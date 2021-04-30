@@ -1,0 +1,7 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=ccal-auth
+Exec=/usr/local/bin/ccal-auth
+Icon=/usr/local/share/icons/aquarius.svg
+Terminal=false
+Type=Application

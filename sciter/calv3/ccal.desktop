@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=农历择日
+Exec=./ccal-single
+Icon=./fire.svg
+Terminal=false
+Type=Application

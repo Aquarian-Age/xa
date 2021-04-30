@@ -1,0 +1,6 @@
+Provides: application() application(ccal-auth.desktop) ccal-auth = 0.6.9-0 ccal-auth(x86-64) = 0.6.9-0
+Requires(rpmlib): 
+rpmlib(CompressedFileNames) <= 3.0.4-1 
+rpmlib(FileDigests) <= 4.6.0-1 
+rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: /usr/bin/env libatk-1.0.so.0()(64bit) libc.so.6()(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libc.so.6(GLIBC_2.32)(64bit) libcairo-gobject.so.2()(64bit) libcairo.so.2()(64bit) libdl.so.2()(64bit) libdl.so.2(GLIBC_2.2.5)(64bit) libgdk-3.so.0()(64bit) libgdk_pixbuf-2.0.so.0()(64bit) libgio-2.0.so.0()(64bit) libglib-2.0.so.0()(64bit) libgobject-2.0.so.0()(64bit) libgtk-3.so.0()(64bit) libharfbuzz.so.0()(64bit) libpango-1.0.so.0()(64bit) libpangocairo-1.0.so.0()(64bit) libpthread.so.0()(64bit) libpthread.so.0(GLIBC_2.2.5)(64bit) libpthread.so.0(GLIBC_2.3.2)(64bit)

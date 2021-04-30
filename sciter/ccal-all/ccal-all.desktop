@@ -1,0 +1,7 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=择日
+Exec=/usr/local/bin/ccal-all
+Icon=/usr/local/share/icons/fire.svg
+Terminal=false
+Type=Application
