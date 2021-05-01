@@ -18,7 +18,11 @@ func main() {
 	wxn := gz.Wxsk("癸酉")
 	fmt.Println(wxsk, wxn)
 
-	lu := gz.Lu("癸酉")
+	lu := gz.Lu("癸酉") //干支禄
 	lu += gz.Lu("庚辰")
 	fmt.Println(lu)
+
+	nyall:= gz.GetNaYin("辛丑","壬辰","庚戌","丙子")
+	fmt.Println(nyall)
+
 }

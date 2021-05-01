@@ -14,7 +14,7 @@ func TestGetNaYin(t *testing.T) {
 	for i := 0; i < len(jz60); i++ {
 		smap := NaYin(jz60[i])
 		if !strings.EqualFold(smap[jz60[i]], wantMap[jz60[i]]) {
-			t.Errorf("func NaYin(%s)=%v want:%v", jz60[i], smap, wantMap[jz60[i]])
+			t.Errorf("func NaYin(%s)=%v want:%v", jz60[i], smap[jz60[i]], wantMap[jz60[i]])
 		}
 	}
 }
