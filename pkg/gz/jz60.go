@@ -1,7 +1,6 @@
-package jz
+package gz
 
-
-func GetJzArr()[]string  {
+func GetJzArr() []string {
 	jiazi, jiaxu, jiashen, jiawu, jiachen, jiayin := liuXun()
 	return jzArr(jiazi, jiaxu, jiashen, jiawu, jiachen, jiayin)
 }
