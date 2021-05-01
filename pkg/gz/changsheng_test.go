@@ -38,10 +38,13 @@ func TestChangSheng(t *testing.T) {
 	for i := 0; i < len(gan); i++ {
 		chmap := ChangSheng(gan[i])
 		for j := i; j < len(want); j++ {
-			if !reflect.DeepEqual(chmap, want[j]) {
-				t.Errorf("func ChangSheng(%s)=%v want:%v", gan[i], chmap, want[j])
+			if i == j {
+				if !reflect.DeepEqual(chmap, want[j]) {
+					t.Errorf("func ChangSheng(%s)=%v want:%v", gan[i], chmap, want[j])
+				}
+				break
 			}
-			break
+
 		}
 	}
 }
