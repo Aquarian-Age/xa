@@ -1,7 +1,0 @@
-#!/usr/bin/env xdg-open
-[Desktop Entry]
-Name=干支历
-Exec=/usr/local/bin/cal-auth
-Icon=/usr/local/share/icons/calendar.svg
-Terminal=false
-Type=Application
