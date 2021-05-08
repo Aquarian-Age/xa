@@ -1,4 +1,4 @@
-module github.com/Aquarian-Age/xyz
+module github.com/Aquarian-Age/xa
 
 go 1.16
 
