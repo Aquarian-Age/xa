@@ -25,4 +25,7 @@ func main() {
 	nyall := gz.GetNaYin("辛丑", "壬辰", "庚戌", "丙子")
 	fmt.Println(nyall)
 
+	gzs := gz.NewGanZhi(2021, 5, 8, 8)
+	fmt.Println(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //辛丑 癸巳 丙辰 壬辰
+
 }
