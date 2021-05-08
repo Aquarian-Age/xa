@@ -22,7 +22,7 @@ func main() {
 	lu += gz.Lu("庚辰")
 	fmt.Println(lu)
 
-	nyall:= gz.GetNaYin("辛丑","壬辰","庚戌","丙子")
+	nyall := gz.GetNaYin("辛丑", "壬辰", "庚戌", "丙子")
 	fmt.Println(nyall)
 
 }

@@ -1,2 +1,4 @@
 github.com/Aquarian-Age/xa v0.0.0-20210501154459-0ccbf48a5dff h1:/4IVcuijnyYf+F13HCIDteDplVW2GTHxpkeLomGdEc4=
 github.com/Aquarian-Age/xa v0.0.0-20210501154459-0ccbf48a5dff/go.mod h1:8Yv0HqN/49PAjs2kGEY/Bo6EGkOcZeRXBEdF1ll0bdw=
+github.com/starainrt/astro v0.0.0-20210304105239-5bd51a8aad8f h1:5MsYLA0yDF/CeGszA3cIeA9isFrr68NeR/C3399bipI=
+github.com/starainrt/astro v0.0.0-20210304105239-5bd51a8aad8f/go.mod h1:aouKnxcSoddULB1nHg3afX18i7JAQs7HgwsIHpzNeis=
