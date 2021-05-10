@@ -28,4 +28,8 @@ func main() {
 	gzs := gz.NewGanZhi(2021, 5, 8, 8)
 	fmt.Println(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //辛丑 癸巳 丙辰 壬辰
 
+	xcs := gz.GetXianChi(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ)
+
+	fmt.Println(xcs)
+
 }
