@@ -1,7 +1,6 @@
 package gz
 
 import (
-	"fmt"
 	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
 	"math"
@@ -25,9 +24,9 @@ type GanZhi struct {
 }
 
 func NewGanZhi(year, month, day, hour int) *GanZhi {
-	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local) //精确到时
-	lcb := fixLiChun(year, cust)
-	fmt.Println(lcb)
+	//cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local) //精确到时
+	//lcb := fixLiChun(year, cust)
+	//fmt.Println(lcb)
 	ygz := GetYGZ(year, month, day, hour)
 	mgz := GetMonthGZ(year, month, day, hour)
 	dgz := GetDayGZ(year, month, day)
