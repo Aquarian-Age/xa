@@ -23,10 +23,8 @@ type GanZhi struct {
 	HGZ string `json:"hgz"`
 }
 
+//精确到时
 func NewGanZhi(year, month, day, hour int) *GanZhi {
-	//cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local) //精确到时
-	//lcb := fixLiChun(year, cust)
-	//fmt.Println(lcb)
 	ygz := GetYGZ(year, month, day, hour)
 	mgz := GetMonthGZ(year, month, day, hour)
 	dgz := GetDayGZ(year, month, day)
@@ -84,7 +82,7 @@ func YearGZ(year int, lcb bool) (string, string) {
 
 //立春修正
 func fixLiChun(year int, cust time.Time) bool {
-	lct, _ := getJie12T(year)
+	lct, _, _ := getJie12T(year)
 	lct = time.Date(lct.Year(), lct.Month(), lct.Day(), lct.Hour(), 0, 0, 0, time.Local)
 	var b bool
 	if cust.Equal(lct) || cust.After(lct) {
@@ -97,7 +95,7 @@ func fixLiChun(year int, cust time.Time) bool {
 
 //传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
 //获取本年立春时间戳
-func getJie12T(year int) (time.Time, []time.Time) {
+func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
 
 	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
 	jq := basic.GetOneYearJQ(year)
@@ -114,22 +112,26 @@ func getJie12T(year int) (time.Time, []time.Time) {
 		"夏至", "小暑", "大暑", "立秋", "处暑", "白露",
 		"秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至",
 	*/
+	var zqArr []time.Time  //中气(0:上一年冬至 到本年冬至)
 	var jieArr []time.Time //12节
 	var lct time.Time
 	for _, v := range keys {
-		//fmt.Printf("k:%v -本地时区%v\n", v, calendar.JDE2Date(jq[v]))
-		if v%2 == 0 {
+		if v%2 == 1 { //中气
+			zqArr = append(zqArr, calendar.JDE2Date(jq[v]))
+		}
+		if v%2 == 0 { //节
 			jieArr = append(jieArr, calendar.JDE2Date(jq[v]))
 		}
 		if v == 4 {
 			lct = calendar.JDE2Date(jq[v])
 		}
 	}
-
+	//12中气
+	// 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪 冬至
 	//12节
 	// 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
 	//排序后对应的k值 2 4 6 8 10 12 14 16 18 20 22 24
-	return lct, jieArr
+	return lct, jieArr, zqArr
 }
 
 //##############################################s
@@ -145,7 +147,7 @@ func GetMonthGZ(year, month, day, hour int) string {
 //以12节气定月干支
 func MonthGZ(year, month, day, hour int) string {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
-	arrT := getJieArr(year)
+	arrT, _ := getJieArr(year)
 	b, index := findJie(cust, arrT)
 	lcb := fixLiChun(year, cust)
 
@@ -175,16 +177,28 @@ func MonthGZ(year, month, day, hour int) string {
 
 //正月立春节 二月惊蛰节 三月清明节 四月立夏节 五月忙钟节 六月小暑节
 //七月立秋节 八月白露节 九月寒露节 十月立东节 冬月大雪节 腊月小寒节
-//0:上一年小寒 1今年立春...11大雪 12本年小寒 13下年立春
-//上一年小寒到下一年节气的时间戳数组
-func getJieArr(year int) []time.Time {
-	_, j12arr := getJie12T(year)
-	_, j4arr := getJie12T(year + 1)
 
-	var arrT []time.Time
+//12节  0:上一年小寒 1今年立春...11大雪 12:本年小寒 13:下年立春
+// 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
+
+//12中气 0:上一年冬至　12:本年冬至时间戳 13:下一年大寒
+// 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪
+
+//2年的节气和中气时间戳　时间精确到秒
+//上一年小寒到下一年节气的时间戳数组 len=24 上一年冬至到本年冬至中气时间戳数组 len=25
+func getJieArr(year int) ([]time.Time, []time.Time) {
+	_, j12arr, zq1Arr := getJie12T(year)
+	_, j4arr, zq2Arr := getJie12T(year + 1)
+
+	var zqArrT []time.Time //12中气
+	zq2Arr = zq2Arr[1:]    //去掉数组中本年冬至重复的时间戳
+	zqArrT = append(zqArrT, zq1Arr...)
+	zqArrT = append(zqArrT, zq2Arr...)
+
+	var arrT []time.Time //12节气
 	arrT = append(arrT, j12arr...)
 	arrT = append(arrT, j4arr...)
-	return arrT
+	return arrT, zqArrT
 }
 
 //true节气之后 false节气之前 节气计算精确到日
