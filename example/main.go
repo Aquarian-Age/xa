@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Aquarian-Age/xa/pkg/gz"
+	"github.com/Aquarian-Age/xa/pkg/x"
 )
 
 func main() {
@@ -28,8 +29,9 @@ func main() {
 	gzs := gz.NewGanZhi(2021, 5, 8, 8)
 	fmt.Println(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //辛丑 癸巳 丙辰 壬辰
 
-	xcs := gz.GetXianChi(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ)
-
+	xcs := gz.GetXianChi(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //咸池
 	fmt.Println(xcs)
 
+	lns, lns1 := x.LiuNianBiao(1990)
+	fmt.Printf("流年:%s\n%s\n", lns, lns1)
 }
