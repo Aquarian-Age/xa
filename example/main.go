@@ -26,12 +26,17 @@ func main() {
 	nyall := gz.GetNaYin("辛丑", "壬辰", "庚戌", "丙子")
 	fmt.Println(nyall)
 
-	gzs := gz.NewGanZhi(2021, 5, 8, 8)
-	fmt.Println(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //辛丑 癸巳 丙辰 壬辰
+	obj := gz.NewGanZhi(2021, 5, 8, 8)
+	fmt.Println(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ) //辛丑 癸巳 丙辰 壬辰
 
-	xcs := gz.GetXianChi(gzs.YGZ, gzs.MGZ, gzs.DGZ, gzs.HGZ) //咸池
+	xcs := gz.GetXianChi(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ) //咸池
 	fmt.Println(xcs)
 
 	lns, lns1 := x.LiuNianBiao(1990)
 	fmt.Printf("流年:%s\n%s\n", lns, lns1)
+	//
+	jcDay := obj.RiJianChu()
+	hhDay := obj.RiHuangHei()
+	fmt.Printf("%s月%s日　建除:%s 黄黑:%s\n", obj.MGZ, obj.DGZ, jcDay, hhDay)
+
 }
