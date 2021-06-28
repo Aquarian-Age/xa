@@ -39,6 +39,11 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 	}
 }
 
+//日建除
+func (obj *GanZhi) RiJianChu() string {
+	return GetRiJianChu(obj.MGZ, obj.DGZ)
+}
+
 //##############################################s
 //计算年干支
 //##############################################
