@@ -44,6 +44,11 @@ func (obj *GanZhi) RiJianChu() string {
 	return GetRiJianChu(obj.MGZ, obj.DGZ)
 }
 
+//日黄黑
+func (obj *GanZhi) RiHuangHei() string {
+	return GetRiHuangHei(obj.MGZ, obj.DGZ)
+}
+
 //##############################################s
 //计算年干支
 //##############################################
