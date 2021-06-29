@@ -49,6 +49,11 @@ func (obj *GanZhi) RiHuangHei() string {
 	return GetRiHuangHei(obj.MGZ, obj.DGZ)
 }
 
+//日禽
+func (obj *GanZhi) RiQin(weekN int) string {
+	return GetRiQin(weekN, obj.DGZ)
+}
+
 //##############################################s
 //计算年干支
 //##############################################
