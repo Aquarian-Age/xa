@@ -1,6 +1,7 @@
 package gz
 
 import (
+	"github.com/Aquarian-Age/xa/pkg/pub"
 	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
 	"math"
@@ -52,6 +53,12 @@ func (obj *GanZhi) RiHuangHei() string {
 //日禽
 func (obj *GanZhi) RiQin(weekN int) string {
 	return GetRiQin(weekN, obj.DGZ)
+}
+
+//月将 月将地支 神将名称 月将所对应的中气时间戳
+func (obj *GanZhi) GetYueJiangName(year, month, day int) (string, string, time.Time) {
+	zhis := pub.GetZhiS(obj.MGZ)
+	return yueJiang(year, month, day, zhis)
 }
 
 //##############################################s
@@ -366,53 +373,29 @@ func hgzArr(gn int) []string {
 func h24Toh12(h int) int {
 	var h12 int
 	switch h {
-	case 23:
+	case 23, 00:
 		h12 = 1
-	case 00:
-		h12 = 1
-	case 1:
+	case 1, 2:
 		h12 = 2
-	case 2:
-		h12 = 2
-	case 3:
+	case 3, 4:
 		h12 = 3
-	case 4:
-		h12 = 3
-	case 5:
+	case 5, 6:
 		h12 = 4
-	case 6:
-		h12 = 4
-	case 7:
+	case 7, 8:
 		h12 = 5
-	case 8:
-		h12 = 5
-	case 9:
+	case 9, 10:
 		h12 = 6
-	case 10:
-		h12 = 6
-	case 11:
+	case 11, 12:
 		h12 = 7
-	case 12:
-		h12 = 7
-	case 13:
+	case 13, 14:
 		h12 = 8
-	case 14:
-		h12 = 8
-	case 15:
+	case 15, 16:
 		h12 = 9
-	case 16:
-		h12 = 9
-	case 17:
+	case 17, 18:
 		h12 = 10
-	case 18:
-		h12 = 10
-	case 19:
+	case 19, 20:
 		h12 = 11
-	case 20:
-		h12 = 11
-	case 21:
-		h12 = 12
-	case 22:
+	case 21, 22:
 		h12 = 12
 	}
 	return h12
