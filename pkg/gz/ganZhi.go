@@ -61,6 +61,16 @@ func (obj *GanZhi) GetYueJiangName(year, month, day int) (string, string, time.T
 	return yueJiang(year, month, day, zhis)
 }
 
+//贵人诀 默认传入年干支
+func (obj *GanZhi) GuiRenYear() (string, string) {
+	return GuiRenJue(obj.YGZ)
+}
+
+//贵人诀　日干支
+func (obj *GanZhi) GuiRenDay() (string, string) {
+	return GuiRenJue(obj.DGZ)
+}
+
 //##############################################s
 //计算年干支
 //##############################################
