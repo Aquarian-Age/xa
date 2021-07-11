@@ -56,7 +56,7 @@ func (obj *GanZhi) RiQin(weekN int) string {
 }
 
 //月将 月将地支 神将名称 月将所对应的中气时间戳
-func (obj *GanZhi) GetYueJiangName(year, month, day int) (string, string, time.Time) {
+func (obj *GanZhi) GetYueJiang(year, month, day int) (string, string, time.Time) {
 	zhis := pub.GetZhiS(obj.MGZ)
 	return yueJiang(year, month, day, zhis)
 }
@@ -128,7 +128,6 @@ func fixLiChun(year int, cust time.Time) bool {
 //传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
 //获取本年立春时间戳
 func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
-
 	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
 	jq := basic.GetOneYearJQ(year)
 	var keys []int

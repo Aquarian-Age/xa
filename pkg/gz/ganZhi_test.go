@@ -234,8 +234,8 @@ func TestHourGZ(t *testing.T) {
 
 //月将
 func TestGanZhi_GetYueJiangName(t *testing.T) {
-	y, m, d, h := 2021, 7, 10, 9
+	y, m, d, h := 2021, 7, 22, 22
 	obj := NewGanZhi(y, m, d, h)
-	yjzhi, name, zt := obj.GetYueJiangName(y, m, d)
+	yjzhi, name, zt := obj.GetYueJiang(y, m, d)
 	fmt.Println(yjzhi, name, zt) //未 小吉 2021-06-21 11:32:00.398005843 +0800 CST
 }

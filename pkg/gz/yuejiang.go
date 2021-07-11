@@ -5,7 +5,24 @@ import (
 	"time"
 )
 
-//传入阳历时间(年　月　日)　月干支 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳
+//月将
+type YJ struct {
+	YueJiang string `json:"yue_jiang"`
+	Name     string `json:"name"`
+	T        string `json:"t"`
+}
+
+func GetYueJiang(y, m, d int, mz string) *YJ {
+	yj, name, t := yueJiang(y, m, d, mz)
+	ts := t.Format("2006-01-02")
+	return &YJ{
+		yj,
+		name,
+		ts,
+	}
+}
+
+//传入阳历时间(年　月　日)　月支 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳
 func yueJiang(year, month, day int, mgz string) (string, string, time.Time) {
 	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到日
 	_, _, zqArrT := getJie12T(year)
