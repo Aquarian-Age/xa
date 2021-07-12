@@ -10,10 +10,8 @@ import (
 )
 
 var (
-	//十天干 甲1 ...癸10
-	Gan = [11]string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	//十二地支 子1 ...亥12
-	Zhi = [13]string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	Gan = []string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
+	Zhi = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 )
 
 //干支信息
@@ -24,7 +22,7 @@ type GanZhi struct {
 	HGZ string `json:"hgz"`
 }
 
-//精确到时
+//干支　精确到时
 func NewGanZhi(year, month, day, hour int) *GanZhi {
 	ygz := GetYGZ(year, month, day, hour)
 	mgz := GetMonthGZ(year, month, day, hour)
@@ -70,10 +68,6 @@ func (obj *GanZhi) GuiRenYear() (string, string) {
 func (obj *GanZhi) GuiRenDay() (string, string) {
 	return GuiRenJue(obj.DGZ)
 }
-
-//##############################################s
-//计算年干支
-//##############################################
 
 //年干支
 func GetYGZ(year, month, day, hour int) string {
@@ -164,10 +158,6 @@ func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
 	//排序后对应的k值 2 4 6 8 10 12 14 16 18 20 22 24
 	return lct, jieArr, zqArr
 }
-
-//##############################################s
-//计算月干支
-//##############################################
 
 //月干支
 func GetMonthGZ(year, month, day, hour int) string {
@@ -301,10 +291,6 @@ func arrX(gan, zhi, head, end []string) []string {
 	}
 	return arr
 }
-
-//##############################################
-//计算日干支
-//##############################################
 
 //日干支
 func GetDayGZ(year, month, day int) string {

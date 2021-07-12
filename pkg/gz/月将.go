@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//月将
+//月将(太阳过宫)
 type YJ struct {
 	YueJiang string `json:"yue_jiang"`
 	Name     string `json:"name"`
