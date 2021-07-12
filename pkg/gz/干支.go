@@ -1,12 +1,13 @@
 package gz
 
 import (
-	"github.com/Aquarian-Age/xa/pkg/pub"
-	"github.com/starainrt/astro/basic"
-	"github.com/starainrt/astro/calendar"
 	"math"
 	"sort"
 	"time"
+
+	"github.com/Aquarian-Age/xa/pkg/pub"
+	"github.com/starainrt/astro/basic"
+	"github.com/starainrt/astro/calendar"
 )
 
 var (
@@ -16,10 +17,11 @@ var (
 
 //干支信息
 type GanZhi struct {
-	YGZ string `json:"ygz"`
-	MGZ string `json:"mgz"`
-	DGZ string `json:"dgz"`
-	HGZ string `json:"hgz"`
+	year, month, day, hour int
+	YGZ                    string `json:"ygz"`
+	MGZ                    string `json:"mgz"`
+	DGZ                    string `json:"dgz"`
+	HGZ                    string `json:"hgz"`
 }
 
 //干支　精确到时
@@ -31,10 +33,14 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 	hgz := GetHourGZ(gn, hour)
 
 	return &GanZhi{
-		YGZ: ygz,
-		MGZ: mgz,
-		DGZ: dgz,
-		HGZ: hgz,
+		year:  year,
+		month: month,
+		day:   day,
+		hour:  hour,
+		YGZ:   ygz,
+		MGZ:   mgz,
+		DGZ:   dgz,
+		HGZ:   hgz,
 	}
 }
 
@@ -54,9 +60,9 @@ func (obj *GanZhi) RiQin(weekN int) string {
 }
 
 //月将 月将地支 神将名称 月将所对应的中气时间戳
-func (obj *GanZhi) GetYueJiang(year, month, day int) (string, string, time.Time) {
+func (obj *GanZhi) GetYueJiang() (string, string, time.Time) {
 	zhis := pub.GetZhiS(obj.MGZ)
-	return yueJiang(year, month, day, zhis)
+	return yueJiang(obj.year, obj.month, obj.day, zhis)
 }
 
 //贵人诀 默认传入年干支
