@@ -39,6 +39,7 @@ func main() {
 	jcDay := obj.RiJianChu()
 	hhDay := obj.RiHuangHei()
 	fmt.Printf("%s月%s日　建除:%s 黄黑:%s\n", obj.MGZ, obj.DGZ, jcDay, hhDay)
+
 	//
 
 	wn := int(t.Weekday())

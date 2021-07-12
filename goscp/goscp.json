@@ -1,7 +1,0 @@
- {
-   "User": "root",
-   "Pass": "abx",
-   "Host":"1.12.2.1:22",
-   "RemotePath":"/root/remotedir/",
-   "LocalPath":"/home/user/tftp/download/"
- }
