@@ -60,7 +60,7 @@ func (obj *GanZhi) RiQin(weekN int) string {
 }
 
 //月将 月将地支 神将名称 月将所对应的中气时间戳
-func (obj *GanZhi) GetYueJiang() (string, string, time.Time) {
+func (obj *GanZhi) YueJiang() (string, string, time.Time) {
 	zhis := pub.GetZhiS(obj.MGZ)
 	return yueJiang(obj.year, obj.month, obj.day, zhis)
 }
