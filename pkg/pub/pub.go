@@ -14,3 +14,16 @@ func GetZhiS(gz string) string {
 	}
 	return z
 }
+
+//顺序排地支 传入对应的地支 原地支数组 返回排序后的地支数组
+func SortArr(zhi string, zhiArr []string) []string {
+	for i := 0; i < len(zhiArr); i++ {
+		if strings.EqualFold(zhi, zhiArr[i]) {
+			head := zhiArr[:i]
+			end := zhiArr[i:]
+			zhiArr = append(end, head...)
+			break
+		}
+	}
+	return zhiArr
+}
