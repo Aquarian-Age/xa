@@ -2,12 +2,77 @@ package cal
 
 import (
 	"4d63.com/tz"
+	"database/sql"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 	jl "github.com/soniakeys/meeus/v3/julian"
+	"log"
 	"math"
 	"os"
 	"time"
 )
+
+//##############################################
+//从数据库中获取数据 cal.sql获取年份同map数组 ccal获取年份从-4000~8000
+
+type calData struct {
+	year                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   int
+	jd0, Z11a, J12, Z12, J01, Z01, J02, Z02, J03, Z03, J04, Z04, J05, Z05, J06, Z06, J07, Z07, J08, Z08, J09, Z09, J10, Z10, J11, Z11b, Q0_01, Q1_01, Q2_01, Q3_01, Q0_02, Q1_02, Q2_02, Q3_02, Q0_03, Q1_03, Q2_03, Q3_03, Q0_04, Q1_04, Q2_04, Q3_04, Q0_05, Q1_05, Q2_05, Q3_05, Q0_06, Q1_06, Q2_06, Q3_06, Q0_07, Q1_07, Q2_07, Q3_07, Q0_08, Q1_08, Q2_08, Q3_08, Q0_09, Q1_09, Q2_09, Q3_09, Q0_10, Q1_10, Q2_10, Q3_10, Q0_11, Q1_11, Q2_11, Q3_11, Q0_12, Q1_12, Q2_12, Q3_12, Q0_13, Q1_13, Q2_13, Q3_13, Q0_14, Q1_14, Q2_14, Q3_14, Q0_15, Q1_15, Q2_15, Q3_15 float64
+}
+
+//用数据库获取年份数据 cal:1600~3500 ccal:-4000~8000
+func Data(y int) []float64 {
+	cfg := mysql.NewConfig()
+	cfg.User = "root"
+	cfg.Passwd = "passwd" //这里改你的密码
+	cfg.Net = "tcp"
+	cfg.Addr = "127.0.0.1:3306"
+	cfg.DBName = "ccal" //数据库
+	db, err := sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(err)
+	}
+	//fmt.Println("connected!`")
+	dbf, err := calByYear(int64(y), db)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return dbf
+}
+
+//查询单行 传入年数字 数据库
+func calByYear(year int64, db *sql.DB) ([]float64, error) {
+	var alb calData
+	var dbf []float64
+	row := db.QueryRow("SELECT * FROM cal.cal WHERE year = ?", year)
+	if err := row.Scan(&alb.year, &alb.jd0, &alb.Z11a, &alb.J12, &alb.Z12, &alb.J01, &alb.Z01, &alb.J02, &alb.Z02, &alb.J03, &alb.Z03, &alb.J04, &alb.Z04, &alb.J05, &alb.Z05, &alb.J06, &alb.Z06, &alb.J07, &alb.Z07, &alb.J08, &alb.Z08, &alb.J09, &alb.Z09, &alb.J10, &alb.Z10, &alb.J11, &alb.Z11b, &alb.Q0_01, &alb.Q1_01, &alb.Q2_01, &alb.Q3_01, &alb.Q0_02, &alb.Q1_02, &alb.Q2_02, &alb.Q3_02, &alb.Q0_03, &alb.Q1_03, &alb.Q2_03, &alb.Q3_03, &alb.Q0_04, &alb.Q1_04, &alb.Q2_04, &alb.Q3_04, &alb.Q0_05, &alb.Q1_05, &alb.Q2_05, &alb.Q3_05, &alb.Q0_06, &alb.Q1_06, &alb.Q2_06, &alb.Q3_06, &alb.Q0_07, &alb.Q1_07, &alb.Q2_07, &alb.Q3_07, &alb.Q0_08, &alb.Q1_08, &alb.Q2_08, &alb.Q3_08, &alb.Q0_09, &alb.Q1_09, &alb.Q2_09, &alb.Q3_09, &alb.Q0_10, &alb.Q1_10, &alb.Q2_10, &alb.Q3_10, &alb.Q0_11, &alb.Q1_11, &alb.Q2_11, &alb.Q3_11, &alb.Q0_12, &alb.Q1_12, &alb.Q2_12, &alb.Q3_12, &alb.Q0_13, &alb.Q1_13, &alb.Q2_13, &alb.Q3_13, &alb.Q0_14, &alb.Q1_14, &alb.Q2_14, &alb.Q3_14, &alb.Q0_15, &alb.Q1_15, &alb.Q2_15, &alb.Q3_15); err != nil {
+		if err == sql.ErrNoRows {
+			dbf = append(dbf, alb.jd0, alb.Z11a, alb.J12, alb.Z12, alb.J01, alb.Z01, alb.J02, alb.Z02, alb.J03, alb.Z03, alb.J04, alb.Z04, alb.J05, alb.Z05, alb.J06, alb.Z06, alb.J07, alb.Z07, alb.J08, alb.Z08, alb.J09, alb.Z09, alb.J10, alb.Z10, alb.J11, alb.Z11b, alb.Q0_01, alb.Q1_01, alb.Q2_01, alb.Q3_01, alb.Q0_02, alb.Q1_02, alb.Q2_02, alb.Q3_02, alb.Q0_03, alb.Q1_03, alb.Q2_03, alb.Q3_03, alb.Q0_04, alb.Q1_04, alb.Q2_04, alb.Q3_04, alb.Q0_05, alb.Q1_05, alb.Q2_05, alb.Q3_05, alb.Q0_06, alb.Q1_06, alb.Q2_06, alb.Q3_06, alb.Q0_07, alb.Q1_07, alb.Q2_07, alb.Q3_07, alb.Q0_08, alb.Q1_08, alb.Q2_08, alb.Q3_08, alb.Q0_09, alb.Q1_09, alb.Q2_09, alb.Q3_09, alb.Q0_10, alb.Q1_10, alb.Q2_10, alb.Q3_10, alb.Q0_11, alb.Q1_11, alb.Q2_11, alb.Q3_11, alb.Q0_12, alb.Q1_12, alb.Q2_12, alb.Q3_12, alb.Q0_13, alb.Q1_13, alb.Q2_13, alb.Q3_13, alb.Q0_14, alb.Q1_14, alb.Q2_14, alb.Q3_14, alb.Q0_15, alb.Q1_15, alb.Q2_15, alb.Q3_15)
+			return dbf, fmt.Errorf("calById %d: no such cal", year)
+		}
+		dbf = append(dbf, alb.jd0, alb.Z11a, alb.J12, alb.Z12, alb.J01, alb.Z01, alb.J02, alb.Z02, alb.J03, alb.Z03, alb.J04, alb.Z04, alb.J05, alb.Z05, alb.J06, alb.Z06, alb.J07, alb.Z07, alb.J08, alb.Z08, alb.J09, alb.Z09, alb.J10, alb.Z10, alb.J11, alb.Z11b, alb.Q0_01, alb.Q1_01, alb.Q2_01, alb.Q3_01, alb.Q0_02, alb.Q1_02, alb.Q2_02, alb.Q3_02, alb.Q0_03, alb.Q1_03, alb.Q2_03, alb.Q3_03, alb.Q0_04, alb.Q1_04, alb.Q2_04, alb.Q3_04, alb.Q0_05, alb.Q1_05, alb.Q2_05, alb.Q3_05, alb.Q0_06, alb.Q1_06, alb.Q2_06, alb.Q3_06, alb.Q0_07, alb.Q1_07, alb.Q2_07, alb.Q3_07, alb.Q0_08, alb.Q1_08, alb.Q2_08, alb.Q3_08, alb.Q0_09, alb.Q1_09, alb.Q2_09, alb.Q3_09, alb.Q0_10, alb.Q1_10, alb.Q2_10, alb.Q3_10, alb.Q0_11, alb.Q1_11, alb.Q2_11, alb.Q3_11, alb.Q0_12, alb.Q1_12, alb.Q2_12, alb.Q3_12, alb.Q0_13, alb.Q1_13, alb.Q2_13, alb.Q3_13, alb.Q0_14, alb.Q1_14, alb.Q2_14, alb.Q3_14, alb.Q0_15, alb.Q1_15, alb.Q2_15, alb.Q3_15)
+		return dbf, fmt.Errorf("calById %d: %v", year, err)
+	}
+	dbf = append(dbf, alb.jd0, alb.Z11a, alb.J12, alb.Z12, alb.J01, alb.Z01, alb.J02, alb.Z02, alb.J03, alb.Z03, alb.J04, alb.Z04, alb.J05, alb.Z05, alb.J06, alb.Z06, alb.J07, alb.Z07, alb.J08, alb.Z08, alb.J09, alb.Z09, alb.J10, alb.Z10, alb.J11, alb.Z11b, alb.Q0_01, alb.Q1_01, alb.Q2_01, alb.Q3_01, alb.Q0_02, alb.Q1_02, alb.Q2_02, alb.Q3_02, alb.Q0_03, alb.Q1_03, alb.Q2_03, alb.Q3_03, alb.Q0_04, alb.Q1_04, alb.Q2_04, alb.Q3_04, alb.Q0_05, alb.Q1_05, alb.Q2_05, alb.Q3_05, alb.Q0_06, alb.Q1_06, alb.Q2_06, alb.Q3_06, alb.Q0_07, alb.Q1_07, alb.Q2_07, alb.Q3_07, alb.Q0_08, alb.Q1_08, alb.Q2_08, alb.Q3_08, alb.Q0_09, alb.Q1_09, alb.Q2_09, alb.Q3_09, alb.Q0_10, alb.Q1_10, alb.Q2_10, alb.Q3_10, alb.Q0_11, alb.Q1_11, alb.Q2_11, alb.Q3_11, alb.Q0_12, alb.Q1_12, alb.Q2_12, alb.Q3_12, alb.Q0_13, alb.Q1_13, alb.Q2_13, alb.Q3_13, alb.Q0_14, alb.Q1_14, alb.Q2_14, alb.Q3_14, alb.Q0_15, alb.Q1_15, alb.Q2_15, alb.Q3_15)
+
+	return dbf, nil
+}
+
+//##############################################
+//从map数组中获取年份数据
+//func Data(y int) (data []float64) {
+//	for k, v := range mapOfYears {
+//		if k == y {
+//			data = v
+//			break
+//		}
+//	}
+//	return
+//}
 
 //从上年冬至到下年立春的节气名称
 func NewJQArr(y int) *JQArr {
@@ -348,17 +413,6 @@ func m11(data []float64) (m11t time.Time, m11jd float64) {
 		} else if jdxt.Equal(dz1t) == false && jdxt.Before(dz1t) { //朔在冬至前
 			m11jd = jdx
 			m11t = JdToLocalTime(jdx) //这里保持原始转换时间
-		}
-	}
-	return
-}
-
-//获取年份数据
-func Data(y int) (data []float64) {
-	for k, v := range mapOfYears {
-		if k == y {
-			data = v
-			break
 		}
 	}
 	return

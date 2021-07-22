@@ -8,6 +8,8 @@ gioui.org v0.0.0-20210616100142-f24232dac52e h1:uVzN68BZ4u+SPKoa1b3afnvmwC1MOqeb
 gioui.org v0.0.0-20210616100142-f24232dac52e/go.mod h1:RSH6KIUZ0p2xy5zHDxgAM4zumjgTw83q2ge/PI+yyw8=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/gonoto/notosans v0.0.0-20200703162533-d78fef05ce80 h1:IRZpbKZUh4WPCw1LZWzwbcdIOliIxAx4U9MO11gJ52s=
 github.com/gonoto/notosans v0.0.0-20200703162533-d78fef05ce80/go.mod h1:W/YfCcePQOUc3EEnMDpzhZQ3/k5e6QeqheEupukoJGs=
 github.com/soniakeys/meeus v3.0.1+incompatible h1:0zwv6edwOVRpO1Ci8y3likHlgfJoL7Vb+jSYHknGvoU=
