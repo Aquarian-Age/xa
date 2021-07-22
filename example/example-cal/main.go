@@ -9,7 +9,7 @@ import (
 var t = time.Now().Local()
 
 func main() {
-	//t = time.Date(2033, time.Month(12), 22, 0, 0, 0, 0, time.Local)
+	t = time.Date(2033, time.Month(12), 22, 0, 0, 0, 0, time.Local)
 	lunar := cal.NewLunar(t.Year(), int(t.Month()), t.Day())
 	var lunars string
 	if lunar.LeapM != 0 && lunar.LeapRmc != "" {
