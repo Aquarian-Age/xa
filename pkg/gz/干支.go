@@ -59,6 +59,21 @@ func (obj *GanZhi) RiHuangHei() string {
 	return GetRiHuangHei(obj.MGZ, obj.DGZ)
 }
 
+//日黄黑
+func (obj *GanZhi) RiHuangHei1() string {
+	return HuangHei(obj.MGZ, obj.DGZ)
+}
+
+//时黄黑
+func (obj *GanZhi) ShiHuangHei() string {
+	return GetRiHuangHei(obj.DGZ, obj.HGZ)
+}
+
+//时黄黑
+func (obj *GanZhi) ShiHuangHei1() string {
+	return HuangHei(obj.DGZ, obj.HGZ)
+}
+
 //日禽
 func (obj *GanZhi) RiQin(weekN int) string {
 	return GetRiQin(weekN, obj.DGZ)
