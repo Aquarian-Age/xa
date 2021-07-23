@@ -8,14 +8,14 @@ import (
 	"time"
 )
 
-func TestJQArr_YueJiang(t *testing.T) {
-	y := 2020
-	jq := NewYueJiangJQ(YueJiangJQT(y))
-	yj := jq.YueJiang(time.Now().Local())
-	fmt.Println(yj)
-	jqtoday := jq.TodayJQ(y, time.Now().Local())
-	fmt.Println(jqtoday)
-}
+// func TestJQArr_YueJiang(t *testing.T) {
+// 	y := 2020
+// 	jq := NewYueJiangJQ(YueJiangJQT(y))
+// 	yj := jq.YueJiang(time.Now().Local())
+// 	fmt.Println(yj)
+// 	jqtoday := jq.TodayJQ(y, time.Now().Local())
+// 	fmt.Println(jqtoday)
+// }
 
 func TestNewGanZhiInfo(t *testing.T) {
 	md2033 := []struct {
@@ -434,8 +434,8 @@ func TestNewLunarMonth(t *testing.T) {
 			ld: d,
 		}
 		if !reflect.DeepEqual(lunarobj, want[i]) {
-			t.Errorf("NewLunar(%d %d %d)=%d want:%d,%d %d\n",
-				ymd[i].y, ymd[i].m, ymd[i].d, d, want[i].ly, want[i].lm, want[i].ld)
+			t.Errorf("NewLunar(%d %d %d)=%v want:%d,%d %d\n",
+				ymd[i].y, ymd[i].m, ymd[i].d, lunarobj, want[i].ly, want[i].lm, want[i].ld)
 		}
 
 	}

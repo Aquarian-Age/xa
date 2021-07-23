@@ -1,6 +1,54 @@
 package gz
 
-import "strings"
+import (
+	"github.com/Aquarian-Age/xa/pkg/pub"
+	"strings"
+)
+
+//日建除
+func JianChu(mgz, dgz string) string {
+	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	mz := pub.GetZhiS(mgz)
+	dz := pub.GetZhiS(dgz)
+	var mi, di int
+	for i := 0; i < len(zhi); i++ {
+		if strings.EqualFold(mz, zhi[i]) {
+			mi = i
+		}
+		if strings.EqualFold(dz, zhi[i]) {
+			di = i
+		}
+	}
+	var s string
+	diff := di - mi
+	switch diff {
+	case 0:
+		s = "建"
+	case 1, -11:
+		s = "除"
+	case 2, -10:
+		s = "满"
+	case 3, -9:
+		s = "平"
+	case 4, -8:
+		s = "定"
+	case 5, -7:
+		s = "执"
+	case 6, -6:
+		s = "破"
+	case 7, -5:
+		s = "危"
+	case 8, -4:
+		s = "成"
+	case 9, -3:
+		s = "收"
+	case 10, -2:
+		s = "开"
+	case 11, -1:
+		s = "闭"
+	}
+	return s
+}
 
 //日建除
 func GetRiJianChu(mgz, dgz string) string {
