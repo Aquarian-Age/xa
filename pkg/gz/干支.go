@@ -95,6 +95,26 @@ func (obj *GanZhi) GuiRenDay() (string, string) {
 	return GuiRenJue(obj.DGZ)
 }
 
+//年长生
+func (obj *GanZhi) ChangShengYgz() *CS12 {
+	return NewChangSheng(pub.GetGanS(obj.YGZ))
+}
+
+//月干支长生
+func (obj *GanZhi) ChangShengMgz() *CS12 {
+	return NewChangSheng(pub.GetGanS(obj.MGZ))
+}
+
+//日干长生
+func (obj *GanZhi) ChangShengDgz() *CS12 {
+	return NewChangSheng(pub.GetGanS(obj.DGZ))
+}
+
+//时干支长生
+func (obj *GanZhi) ChangShengHgz() *CS12 {
+	return NewChangSheng(pub.GetGanS(obj.HGZ))
+}
+
 //年干支
 func GetYGZ(year, month, day, hour int) string {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local) //精确到时

@@ -1,6 +1,9 @@
 package gz
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 //########################################
 //十干长生
@@ -12,8 +15,75 @@ import "strings"
 //戊长生在寅死在酉  己长生在酉死在寅
 //庚长生在巳死在子  辛长生在子死在巳
 //壬长生在申死在卯  癸长生在卯死在申
-//k:长生位置 v:十二长生名称 传入干支名称
-func ChangSheng(gz string) map[string]string {
+type CS12 struct {
+	ChangSheng string   `json:"chang_sheng"`
+	MuYu       string   `json:"mu_yu"`
+	GuanDai    string   `json:"guan_dai"`
+	LinGuan    string   `json:"lin_guan"`
+	DiWang     string   `json:"di_wang"`
+	Shuai      string   `json:"shuai"`
+	Bing       string   `json:"bing"`
+	Si         string   `json:"si"`
+	Mu         string   `json:"mu"`
+	Jue        string   `json:"jue"`
+	Tai        string   `json:"tai"`
+	Yang       string   `json:"yang"`
+	charr      []string `json:"charr"`
+}
+
+//传入干
+func NewChangSheng(gan string) *CS12 {
+	//k:天干 v 0:长生 1:沐浴 冠带 临官 帝旺 衰 病 死 墓 绝 胎 11:养
+	xmap := map[string][]string{
+		"甲": {"亥", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌"},
+		"丙": {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"},
+		"戊": {"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"},
+		"庚": {"巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰"},
+		"壬": {"申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰", "巳", "午", "未"},
+		"乙": {"午", "巳", "辰", "卯", "寅", "丑", "子", "亥", "戌", "酉", "申", "未"},
+		"丁": {"酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑", "子", "亥", "戌"},
+		"己": {"酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑", "子", "亥", "戌"},
+		"辛": {"子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"},
+		"癸": {"卯", "寅", "丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰"},
+	}
+	var xarr []string
+	for g, charr := range xmap {
+		if strings.EqualFold(gan, g) {
+			xarr = charr
+			break
+		}
+	}
+	return &CS12{
+		xarr[0],
+		xarr[1],
+		xarr[2],
+		xarr[3],
+		xarr[4],
+		xarr[5],
+		xarr[6],
+		xarr[7],
+		xarr[8],
+		xarr[9],
+		xarr[10],
+		xarr[11],
+		xarr,
+	}
+}
+
+//十二长生名称:地支位
+func (ch *CS12) ChangShengArr() []string {
+	arr := []string{"长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"}
+	charr := ch.charr
+	var arrx []string
+	for i := 0; i < len(arr); i++ {
+		s := fmt.Sprintf("%s:%s", arr[i], charr[i])
+		arrx = append(arrx, s)
+	}
+	return arrx
+}
+
+//长生map k:长生位置 v:十二长生名称  传入干支名称
+func ChangShengMap(gz string) map[string]string {
 	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
 	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	arr := []string{"长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"}
