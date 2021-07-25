@@ -1,6 +1,7 @@
 package gz
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"time"
@@ -13,6 +14,12 @@ import (
 var (
 	Gan = []string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
 	Zhi = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	Jmc = []string{
+		"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰",
+		"春分", "清明", "谷雨", "立夏", "小满", "芒种",
+		"夏至", "小暑", "大暑", "立秋", "处暑", "白露",
+		"秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至",
+	}
 )
 
 //干支信息
@@ -42,6 +49,11 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 		DGZ:   dgz,
 		HGZ:   hgz,
 	}
+}
+
+//年月日时纳因
+func (obj *GanZhi) GetNaYin() string {
+	return GetNaYin(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
 }
 
 //日建除
@@ -113,6 +125,61 @@ func (obj *GanZhi) ChangShengDgz() *CS12 {
 //时干支长生
 func (obj *GanZhi) ChangShengHgz() *CS12 {
 	return NewChangSheng(pub.GetGanS(obj.HGZ))
+}
+
+//24节气 上年冬至到本年冬至　当前节气
+func (obj *GanZhi) Jq24() ([]string, string) {
+	year := obj.year
+	arr := jq24(year)
+	arr1 := jq24(year + 1)
+	arr = append(arr, arr1[1:]...)
+	Jmc = append(Jmc, Jmc[1:]...)
+
+	//
+	var jqs string //当前时间节气
+	ct := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
+	for i := 0; i < len(arr); i++ {
+		xt := arr[i]
+		xth := time.Date(xt.Year(), xt.Month(), xt.Day(), xt.Hour(), 0, 0, 0, time.Local)
+		if xth.Equal(ct) || xth.After(ct) {
+			index := i - 1
+			if index > 24 {
+				index = i + 1
+			}
+			xts := arr[index].Format("2006-01-02 15:04:05")
+			jqs = fmt.Sprintf("%s: %s", Jmc[index], xts)
+			break
+		}
+	}
+	//
+	var tmp []string
+	for i := 0; i < len(arr); i++ {
+		x := Jmc[i] + ": " + arr[i].Format("2006-01-02 :15:04:05")
+		tmp = append(tmp, x)
+	}
+	return tmp[:len(tmp)-24], jqs
+}
+func (obj *GanZhi) Jq24T() []time.Time {
+	return GetJq24(obj.year)
+}
+func GetJq24(year int) []time.Time {
+	return jq24(year)
+}
+
+func jq24(year int) []time.Time {
+	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
+	jq := basic.GetOneYearJQ(year)
+	var keys []int
+	for k := range jq {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	var arr []time.Time
+	for _, v := range keys {
+		xt := calendar.JDE2Date(jq[v])
+		arr = append(arr, xt)
+	}
+	return arr
 }
 
 //年干支

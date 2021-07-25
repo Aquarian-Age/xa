@@ -28,7 +28,7 @@ type CS12 struct {
 	Jue        string   `json:"jue"`
 	Tai        string   `json:"tai"`
 	Yang       string   `json:"yang"`
-	charr      []string `json:"charr"`
+	Charr      []string `json:"charr"`
 }
 
 //传入干
@@ -73,7 +73,7 @@ func NewChangSheng(gan string) *CS12 {
 //十二长生名称:地支位
 func (ch *CS12) ChangShengArr() []string {
 	arr := []string{"长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"}
-	charr := ch.charr
+	charr := ch.Charr
 	var arrx []string
 	for i := 0; i < len(arr); i++ {
 		s := fmt.Sprintf("%s:%s", arr[i], charr[i])
