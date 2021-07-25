@@ -40,3 +40,24 @@ func SortArr(zhi string, zhiArr []string) []string {
 	}
 	return zhiArr
 }
+
+//逆序排地支
+func ReSortArr(zhi string, zhiArr []string) []string {
+	for i := 0; i < len(zhiArr); i++ {
+		if strings.EqualFold(zhi, zhiArr[i]) {
+			head := zhiArr[:i]
+			end := zhiArr[i:]
+			zhiArr = append(end, head...)
+			break
+		}
+	}
+	//
+	head := zhiArr[:1]
+	end := zhiArr[1:]
+	var rArr []string
+	for i := len(end) - 1; i >= 0; i-- {
+		rArr = append(rArr, end[i])
+	}
+	rArr = append(head, rArr...)
+	return rArr
+}
