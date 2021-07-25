@@ -1,15 +1,14 @@
 package cal
 
 import (
-	"4d63.com/tz"
 	"database/sql"
 	"fmt"
-	"github.com/go-sql-driver/mysql"
-	jl "github.com/soniakeys/meeus/v3/julian"
-	"log"
 	"math"
 	"os"
 	"time"
+
+	"4d63.com/tz"
+	jl "github.com/soniakeys/meeus/v3/julian"
 )
 
 //##############################################
@@ -21,28 +20,28 @@ type calData struct {
 }
 
 //用数据库获取年份数据 cal:1600~3500 ccal:-4000~8000
-func Data(y int) []float64 {
-	cfg := mysql.NewConfig()
-	cfg.User = "root"
-	cfg.Passwd = "passwd" //这里改你的密码
-	cfg.Net = "tcp"
-	cfg.Addr = "127.0.0.1:3306"
-	cfg.DBName = "ccal" //数据库
-	db, err := sql.Open("mysql", cfg.FormatDSN())
-	if err != nil {
-		log.Fatal(err)
-	}
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(err)
-	}
-	//fmt.Println("connected!`")
-	dbf, err := calByYear(int64(y), db)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return dbf
-}
+// func Data(y int) []float64 {
+// 	cfg := mysql.NewConfig()
+// 	cfg.User = "root"
+// 	cfg.Passwd = "passwd" //这里改你的密码
+// 	cfg.Net = "tcp"
+// 	cfg.Addr = "127.0.0.1:3306"
+// 	cfg.DBName = "ccal" //数据库
+// 	db, err := sql.Open("mysql", cfg.FormatDSN())
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	pingErr := db.Ping()
+// 	if pingErr != nil {
+// 		log.Fatal(err)
+// 	}
+// 	//fmt.Println("connected!`")
+// 	dbf, err := calByYear(int64(y), db)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	return dbf
+// }
 
 //查询单行 传入年数字 数据库
 func calByYear(year int64, db *sql.DB) ([]float64, error) {
@@ -64,15 +63,15 @@ func calByYear(year int64, db *sql.DB) ([]float64, error) {
 
 //##############################################
 //从map数组中获取年份数据
-//func Data(y int) (data []float64) {
-//	for k, v := range mapOfYears {
-//		if k == y {
-//			data = v
-//			break
-//		}
-//	}
-//	return
-//}
+func Data(y int) (data []float64) {
+	for k, v := range mapOfYears {
+		if k == y {
+			data = v
+			break
+		}
+	}
+	return
+}
 
 //从上年冬至到下年立春的节气名称
 func NewJQArr(y int) *JQArr {
