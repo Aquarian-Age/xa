@@ -1,6 +1,10 @@
 package pub
 
-import "strings"
+import (
+	"log"
+	"regexp"
+	"strings"
+)
 
 //取天干 传干支 返回干
 func GetGanS(gz string) string {
@@ -60,4 +64,33 @@ func ReSortArr(zhi string, zhiArr []string) []string {
 	}
 	rArr = append(head, rArr...)
 	return rArr
+}
+
+//顺序不变　把arr数组中source名字改为source + add 如果没有符合条件的返回原值
+func ReName(arr []string, source, add string) []string {
+	//fmt.Printf("arr:%s source:%s add:%s\n", arr, source, add)
+	var newArr []string
+	for i := 0; i < len(arr); i++ {
+		if strings.EqualFold(arr[i], source) {
+			source = source + add
+			head := arr[:i+1]
+			head = head[:len(head)-1]
+			head = append(head, source)
+			end := arr[i+1:]
+			//fmt.Printf("\nhead:%s\nend:%s\n", head, end)
+			newArr = append(head, end...)
+		} else {
+			newArr = arr
+		}
+	}
+	return newArr
+}
+
+//正则替换 把s的dels元素替换成r
+func ReNameS(s, dels string, r string) string {
+	rs, err := regexp.Compile(dels)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return rs.ReplaceAllString(s, r)
 }
