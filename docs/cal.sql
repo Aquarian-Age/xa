@@ -1,3 +1,10 @@
+/*
+ * Created by GoLand
+ * User: Amrta
+ * Mail: liangzi2021@yandex.com
+ * Date:  2021年 7月 26日
+ */
+
 CREATE TABLE cal (
                        year      INT AUTO_INCREMENT NOT NULL,
                        jd0 double not null,Z11a double not null,J12 double not null,Z12 double not null,J01 double not null,Z01 double not null,J02 double not null,Z02 double not null,J03 double not null,Z03 double not null,J04 double not null,Z04 double not null,J05 double not null,Z05 double not null,J06 double not null,Z06 double not null,J07 double not null,Z07 double not null,J08 double not null,Z08 double not null,J09 double not null,Z09 double not null,J10 double not null,Z10 double not null,J11 double not null,Z11b double not null,Q0_01 double not null,Q1_01 double not null,Q2_01 double not null,Q3_01 double not null,Q0_02 double not null,Q1_02 double not null,Q2_02 double not null,Q3_02 double not null,Q0_03 double not null,Q1_03 double not null,Q2_03 double not null,Q3_03 double not null,Q0_04 double not null,Q1_04 double not null,Q2_04 double not null,Q3_04 double not null,Q0_05 double not null,Q1_05 double not null,Q2_05 double not null,Q3_05 double not null,Q0_06 double not null,Q1_06 double not null,Q2_06 double not null,Q3_06 double not null,Q0_07 double not null,Q1_07 double not null,Q2_07 double not null,Q3_07 double not null,Q0_08 double not null,Q1_08 double not null,Q2_08 double not null,Q3_08 double not null,Q0_09 double not null,Q1_09 double not null,Q2_09 double not null,Q3_09 double not null,Q0_10 double not null,Q1_10 double not null,Q2_10 double not null,Q3_10 double not null,Q0_11 double not null,Q1_11 double not null,Q2_11 double not null,Q3_11 double not null,Q0_12 double not null,Q1_12 double not null,Q2_12 double not null,Q3_12 double not null,Q0_13 double not null,Q1_13 double not null,Q2_13 double not null,Q3_13 double not null,Q0_14 double not null,Q1_14 double not null,Q2_14 double not null,Q3_14 double not null,Q0_15 double not null,Q1_15 double not null,Q2_15 double not null,Q3_15 double not null,
