@@ -7,6 +7,7 @@
 package pub
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 	"strings"
@@ -99,4 +100,20 @@ func ReNameS(s, dels string, r string) string {
 		log.Fatal(err)
 	}
 	return rs.ReplaceAllString(s, r)
+}
+
+//顺排 int数组 排序后使得index在首位 返回排序后的数组 如果index不在数组中 返回错误
+func SortArrInt(index int, arr []int) ([]int, error) {
+	var err error
+	for i := 0; i < len(arr); i++ {
+		if index == arr[i] {
+			head := arr[i:]
+			end := arr[:i]
+			arr = append(head, end...)
+			return arr, nil
+		} else if index != arr[i] {
+			err = fmt.Errorf("%d不在数组%d中", index, arr)
+		}
+	}
+	return arr, err
 }
