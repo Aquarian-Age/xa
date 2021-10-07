@@ -8,12 +8,13 @@ package gz
 
 import (
 	"fmt"
-	"github.com/Aquarian-Age/xa/pkg/pub"
-	"github.com/starainrt/astro/basic"
-	"github.com/starainrt/astro/calendar"
 	"math"
 	"sort"
 	"time"
+
+	"github.com/Aquarian-Age/xa/pkg/pub"
+	"github.com/starainrt/astro/basic"
+	"github.com/starainrt/astro/calendar"
 )
 
 var (
@@ -131,14 +132,14 @@ func (obj *GanZhi) ChangShengHgz() *CS12 {
 	return NewChangSheng(pub.GetGanS(obj.HGZ))
 }
 
-//24节气 上年冬至到本年冬至　当前节气
-func (obj *GanZhi) Jq24() ([]string, string) {
+//当前节气名称:节气时间
+func (obj *GanZhi) JieQi() string {
 	year := obj.year
 	arr := jq24(year)
 	arr1 := jq24(year + 1)
 	arr = append(arr, arr1[1:]...)
 	Jmc = append(Jmc, Jmc[1:]...)
-	//
+
 	var jqs string //当前时间节气
 	ct := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
 	for i := 0; i < len(arr); i++ {
@@ -154,13 +155,23 @@ func (obj *GanZhi) Jq24() ([]string, string) {
 			break
 		}
 	}
-	//
+	return jqs
+}
+
+//两个年份的24节气之和
+func (obj *GanZhi) Jq24() []string {
+	year := obj.year
+	arr := jq24(year)
+	arr1 := jq24(year + 1)
+	arr = append(arr, arr1[1:]...)
+	Jmc = append(Jmc, Jmc[1:]...)
+
 	var tmp []string
 	for i := 0; i < len(arr); i++ {
 		x := Jmc[i] + ": " + arr[i].Format("2006-01-02 :15:04:05")
 		tmp = append(tmp, x)
 	}
-	return tmp[:len(tmp)-24], jqs
+	return tmp[:len(tmp)-24]
 }
 func (obj *GanZhi) Jq24T() []time.Time {
 	return GetJq24(obj.year)
@@ -421,11 +432,7 @@ func dGz(jdI int) (string, int) {
 	return dgz, gn
 }
 
-//##############################################
-//计算时干支
-//##############################################
-//传入日干数字 现代24小时制的时间数字 返回对应的干支
-//时干支
+//计算时干支 传入日干数字 现代24小时制的时间数字 返回对应的干支
 func GetHourGZ(gn, hour int) string {
 	h := h24Toh12(hour)
 	arr := hgzArr(gn)
