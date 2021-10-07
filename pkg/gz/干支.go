@@ -137,8 +137,8 @@ func (obj *GanZhi) JieQi() string {
 	year := obj.year
 	arr := jq24(year)
 	arr1 := jq24(year + 1)
-	arr = append(arr, arr1[1:]...)
-	Jmc = append(Jmc, Jmc[1:]...)
+	arr = append(arr, arr1[1:3]...)
+	Jmc = append(Jmc, Jmc[1:3]...)
 
 	var jqs string //当前时间节气
 	ct := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
@@ -158,13 +158,13 @@ func (obj *GanZhi) JieQi() string {
 	return jqs
 }
 
-//两个年份的24节气之和
+//24节气
 func (obj *GanZhi) Jq24() []string {
 	year := obj.year
 	arr := jq24(year)
 	arr1 := jq24(year + 1)
-	arr = append(arr, arr1[1:]...)
-	Jmc = append(Jmc, Jmc[1:]...)
+	arr = append(arr, arr1[1:3]...)
+	Jmc = append(Jmc, Jmc[1:3]...)
 
 	var tmp []string
 	for i := 0; i < len(arr); i++ {
