@@ -15,6 +15,7 @@ import (
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
+	"github.com/starainrt/astro/moon"
 )
 
 var (
@@ -54,6 +55,16 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 		DGZ:   dgz,
 		HGZ:   hgz,
 	}
+}
+
+//返回阴历月日　月相
+func (gz *GanZhi) GetLunar() (string, string) {
+	_, _, _, moons := basic.GetLunar(gz.year, gz.month, gz.day)
+	tx := time.Date(gz.year, time.Month(gz.month), gz.day, gz.hour, 0, 0, 0, time.Local)
+	moons = fmt.Sprintf("阴历:%s", moons)
+	phase := moon.Phase(tx)
+	yueXiang := fmt.Sprintf("月相:%5f", phase)
+	return moons, yueXiang
 }
 
 //年月日时纳因
