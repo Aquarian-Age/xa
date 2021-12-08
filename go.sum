@@ -240,8 +240,8 @@ github.com/soniakeys/unit v1.0.0/go.mod h1:z93o2tO/hJA2+Wr1Fozkt3jK4LyDwTfRCjyRF
 github.com/sony/gobreaker v0.4.1/go.mod h1:ZKptC7FHNvhBz7dN2LGjPVBz2sZJmc0/PkyDJOjmxWY=
 github.com/spf13/cobra v0.0.3/go.mod h1:1l0Ry5zgKvJasoi3XT1TypsSe7PqH0Sj9dhYf7v3XqQ=
 github.com/spf13/pflag v1.0.1/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
-github.com/starainrt/astro v0.0.0-20210304105239-5bd51a8aad8f h1:5MsYLA0yDF/CeGszA3cIeA9isFrr68NeR/C3399bipI=
-github.com/starainrt/astro v0.0.0-20210304105239-5bd51a8aad8f/go.mod h1:aouKnxcSoddULB1nHg3afX18i7JAQs7HgwsIHpzNeis=
+github.com/starainrt/astro v0.0.0-20210813064917-b5ede293514d h1:Ym0551LL/k1GNQV1FYHQ4tFkaQyoHLWL/ICCjtTJ6YM=
+github.com/starainrt/astro v0.0.0-20210813064917-b5ede293514d/go.mod h1:aouKnxcSoddULB1nHg3afX18i7JAQs7HgwsIHpzNeis=
 github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a/go.mod h1:qNTQ5P5JnDBl6z3cMAg/SywNDC5ABu5ApDIw6lUbRmI=
