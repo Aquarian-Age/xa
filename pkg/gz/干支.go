@@ -41,12 +41,12 @@ type GanZhi struct {
 //干支　精确到时
 func NewGanZhi(year, month, day, hour int) *GanZhi {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
-	lcb, lct := fixLiChun(year, cust)
+	lcb, _ := fixLiChun(year, cust)
 	yg, yz := yearGZ(year, lcb)
 	ygz := yg + yz
 	arrT, _ := getJieArr(year)
 	jieqib, index := findJie(cust, arrT)
-	mgz := monthGZ(cust, lcb, lct, jieqib, index)
+	mgz := monthGZ(cust, lcb, jieqib, index)
 	dgz, gn := DayGZ(year, month, day)
 	hgz := GetHourGZ(gn, hour)
 	return &GanZhi{
@@ -91,17 +91,8 @@ func yearGZ(year int, lcb bool) (string, string) {
 }
 
 //传入指定时间　立春布尔值　立春日时间戳　节气布尔值　节气索引值
-func monthGZ(cust time.Time, lcb bool, lct time.Time, jieqib bool, index int) string {
+func monthGZ(cust time.Time, lcb bool, jieqib bool, index int) string {
 	b := jieqib
-	cdt := cust.Sub(lct) //<0当前时间在立春日之前
-	custd := cust.Day()
-	lctd := lct.Day()
-	var dayB bool
-	if custd == lctd && cdt < 0 {
-		dayB = false //立春日　精确到小时比较　当前时间在立春之前
-	} else if custd == lctd && cdt >= 0 {
-		dayB = true //立春日　精确到小时比较　当前时间在立春之后
-	}
 	yg, _ := yearGZ(cust.Year(), lcb)
 	gzArr := mgzArr(yg)
 
@@ -117,20 +108,11 @@ func monthGZ(cust time.Time, lcb bool, lct time.Time, jieqib bool, index int) st
 			index += 12
 		}
 	} else if b == true {
-		if dayB == true {
-			index -= 1
-			if index < 0 {
-				index += 12
-			}
-		} else if dayB == false {
-			if index == 0 {
-				index = 11
-			} else if index == 1 {
-				index = 11
-			}
+		index -= 1
+		if index < 0 {
+			index += 12
 		}
 	}
-	//fmt.Printf("年干:%s index:%d 月干支:%s\n", yg, index, gzArr[index])
 	return gzArr[index]
 }
 
@@ -321,7 +303,9 @@ func YearGZ(year int, lcb bool) (string, string) {
 //立春修正
 func fixLiChun(year int, cust time.Time) (bool, time.Time) {
 	lct, _, _ := getJie12T(year)
-	lct = time.Date(lct.Year(), lct.Month(), lct.Day(), lct.Hour(), 0, 0, 0, time.Local)
+	//节气精确到日
+	lct = time.Date(lct.Year(), lct.Month(), lct.Day(), 0, 0, 0, 0, time.Local)
+	cust = time.Date(cust.Year(), cust.Month(), cust.Day(), 0, 0, 0, 0, time.Local)
 	var b bool
 	if cust.Equal(lct) || cust.After(lct) {
 		b = true //当前时间在立春之后
@@ -376,16 +360,7 @@ func GetMonthGZ(year, month, day, hour int) string {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
 	arrT, _ := getJieArr(year)
 	b, index := findJie(cust, arrT)
-	lcb, lct := fixLiChun(year, cust)
-	cdt := cust.Sub(lct) //<0当前时间在立春日之前
-	custd := cust.Day()
-	lctd := lct.Day()
-	var dayB bool
-	if custd == lctd && cdt < 0 {
-		dayB = false //立春日　精确到小时比较　当前时间在立春之前
-	} else if custd == lctd && cdt >= 0 {
-		dayB = true //立春日　精确到小时比较　当前时间在立春之后
-	}
+	lcb, _ := fixLiChun(year, cust)
 	yg, _ := yearGZ(year, lcb)
 	gzArr := mgzArr(yg)
 
@@ -401,20 +376,11 @@ func GetMonthGZ(year, month, day, hour int) string {
 			index += 12
 		}
 	} else if b == true {
-		if dayB == true {
-			index -= 1
-			if index < 0 {
-				index += 12
-			}
-		} else if dayB == false {
-			if index == 0 {
-				index = 11
-			} else if index == 1 {
-				index = 11
-			}
+		index -= 1
+		if index < 0 {
+			index += 12
 		}
 	}
-	//fmt.Printf("年干:%s index:%d 月干支:%s\n", yg, index, gzArr[index])
 	return gzArr[index]
 }
 

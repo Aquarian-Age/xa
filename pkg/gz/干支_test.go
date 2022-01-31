@@ -19,8 +19,10 @@ func TestNewGanZhi(t *testing.T) {
 	//y, m, d, h = 2033, 2, 3, 19  //壬子 癸丑 乙酉 丙戌
 	//y, m, d, h = 2033, 2, 3, 20  //癸丑 甲寅 乙酉 丙戌
 	//y, m, d, h = 2022, 2, 3, 0 //辛丑 辛丑 丁亥 庚子
-	y, m, d, h = 2022, 2, 4, 0 //辛丑 辛丑 戊子 壬子
+	//y, m, d, h = 2022, 2, 4, 0 //辛丑 辛丑 戊子 壬子
 	//y, m, d, h = 2022, 2, 4, 4//壬寅 壬寅 戊子 甲寅
+	y, m, d, h = 2022, 3, 4, 0 //壬寅 壬寅 丙辰 戊子
+	y, m, d, h = 2022, 3, 5, 0 //壬寅 癸卯 丁巳 庚子
 	gzo := NewGanZhi(y, m, d, h)
 	fmt.Println(gzo.YGZ, gzo.MGZ, gzo.DGZ, gzo.HGZ)
 
