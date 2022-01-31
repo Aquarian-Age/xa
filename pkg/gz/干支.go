@@ -19,9 +19,9 @@ import (
 )
 
 var (
-	Gan = []string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	Zhi = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
-	Jmc = []string{
+	Gans = []string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
+	Zhi  = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	Jmc  = []string{
 		"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰",
 		"春分", "清明", "谷雨", "立夏", "小满", "芒种",
 		"夏至", "小暑", "大暑", "立秋", "处暑", "白露",
@@ -40,10 +40,14 @@ type GanZhi struct {
 
 //干支　精确到时
 func NewGanZhi(year, month, day, hour int) *GanZhi {
-	ygz := GetYGZ(year, month, day, hour)
-	mgz := GetMonthGZ(year, month, day, hour)
-	dgz := GetDayGZ(year, month, day)
-	_, gn := DayGZ(year, month, day)
+	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
+	lcb, lct := fixLiChun(year, cust)
+	yg, yz := yearGZ(year, lcb)
+	ygz := yg + yz
+	arrT, _ := getJieArr(year)
+	jieqib, index := findJie(cust, arrT)
+	mgz := monthGZ(cust, lcb, lct, jieqib, index)
+	dgz, gn := DayGZ(year, month, day)
 	hgz := GetHourGZ(gn, hour)
 	return &GanZhi{
 		year:  year,
@@ -57,10 +61,83 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 	}
 }
 
+//传入阳历年 立春布尔值 返回年干 年支 年干支
+//年干支
+func yearGZ(year int, lcb bool) (string, string) {
+	var aliasGan, aliasZhi string
+	switch lcb {
+	case false: //日期在立春之前
+		//干
+		g := 1 + (year+6)%10
+		if g -= 1; g < 1 {
+			g += 10
+		}
+		aliasGan = Gans[g] //Gan
+		//支
+		z := 1 + (year+8)%12
+		if z -= 1; z < 1 {
+			z += 12
+		}
+		aliasZhi = Zhi[z]
+	case true: //日期在立春之后
+		yearg := 1 + (year+6)%10
+		yearz := 1 + (year+8)%12
+		aliasGan = Gans[yearg] //Gan
+		aliasZhi = Zhi[yearz]
+	}
+
+	return aliasGan, aliasZhi
+
+}
+
+//传入指定时间　立春布尔值　立春日时间戳　节气布尔值　节气索引值
+func monthGZ(cust time.Time, lcb bool, lct time.Time, jieqib bool, index int) string {
+	b := jieqib
+	cdt := cust.Sub(lct) //<0当前时间在立春日之前
+	custd := cust.Day()
+	lctd := lct.Day()
+	var dayB bool
+	if custd == lctd && cdt < 0 {
+		dayB = false //立春日　精确到小时比较　当前时间在立春之前
+	} else if custd == lctd && cdt >= 0 {
+		dayB = true //立春日　精确到小时比较　当前时间在立春之后
+	}
+	yg, _ := yearGZ(cust.Year(), lcb)
+	gzArr := mgzArr(yg)
+
+	if (b == false && index == 0) && lcb == false { //在本年立春之前
+		index -= 1
+		if index < 0 {
+			index += 12
+		}
+		index -= 1
+	} else if (b == false && index == 0) && lcb == true {
+		index -= 1
+		if index < 0 {
+			index += 12
+		}
+	} else if b == true {
+		if dayB == true {
+			index -= 1
+			if index < 0 {
+				index += 12
+			}
+		} else if dayB == false {
+			if index == 0 {
+				index = 11
+			} else if index == 1 {
+				index = 11
+			}
+		}
+	}
+	//fmt.Printf("年干:%s index:%d 月干支:%s\n", yg, index, gzArr[index])
+	return gzArr[index]
+}
+
 //返回阴历月日　月相
-func (gz *GanZhi) GetLunar() (string, string) {
-	_, _, _, moons := basic.GetLunar(gz.year, gz.month, gz.day)
-	tx := time.Date(gz.year, time.Month(gz.month), gz.day, gz.hour, 0, 0, 0, time.Local)
+func (obj *GanZhi) GetLunar() (string, string) {
+	_, _, _, moons := calendar.ChineseLunar(time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)) //basic.GetLunar(obj.year, obj.month, obj.day)
+	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
 	moons = fmt.Sprintf("阴历:%s", moons)
 	phase := moon.Phase(tx)
 	yueXiang := fmt.Sprintf("月相:%5f", phase)
@@ -209,7 +286,7 @@ func jq24(year int) []time.Time {
 //年干支
 func GetYGZ(year, month, day, hour int) string {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local) //精确到时
-	lcb := fixLiChun(year, cust)
+	lcb, _ := fixLiChun(year, cust)
 	g, z := YearGZ(year, lcb)
 	return g + z
 }
@@ -225,7 +302,7 @@ func YearGZ(year int, lcb bool) (string, string) {
 		if g -= 1; g < 1 {
 			g += 10
 		}
-		aliasGan = Gan[g]
+		aliasGan = Gans[g]
 		//支
 		z := 1 + (year+8)%12
 		if z -= 1; z < 1 {
@@ -235,14 +312,14 @@ func YearGZ(year int, lcb bool) (string, string) {
 	case true: //日期在立春之后
 		yearg := 1 + (year+6)%10
 		yearz := 1 + (year+8)%12
-		aliasGan = Gan[yearg]
+		aliasGan = Gans[yearg]
 		aliasZhi = Zhi[yearz]
 	}
 	return aliasGan, aliasZhi
 }
 
 //立春修正
-func fixLiChun(year int, cust time.Time) bool {
+func fixLiChun(year int, cust time.Time) (bool, time.Time) {
 	lct, _, _ := getJie12T(year)
 	lct = time.Date(lct.Year(), lct.Month(), lct.Day(), lct.Hour(), 0, 0, 0, time.Local)
 	var b bool
@@ -251,7 +328,7 @@ func fixLiChun(year int, cust time.Time) bool {
 	} else {
 		b = false //当前时间在立春之前
 	}
-	return b
+	return b, lct
 }
 
 //传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
@@ -293,20 +370,25 @@ func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
 	return lct, jieArr, zqArr
 }
 
-//月干支
+// GetMonthGZ 月干支
+//以12节气定月干支 传入阳历时间 返回月干支
 func GetMonthGZ(year, month, day, hour int) string {
-	return MonthGZ(year, month, day, hour)
-}
-
-//传入阳历时间 返回月干支
-//以12节气定月干支
-func MonthGZ(year, month, day, hour int) string {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
 	arrT, _ := getJieArr(year)
 	b, index := findJie(cust, arrT)
-	lcb := fixLiChun(year, cust)
-	yg, _ := YearGZ(year, lcb)
+	lcb, lct := fixLiChun(year, cust)
+	cdt := cust.Sub(lct) //<0当前时间在立春日之前
+	custd := cust.Day()
+	lctd := lct.Day()
+	var dayB bool
+	if custd == lctd && cdt < 0 {
+		dayB = false //立春日　精确到小时比较　当前时间在立春之前
+	} else if custd == lctd && cdt >= 0 {
+		dayB = true //立春日　精确到小时比较　当前时间在立春之后
+	}
+	yg, _ := yearGZ(year, lcb)
 	gzArr := mgzArr(yg)
+
 	if (b == false && index == 0) && lcb == false { //在本年立春之前
 		index -= 1
 		if index < 0 {
@@ -319,9 +401,17 @@ func MonthGZ(year, month, day, hour int) string {
 			index += 12
 		}
 	} else if b == true {
-		index -= 1
-		if index < 0 {
-			index += 12
+		if dayB == true {
+			index -= 1
+			if index < 0 {
+				index += 12
+			}
+		} else if dayB == false {
+			if index == 0 {
+				index = 11
+			} else if index == 1 {
+				index = 11
+			}
 		}
 	}
 	//fmt.Printf("年干:%s index:%d 月干支:%s\n", yg, index, gzArr[index])
@@ -437,7 +527,7 @@ func dGz(jdI int) (string, int) {
 	}
 	z := 1 + +(jdI%60+1)%12 //支
 	//g 日干数字
-	daygM := Gan[gn]
+	daygM := Gans[gn]
 	dayzM := Zhi[z]
 	dgz := daygM + dayzM
 	return dgz, gn

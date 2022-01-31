@@ -13,6 +13,30 @@ import (
 	"time"
 )
 
+func TestNewGanZhi(t *testing.T) {
+	y, m, d, h := 2021, 2, 3, 21 //庚子 己丑 壬午 辛亥
+	//y, m, d, h = 2021, 2, 3, 22  //辛丑 庚寅 壬午 辛亥
+	//y, m, d, h = 2033, 2, 3, 19  //壬子 癸丑 乙酉 丙戌
+	//y, m, d, h = 2033, 2, 3, 20  //癸丑 甲寅 乙酉 丙戌
+	//y, m, d, h = 2022, 2, 3, 0 //辛丑 辛丑 丁亥 庚子
+	y, m, d, h = 2022, 2, 4, 0 //辛丑 辛丑 戊子 壬子
+	//y, m, d, h = 2022, 2, 4, 4//壬寅 壬寅 戊子 甲寅
+	gzo := NewGanZhi(y, m, d, h)
+	fmt.Println(gzo.YGZ, gzo.MGZ, gzo.DGZ, gzo.HGZ)
+
+	//cust := time.Date(y, time.Month(m), d, h, 0, 0, 0, time.Local)
+	//lcb, lct := fixLiChun(y, cust)
+	//yg, yz := yearGZ(y, lcb)
+	//ygz := yg + yz
+	//arrT, _ := getJieArr(y)
+	//jieqib, index := findJie(cust, arrT)
+	//mgz := monthGZ(cust, lcb, lct, jieqib, index)
+	//dgz, gn := DayGZ(y, m, d)
+	//hgz := GetHourGZ(gn, h)
+	//fmt.Println(ygz, mgz, dgz, hgz)
+
+}
+
 //立春布尔值
 func TestFixLiChun(t *testing.T) {
 	year := 2021
@@ -21,7 +45,7 @@ func TestFixLiChun(t *testing.T) {
 	cust = time.Date(year, time.Month(2), 3, 21, 0, 0, 0, time.Local)
 	cust = time.Date(year, time.Month(2), 3, 19, 0, 0, 0, time.Local)
 	cust = time.Date(year, time.Month(2), 3, 20, 0, 0, 0, time.Local)
-	lcb := fixLiChun(year, cust)
+	lcb, _ := fixLiChun(year, cust)
 	fmt.Println(lcb)
 }
 
@@ -116,7 +140,7 @@ func TestMonthGZ(t *testing.T) {
 	wantMgzArr := []string{"戊子", "己丑", "己丑", "庚寅", "庚寅", "辛卯", "辛卯", "壬辰", "壬辰", "癸巳", "癸巳", "甲午", "甲午", "乙未", "乙未", "丙申", "丙申", "丁酉", "丁酉", "戊戌", "戊戌", "己亥", "己亥", "庚子", "庚子", "辛丑", "辛丑", "壬寅", "辛巳", "辛巳", "壬午", "壬子", "癸丑", "癸亥", "甲子", "甲子", "乙丑"}
 	for i := 0; i < len(arrT); i++ {
 		tx := arrT[i]
-		gz := MonthGZ(tx.y, tx.m, tx.d, tx.h)
+		gz := GetMonthGZ(tx.y, tx.m, tx.d, tx.h)
 		if !strings.EqualFold(gz, wantMgzArr[i]) {
 			t.Errorf("func MonthGZ(%d %d %d %d)=%s want:%s\n", tx.y, tx.m, tx.d, tx.h, gz, wantMgzArr[i])
 		}
