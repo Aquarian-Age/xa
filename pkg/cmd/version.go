@@ -14,15 +14,15 @@ import (
 var (
 	Version   = ""
 	GoVersion = ""
-	GitCommit = ""
+	Mail      = ""
 	BuildTime = ""
 )
 
 //输出版本信息
 func PrintVersion() {
 	fmt.Printf("Version: %s\n", Version)
-	fmt.Printf("Go Version: %s\n", GoVersion)
-	fmt.Printf("Git Commit: %s\n", GitCommit)
+	fmt.Printf("%s\n", GoVersion)
+	fmt.Printf("Mail: %s\n", Mail)
 	fmt.Printf("Build Time: %s\n", BuildTime)
 	os.Exit(0)
 }

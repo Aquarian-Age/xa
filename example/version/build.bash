@@ -7,9 +7,8 @@
 #
 
 version="1.0.0"
-v=$(go version)
-gov=${v:2-20}
-commit=$(git rev-parse HEAD)
+gov=$(go version)
+mail="aaa@bbb"
 time=$(date +"%Y-%m-%d %H:%M:%S")
 path="github.com/Aquarian-Age/xa/pkg/cmd"
 
@@ -17,7 +16,7 @@ flags="
 -X $path.Version=$version
 -X '$path.GoVersion=$gov'
 -X '$path.BuildTime=$time'
--X $path.GitCommit=$commit
+-X $path.Mail=$mail
 -s -w"
 
 go build -ldflags "$flags" -o example .
