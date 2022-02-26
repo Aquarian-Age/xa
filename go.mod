@@ -1,6 +1,6 @@
 module github.com/Aquarian-Age/xa
 
-go 1.16
+go 1.17
 
 require (
 	4d63.com/tz v1.2.0
@@ -9,5 +9,4 @@ require (
 	github.com/gonoto/notosans v0.0.0-20200703162533-d78fef05ce80
 	github.com/soniakeys/meeus/v3 v3.0.1
 	github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
-//github.com/starainrt/astro v0.0.0-20210813064917-b5ede293514d
 )

@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-//黄黑 传(月干支 日干支 或 日干支 时辰干支)
+// HuangHei 黄黑 传(月干支 日干支 或 日干支 时辰干支)
 func HuangHei(gz, subgz string) string {
 	arr := []string{"青龙", "金匮", "司命", "明堂", "天德", "玉堂", "天刑", "白虎", "天牢", "朱雀", "玄武", "勾陈"}
 	//k:月建 v:对应arr 如正月建寅 子日青龙 亥日勾陈

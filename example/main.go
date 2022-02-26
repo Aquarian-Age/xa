@@ -35,7 +35,7 @@ func main() {
 	fmt.Printf("流年:%s\n%s\n", lns, lns1)
 	//
 	jcDay := obj.RiJianChu()
-	hhDay := obj.RiHuangHei()
+	hhDay := obj.RiHuangHei1()
 	fmt.Printf("%s月%s日　建除:%s 黄黑:%s\n", obj.MGZ, obj.DGZ, jcDay, hhDay)
 	//
 	wn := int(t.Weekday())

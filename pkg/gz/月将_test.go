@@ -45,8 +45,11 @@ func TestGetYueJiang(t *testing.T) {
 	_, zqt := getJieArr(2021)
 	for i := 0; i < len(zqt); i++ {
 		obj := NewGanZhi(zqt[i].Year(), int(zqt[i].Month()), zqt[i].Day(), zqt[i].Hour())
-		yj := GetYueJiang(zqt[i].Year(), int(zqt[i].Month()), zqt[i].Day(), pub.GetZhiS(obj.MGZ))
-		if !strings.EqualFold(yj.YueJiang, want[i].yj) && strings.EqualFold(yj.Name, want[i].name) && strings.EqualFold(yj.T, want[i].ts) {
+		//yj := GetYueJiang(zqt[i].Year(), int(zqt[i].Month()), zqt[i].Day(), pub.GetZhiS(obj.MGZ))
+		yj := obj.YueJiangStruct()
+		if !strings.EqualFold(yj.Zhi, want[i].yj) &&
+			strings.EqualFold(yj.Name, want[i].name) &&
+			strings.EqualFold(yj.ZhongQiT, want[i].ts) {
 			t.Errorf("func GetYueJiang(%d %d %d %s)=%v want %v\n",
 				zqt[i].Year(), int(zqt[i].Month()), zqt[i].Day(), pub.GetZhiS(obj.MGZ), yj, want[i])
 		}

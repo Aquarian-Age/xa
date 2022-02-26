@@ -7,44 +7,55 @@
 package gz
 
 import (
+	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 	"time"
 )
 
-//月将(太阳过宫)
+// YJ 月将(太阳过宫)
 type YJ struct {
-	YueJiang string `json:"yue_jiang"`
-	Name     string `json:"name"`
-	T        string `json:"t"`
+	Zhi         string `json:"yue_jiang"`
+	Name        string `json:"name"`
+	ZhongQiT    string `json:"t"`
+	ZhongQiName string `json:"zhong_qi_name"`
 }
 
-func GetYueJiang(y, m, d int, mz string) *YJ {
-	yj, name, t := yueJiang(y, m, d, mz)
+func NewYueJiang(y, m, d int, mgz string) *YJ {
+	mz := pub.GetZhiS(mgz)
+	yj, name, t, zqName := yueJiang(y, m, d, mz)
 	ts := t.Format("2006-01-02")
 	return &YJ{
 		yj,
 		name,
 		ts,
+		zqName,
 	}
 }
 
-//传入阳历时间(年　月　日)　月支 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳
-func yueJiang(year, month, day int, mgz string) (string, string, time.Time) {
+//传入阳历时间(年　月　日)　月干支
+//返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
+func yueJiang(year, month, day int, zhis string) (string, string, time.Time, string) {
 	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到日
 	_, _, zqArrT := getJie12T(year)
+
 	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子"}             //月支从上年冬月开始
 	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}             //天月将的地支 从子月到子月
 	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"} //从子月到子月
-	var zqt time.Time                                                                            //中气时间戳　精确到日
-	var yjZhi string                                                                             //月将的地支
-	var yjName string                                                                            //神将
+
+	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"} //中气
+	var zqt time.Time                                                                                //中气时间戳　精确到日
+	var yjZhi string                                                                                 //月将的地支
+	var shenJiangName, zhongQiName string                                                            //神将名称,中气名称
 	for i := 1; i < len(zhi); i++ {
-		if strings.EqualFold(mgz, zhi[i]) {
+		if strings.EqualFold(zhis, zhi[i]) {
 			zqt = zqArrT[i]
 			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
+			zhongQiName = zqName[i]
 			if cust.Equal(zqt) || cust.After(zqt) {
 				yjZhi = tyj[i]
-				yjName = sj[i]
+				shenJiangName = sj[i]
+				//fmt.Printf("zqt中气:%v\n", zqt)
+				//fmt.Printf("月地支:%s i=:%d 月将地支:%s 神将:%s\n", zhi[i], i, yjZhi, shenJiangName)
 				break
 			} else {
 				index := i - 1
@@ -52,11 +63,15 @@ func yueJiang(year, month, day int, mgz string) (string, string, time.Time) {
 					index = 13
 				}
 				yjZhi = tyj[index]
-				yjName = sj[index]
+				shenJiangName = sj[index]
 				zqt = zqArrT[index]
+				zhongQiName = zqName[index]
+				//fmt.Printf("zqt中气:%v\n", zqt)
+				//fmt.Printf("月地支:%s index:%d 月将地支:%s 神将:%s\n", zhi[index], index, yjZhi, shenJiangName)
 				break
 			}
 		}
 	}
-	return yjZhi, yjName, zqt
+
+	return yjZhi, shenJiangName, zqt, zhongQiName
 }

@@ -116,16 +116,28 @@ func monthGZ(cust time.Time, lcb bool, jieqib bool, index int) string {
 	return gzArr[index]
 }
 
-//返回阴历月日　月相
+// GetLunar 返回阴历月日　月相
 func (obj *GanZhi) GetLunar() (string, string) {
-	_, _, _, moons := calendar.ChineseLunar(time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)) //basic.GetLunar(obj.year, obj.month, obj.day)
+	_, _, _, moons := calendar.Lunar(obj.year, obj.month, obj.day)
 	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
-	moons = fmt.Sprintf("阴历:%s", moons)
+	moons = fmt.Sprintf("阴历: %s", moons)
 	phase := moon.Phase(tx)
-	yueXiang := fmt.Sprintf("月相:%5f", phase)
+	yueXiang := fmt.Sprintf("月相: %5f", phase)
 	return moons, yueXiang
 }
 
+// GetLunar 返回阴历月日　月相
+//func (obj *GanZhi) GetLunar() (string, string) {
+//	//_, _, _, moons := basic.GetLunar(obj.year, obj.month, obj.day)
+//	cst := time.FixedZone("CST", 8*3600)
+//	date := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, cst)
+//	_, _, _, moons := calendar.ChineseLunar(date)
+//	//tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
+//	moons = fmt.Sprintf("阴历: %s", moons)
+//	phase := moon.Phase(date)
+//	yueXiang := fmt.Sprintf("月相: %5f", phase)
+//	return moons, yueXiang
+//}
 //年月日时纳因
 func (obj *GanZhi) GetNaYin() string {
 	return GetNaYin(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
@@ -141,33 +153,39 @@ func (obj *GanZhi) JianChu() string {
 	return JianChu(obj.MGZ, obj.DGZ)
 }
 
-//日黄黑
-func (obj *GanZhi) RiHuangHei() string {
-	return GetRiHuangHei(obj.MGZ, obj.DGZ)
-}
+////日黄黑
+//func (obj *GanZhi) RiHuangHei() string {
+//	return GetRiHuangHei(obj.MGZ, obj.DGZ)
+//}
 
-//日黄黑
+// RiHuangHei1 日黄黑
 func (obj *GanZhi) RiHuangHei1() string {
 	return HuangHei(obj.MGZ, obj.DGZ)
 }
 
-//时黄黑
-func (obj *GanZhi) ShiHuangHei() string {
-	return GetRiHuangHei(obj.DGZ, obj.HGZ)
-}
+////时黄黑
+//func (obj *GanZhi) ShiHuangHei() string {
+//	return GetRiHuangHei(obj.DGZ, obj.HGZ)
+//}
 
-//时黄黑
+// ShiHuangHei1 时黄黑
 func (obj *GanZhi) ShiHuangHei1() string {
 	return HuangHei(obj.DGZ, obj.HGZ)
 }
 
-//日禽
+// RiQin 日禽
 func (obj *GanZhi) RiQin(weekN int) string {
 	return GetRiQin(weekN, obj.DGZ)
 }
 
-//月将 月将地支 神将名称 月将所对应的中气时间戳
-func (obj *GanZhi) YueJiang() (string, string, time.Time) {
+// YueJiangStruct 月将
+func (obj GanZhi) YueJiangStruct() *YJ {
+	return NewYueJiang(obj.year, obj.month, obj.day, obj.MGZ)
+}
+
+// YueJiang 月将
+//返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
+func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
 	zhis := pub.GetZhiS(obj.MGZ)
 	return yueJiang(obj.year, obj.month, obj.day, zhis)
 }

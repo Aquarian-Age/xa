@@ -11,7 +11,12 @@ import (
 	"strings"
 )
 
-//日建除
+// JianChuDay 日建除另一个算法
+func (obj *GanZhi) JianChuDay() string {
+	return JianChu(obj.MGZ, obj.DGZ)
+}
+
+// JianChu 日建除
 func JianChu(mgz, dgz string) string {
 	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	mz := pub.GetZhiS(mgz)
@@ -56,7 +61,7 @@ func JianChu(mgz, dgz string) string {
 	return s
 }
 
-//日建除
+// GetRiJianChu 日建除
 func GetRiJianChu(mgz, dgz string) string {
 	mjc := jcMonthMap(mgz)
 	return jcToday(dgz, mjc)
