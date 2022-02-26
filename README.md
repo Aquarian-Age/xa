@@ -6,7 +6,7 @@
 
 ### 中国农历
 
--[简单农历](https://github.com/Aquarian-Age/ccal/releases/tag/ccal)
+- [简单农历](https://github.com/Aquarian-Age/ccal/releases/tag/ccal)
 
 - openSuSE
 ```bash
