@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Aquarian-Age/xa/pkg/gz"
+	"github.com/Aquarian-Age/xa/pkg/jingwei"
 	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
 	"github.com/ying32/govcl/vcl/rtl"
@@ -90,6 +91,7 @@ func PrintVersion() {
 	os.Exit(0)
 }
 
+// go build -o ChineseLunarCalendar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.0t' -X 'main.GoVersion=Go Version: go1.17.6' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
 func main() {
 	flag.BoolVar(&printVersion, "version", false, "print program build version")
 	flag.Parse()
@@ -112,7 +114,6 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.initLabels(sender)
 	f.initedit(sender)
 
-	//t := time.Now().Local()
 	f.showLabels(T)
 	f.OnBtnClicked(sender)
 	f.about()
@@ -166,7 +167,6 @@ func (f *TForm1) initLabels(sender vcl.IObject) {
 	for i := 0; i < len(labels); i++ {
 		labels[i] = vcl.NewLabel(f)
 		labels[i].SetParent(f)
-		//labels[i].SetAlignment(types.AsrCenter)
 
 		gzLabels[i] = vcl.NewLabel(f)
 		gzLabels[i].SetParent(f)
@@ -174,7 +174,6 @@ func (f *TForm1) initLabels(sender vcl.IObject) {
 
 		moonLabels[i] = vcl.NewLabel(f)
 		moonLabels[i].SetParent(f)
-		//moonLabels[i].SetAlign(types.AlNone)
 		moonLabels[i].SetColor(colors.ClWhite)
 	}
 	f.labels = labels
@@ -234,7 +233,7 @@ func (f *TForm1) btnaClick(sender vcl.IObject) {
 	}
 	t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
 	f.showLabels(t)
-	//f.showBtnClicked(sender)
+
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, 1)
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
@@ -250,7 +249,7 @@ func (f *TForm1) btnbClick(sender vcl.IObject) {
 	}
 	t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
 	f.showLabels(t)
-	//f.showBtnClicked(sender)
+
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, 1)
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
@@ -259,8 +258,6 @@ func (f *TForm1) btnbClick(sender vcl.IObject) {
 }
 
 func (f *TForm1) btncClick(sender vcl.IObject) {
-	//t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
-	//t := time.Now().Local()
 	f.showLabels(T)
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, T.Day())
 	f.pubLabel.Refresh()
@@ -272,7 +269,6 @@ func (f *TForm1) btncClick(sender vcl.IObject) {
 func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	x := vcl.AsLabel(sender)
 	tl := time.Date(year, time.Month(monthNow), x.Tag(), 0, 0, 0, 0, time.Local)
-	//fmt.Println(tl.String()[:19])
 
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, x.Tag())
 	gzo := gz.NewGanZhi(year, monthNow, x.Tag(), 0)
@@ -300,8 +296,8 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	f.pubLabel.SetCaption(s)
 }
 func jingweix(jing, wei string) string {
-	j, w := GetJingWei(jing, wei)
-	so := GetSun(j, w)
+	j, w := jingwei.GetJingWei(jing, wei)
+	so := jingwei.GetSun(j, w)
 	s1 := `日出: ` + so.ShengQi
 	s2 := `日落: ` + so.LuoXia
 	s3 := `中天: ` + so.ZhongTian
@@ -324,14 +320,6 @@ func jingweix(jing, wei string) string {
 // 		lastWang, shuo, wang, shangXian, xiaXian, nextWang)
 // 	return s
 // }
-
-//func (f *TForm1) showBtnClicked(sender vcl.IObject) {
-//	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, 1)
-//	f.pubLabel.Refresh()
-//	f.pubLabel.SetLeft(290)
-//	f.pubLabel.SetTop(10)
-//	f.pubLabel.SetCaption(years)
-//}
 
 func (f *TForm1) showLabels(t time.Time) {
 	monthNow = int(t.Month())
@@ -359,8 +347,6 @@ func (f *TForm1) showLabels(t time.Time) {
 
 	t = time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.Local)
 	weeknow := int(t.Weekday())
-	//fmt.Println(t.String()[:20])
-
 	jqt(t)
 
 	var xday []int32
@@ -395,7 +381,7 @@ func (f *TForm1) showLabels(t time.Time) {
 					labels[i].Font().SetColor(colors.ClBlack)
 					labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
 				}
-				//labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
@@ -405,7 +391,6 @@ func (f *TForm1) showLabels(t time.Time) {
 				gzLabels[i].SetTop(labels[i].Top() + 25)
 				gzLabels[i].SetCaption(dgz)
 
-				//tx := time.Date(year, time.Month(monthNow), int(xday[i]), 0, 0, 0, 0, time.Local)
 				_, moonday, _, _ := calendar.ChineseLunar(tx)
 				moon := dayMap[moonday]
 				moonLabels[i].SetLeft(Lefts[i])
