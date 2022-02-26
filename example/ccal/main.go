@@ -291,7 +291,7 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 
 	jing := f.sheng.Text()
 	wei := f.shi.Text()
-	jws := jingweix(jing, wei)
+	jws := jingweix(jing, wei, tl)
 	s += jws
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
@@ -300,9 +300,9 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	f.pubLabel.Font().SetSize(12)
 	f.pubLabel.SetCaption(s)
 }
-func jingweix(jing, wei string) string {
+func jingweix(jing, wei string, tx time.Time) string {
 	j, w := jingwei.GetJingWei(jing, wei)
-	so := jingwei.GetSun(j, w)
+	so := jingwei.GetSun(j, w, tx)
 	s1 := `日出: ` + so.ShengQi
 	s2 := `日落: ` + so.LuoXia
 	s3 := `中天: ` + so.ZhongTian

@@ -3,7 +3,7 @@ module liangzi.local/ccal
 go 1.17
 
 require (
-	github.com/Aquarian-Age/xa v1.0.6-0.20220226015652-05301b761473
+	github.com/Aquarian-Age/xa v1.0.6-0.20220226111945-80d3f79eaa94
 	github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
 	github.com/ying32/govcl v2.2.0+incompatible
 
