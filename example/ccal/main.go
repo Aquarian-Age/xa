@@ -109,6 +109,7 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.SetHeight(550)
 	f.ScreenCenter()
 	f.SetCaption("简易农历")
+	f.SetBorderStyle(types.BsSingle) //固定窗口大小
 	f.SetShowHint(true)
 	f.Title()
 	f.initLabels(sender)
@@ -174,7 +175,12 @@ func (f *TForm1) initLabels(sender vcl.IObject) {
 
 		moonLabels[i] = vcl.NewLabel(f)
 		moonLabels[i].SetParent(f)
-		moonLabels[i].SetColor(colors.ClWhite)
+		moonLabels[i].SetHeight(23)
+		moonLabels[i].SetWidth(40)
+		moonLabels[i].Font().SetSize(11)
+		moonLabels[i].SetAutoSize(false)
+		moonLabels[i].SetWordWrap(false)
+		//moonLabels[i].SetColor(colors.ClWhite)
 	}
 	f.labels = labels
 	f.gzLabels = gzLabels
@@ -233,7 +239,6 @@ func (f *TForm1) btnaClick(sender vcl.IObject) {
 	}
 	t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
 	f.showLabels(t)
-
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, 1)
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
@@ -361,9 +366,13 @@ func (f *TForm1) showLabels(t time.Time) {
 	gzLabels := f.gzLabels
 	moonLabels := f.moonLabels
 	for i := 0; i < len(labels); i++ {
-		f.labels[i].SetCaption(``)
-		f.gzLabels[i].SetCaption(``)
-		f.moonLabels[i].SetCaption(``)
+		labels[i].SetCaption(``)
+		gzLabels[i].SetCaption(``)
+		//moonLabels[i].SetCaption(``)
+		moonLabels[i].Free()
+		moonLabels[i] = vcl.NewLabel(f)
+		moonLabels[i].SetParent(f)
+
 		//
 		if i >= 0 && i <= 6 {
 			if i >= weeknow {
@@ -379,9 +388,8 @@ func (f *TForm1) showLabels(t time.Time) {
 				} else {
 					labels[i].Font().SetSize(12)
 					labels[i].Font().SetColor(colors.ClBlack)
-					labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+					labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 				}
-
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
@@ -391,14 +399,16 @@ func (f *TForm1) showLabels(t time.Time) {
 				gzLabels[i].SetTop(labels[i].Top() + 25)
 				gzLabels[i].SetCaption(dgz)
 
-				_, moonday, _, _ := calendar.ChineseLunar(tx)
+				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 				moon := dayMap[moonday]
-				moonLabels[i].SetLeft(Lefts[i])
-				moonLabels[i].SetWidth(10)
+				moonLabels[i].SetLeft(Lefts[i] + 3)
 				moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 				moonLabels[i].SetCaption(moon)
+				if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+					moonLabels[i].Font().SetColor(colors.ClOrange)
+					moonLabels[i].SetHint(info)
+				}
 			}
-
 		}
 		if i >= 7 && i <= 13 {
 			tx := time.Date(year, time.Month(monthNow), int(xday[i]), 0, 0, 0, 0, time.Local)
@@ -414,7 +424,7 @@ func (f *TForm1) showLabels(t time.Time) {
 			} else {
 				labels[i].Font().SetSize(12)
 				labels[i].Font().SetColor(colors.ClBlack)
-				labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+				labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 			}
 			labels[i].SetOnClick(f.onLabelxClick)
 
@@ -424,12 +434,15 @@ func (f *TForm1) showLabels(t time.Time) {
 			gzLabels[i].SetTop(labels[i].Top() + 25)
 			gzLabels[i].SetCaption(dgz)
 
-			_, moonday, _, _ := calendar.ChineseLunar(tx)
+			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 			moon := dayMap[moonday]
-			moonLabels[i].SetLeft(Lefts[i-7])
-			moonLabels[i].SetWidth(10)
+			moonLabels[i].SetLeft(Lefts[i-7] + 3)
 			moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 			moonLabels[i].SetCaption(moon)
+			if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+				moonLabels[i].Font().SetColor(colors.ClOrange)
+				moonLabels[i].SetHint(info)
+			}
 		}
 		if i >= 14 && i <= 20 {
 			tx := time.Date(year, time.Month(monthNow), int(xday[i]), 0, 0, 0, 0, time.Local)
@@ -444,7 +457,7 @@ func (f *TForm1) showLabels(t time.Time) {
 			} else {
 				labels[i].Font().SetSize(12)
 				labels[i].Font().SetColor(colors.ClBlack)
-				labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+				labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 			}
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
@@ -455,12 +468,15 @@ func (f *TForm1) showLabels(t time.Time) {
 			gzLabels[i].SetTop(labels[i].Top() + 25)
 			gzLabels[i].SetCaption(dgz)
 
-			_, moonday, _, _ := calendar.ChineseLunar(tx)
+			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 			moon := dayMap[moonday]
-			moonLabels[i].SetLeft(Lefts[i-14])
-			moonLabels[i].SetWidth(10)
+			moonLabels[i].SetLeft(Lefts[i-14] + 3)
 			moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 			moonLabels[i].SetCaption(moon)
+			if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+				moonLabels[i].Font().SetColor(colors.ClOrange)
+				moonLabels[i].SetHint(info)
+			}
 		}
 		if i >= 21 && i <= 27 {
 			tx := time.Date(year, time.Month(monthNow), int(xday[i]), 0, 0, 0, 0, time.Local)
@@ -475,7 +491,7 @@ func (f *TForm1) showLabels(t time.Time) {
 			} else {
 				labels[i].Font().SetSize(12)
 				labels[i].Font().SetColor(colors.ClBlack)
-				labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+				labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 			}
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
@@ -486,12 +502,15 @@ func (f *TForm1) showLabels(t time.Time) {
 			gzLabels[i].SetTop(labels[i].Top() + 25)
 			gzLabels[i].SetCaption(dgz)
 
-			_, moonday, _, _ := calendar.ChineseLunar(tx)
+			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 			moon := dayMap[moonday]
-			moonLabels[i].SetLeft(Lefts[i-21])
-			moonLabels[i].SetWidth(10)
+			moonLabels[i].SetLeft(Lefts[i-21] + 3)
 			moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 			moonLabels[i].SetCaption(moon)
+			if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+				moonLabels[i].Font().SetColor(colors.ClOrange)
+				moonLabels[i].SetHint(info)
+			}
 		}
 		if i >= 28 && i <= 34 {
 			if len(xday) > 34 {
@@ -507,7 +526,7 @@ func (f *TForm1) showLabels(t time.Time) {
 				} else {
 					labels[i].Font().SetSize(12)
 					labels[i].Font().SetColor(colors.ClBlack)
-					labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+					labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 				}
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
@@ -518,12 +537,15 @@ func (f *TForm1) showLabels(t time.Time) {
 				gzLabels[i].SetTop(labels[i].Top() + 25)
 				gzLabels[i].SetCaption(dgz)
 
-				_, moonday, _, _ := calendar.ChineseLunar(tx)
+				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 				moon := dayMap[moonday]
-				moonLabels[i].SetLeft(Lefts[i-28])
-				moonLabels[i].SetWidth(10)
+				moonLabels[i].SetLeft(Lefts[i-28] + 3)
 				moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 				moonLabels[i].SetCaption(moon)
+				if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+					moonLabels[i].Font().SetColor(colors.ClOrange)
+					moonLabels[i].SetHint(info)
+				}
 			} else {
 				if i < len(xday) {
 					tx := time.Date(year, time.Month(monthNow), int(xday[i]), 0, 0, 0, 0, time.Local)
@@ -538,7 +560,7 @@ func (f *TForm1) showLabels(t time.Time) {
 					} else {
 						labels[i].Font().SetSize(12)
 						labels[i].Font().SetColor(colors.ClBlack)
-						labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+						labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 					}
 					labels[i].SetTag(int(xday[i]))
 					labels[i].SetOnClick(f.onLabelxClick)
@@ -549,12 +571,15 @@ func (f *TForm1) showLabels(t time.Time) {
 					gzLabels[i].SetTop(labels[i].Top() + 25)
 					gzLabels[i].SetCaption(dgz)
 
-					_, moonday, _, _ := calendar.ChineseLunar(tx)
+					_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 					moon := dayMap[moonday]
-					moonLabels[i].SetLeft(Lefts[i-28])
-					moonLabels[i].SetWidth(10)
+					moonLabels[i].SetLeft(Lefts[i-28] + 3)
 					moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 					moonLabels[i].SetCaption(moon)
+					if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+						moonLabels[i].Font().SetColor(colors.ClOrange)
+						moonLabels[i].SetHint(info)
+					}
 				}
 			}
 		}
@@ -572,7 +597,7 @@ func (f *TForm1) showLabels(t time.Time) {
 				} else {
 					labels[i].Font().SetSize(12)
 					labels[i].Font().SetColor(colors.ClBlack)
-					labels[i].SetCaption(fmt.Sprintf("  %d", xday[i]))
+					labels[i].SetCaption(fmt.Sprintf(" %d", xday[i]))
 				}
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
@@ -583,12 +608,15 @@ func (f *TForm1) showLabels(t time.Time) {
 				gzLabels[i].SetTop(labels[i].Top() + 25)
 				gzLabels[i].SetCaption(dgz)
 
-				_, moonday, _, _ := calendar.ChineseLunar(tx)
+				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
 				moon := dayMap[moonday]
-				moonLabels[i].SetLeft(Lefts[i-35])
-				moonLabels[i].SetWidth(10)
+				moonLabels[i].SetLeft(Lefts[i-35] + 3)
 				moonLabels[i].SetTop(gzLabels[i].Top() + 25)
 				moonLabels[i].SetCaption(moon)
+				if info, ok := zongJiaoJieRiMap[aliasMoon]; ok {
+					moonLabels[i].Font().SetColor(colors.ClOrange)
+					moonLabels[i].SetHint(info)
+				}
 			}
 		}
 	}
