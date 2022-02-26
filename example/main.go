@@ -107,12 +107,12 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.SetHeight(550)
 	f.ScreenCenter()
 	f.SetCaption("简易农历")
+	f.SetBorderStyle(types.BsSingle) //固定窗口大小
 	f.SetShowHint(true)
 	f.Title()
 	f.initLabels(sender)
 	f.initedit(sender)
 
-	//t := time.Now().Local()
 	f.showLabels(T)
 	f.OnBtnClicked(sender)
 	f.about()
