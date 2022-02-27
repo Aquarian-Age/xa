@@ -509,7 +509,7 @@ func dGz(jdI int) (string, int) {
 	if gn == 0 {
 		gn += 10
 	}
-	z := 1 + +(jdI%60+1)%12 //支
+	z := 1 + (jdI%60+1)%12 //支
 	//g 日干数字
 	daygM := Gans[gn]
 	dayzM := Zhi[z]
