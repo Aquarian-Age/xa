@@ -173,7 +173,7 @@ func (obj *GanZhi) ShiHuangHei1() string {
 	return HuangHei(obj.DGZ, obj.HGZ)
 }
 
-// RiQin 日禽
+// riQin 日禽
 func (obj *GanZhi) RiQin(weekN int) string {
 	return GetRiQin(weekN, obj.DGZ)
 }
