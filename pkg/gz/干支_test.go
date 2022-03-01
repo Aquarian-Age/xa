@@ -33,7 +33,7 @@ func TestNewGanZhi(t *testing.T) {
 	//arrT, _ := getJieArr(y)
 	//jieqib, index := findJie(cust, arrT)
 	//mgz := monthGZ(cust, lcb, lct, jieqib, index)
-	//dgz, gn := DayGZ(y, m, d)
+	//dgz, gn := dayGanZhi(y, m, d)
 	//hgz := GetHourGZ(gn, h)
 	//fmt.Println(ygz, mgz, dgz, hgz)
 
@@ -59,17 +59,17 @@ func TestYearGZ(t *testing.T) {
 	year = 2033
 	lcb = true  //干:癸 支:丑
 	lcb = false //干:壬 支:子
-	g, z := YearGZ(year, lcb)
+	g, z := yearGZ(year, lcb)
 	fmt.Printf("干:%s 支:%s\n", g, z)
 }
 
 //年干支
 func TestGetYGZ(t *testing.T) {
-	y, m, d, h := 2021, 2, 3, 21 //庚子
-	y, m, d, h = 2021, 2, 3, 22  //辛丑
-	y, m, d, h = 2033, 2, 3, 19  //壬子
-	y, m, d, h = 2033, 2, 3, 20  //癸丑
-	gz := GetYGZ(y, m, d, h)
+	y, m, d := 2021, 2, 3 //庚子
+	y, m, d = 2021, 2, 3  //辛丑
+	y, m, d = 2033, 2, 3  //壬子
+	y, m, d = 2033, 2, 3  //癸丑
+	gz := GetYGZ(y, m, d)
 	fmt.Println(gz)
 }
 
@@ -209,17 +209,17 @@ func TestDayGZ(t *testing.T) {
 	want2033 := []string{"戊子", "辛卯", "壬辰", "丙午", "壬子", "丙辰", "辛未", "壬午", "乙酉", "庚子", "辛亥", "乙卯", "庚午", "辛巳", "乙酉", "辛丑", "庚戌", "丙辰", "壬申", "己卯", "丁亥", "癸卯", "己酉", "己未", "甲戌", "戊寅", "庚寅", "丙午", "戊申", "辛酉", "丁丑", "丁丑", "壬辰", "丁未", "丁未", "壬戌", "丁丑", "丁丑", "壬辰"}
 	for i := 0; i < len(arr2020); i++ {
 		tx := arr2020[i]
-		dgz, _ := DayGZ(tx.y, tx.m, tx.d)
+		dgz, _ := dayGanZhi(tx.y, tx.m, tx.d)
 		if !strings.EqualFold(dgz, wantArr[i]) {
-			t.Errorf("func DayGZ(%d %d %d)=%s want:%s", tx.y, tx.m, tx.d, dgz, wantArr[i])
+			t.Errorf("func dayGanZhi(%d %d %d)=%s want:%s", tx.y, tx.m, tx.d, dgz, wantArr[i])
 		}
 	}
 	//
 	for i := 0; i < len(md2033); i++ {
 		tx := md2033[i]
-		dgz, _ := DayGZ(tx.y, tx.m, tx.d)
+		dgz, _ := dayGanZhi(tx.y, tx.m, tx.d)
 		if !strings.EqualFold(dgz, want2033[i]) {
-			t.Errorf("func DayGZ(%d %d %d)=%s want:%s", tx.y, tx.m, tx.d, dgz, want2033[i])
+			t.Errorf("func dayGanZhi(%d %d %d)=%s want:%s", tx.y, tx.m, tx.d, dgz, want2033[i])
 		}
 	}
 }
