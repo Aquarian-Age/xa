@@ -1,5 +1,5 @@
 #
-# spec file for package ChineseLunarCalendar
+# spec file for package chineseLunar
 #
 # Copyright (c) 2022 SUSE LLC
 #
@@ -16,13 +16,13 @@
 #
 
 
-Name:           ChineseLunarCalendar
-Version:        1.0.0
+Name:           chineseLunar
+Version:        1.0.6
 Release:        0
-Summary:        Constellation ChineseLunarCalendar
+Summary:        Constellation chineseLunar
 License:        MIT
 URL:            https://github.com/Aquarian-Age/xa
-Source0:        ccal.tar.gz
+Source0:        chineseLunar.tar.gz
 
 %if 0%{?suse_version} >= 1150
 BuildRequires: golang(API) = 1.15
@@ -35,41 +35,44 @@ BuildRequires:  pkg-config
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build   
 
 %description
-ChineseLunarCalendar
+一个简单的中国农历
+包含阳历 干支 阴历 二十八星宿 宗教节日鼠标悬停显示
 
 %prep
 mkdir -p %{_builddir}/%{name}-%{version}
 cd %{_builddir}
-tar xzvf %{_sourcedir}/ccal.tar.gz -C %{_builddir}/%{name}-%{version}
+tar xzvf %{_sourcedir}/chineseLunar.tar.gz -C %{_builddir}/%{name}-%{version}
 
 %build
 cd %{_builddir}/%{name}-%{version}
 
-go build -o ChineseLunarCalendar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.0t' -X 'main.GoVersion=Go Version: go1.17.6' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
+go build -o chineseLunar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.6t' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
 
 %install
 mkdir -p %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_bindir}/
 install -d %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_bindir}/
-install -m0755 %{_builddir}/%{name}-%{version}/ChineseLunarCalendar %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_bindir}/ChineseLunarCalendar
+install -m0755 %{_builddir}/%{name}-%{version}/chineseLunar %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_bindir}/chineseLunar
 
 mkdir -p %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/icons/
+mkdir -p %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/icons/chineseLunar/
 mkdir -p %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/applications/
 install -d %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}
-install -m0755 %{_builddir}/%{name}-%{version}/ChineseLunarCalendar.png %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/icons/ChineseLunarCalendar.png
-install -m0755 %{_builddir}/%{name}-%{version}/ChineseLunarCalendar.desktop %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/applications/ChineseLunarCalendar.desktop
+install -m0755 %{_builddir}/%{name}-%{version}/chineseLunar.png %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/icons/chineseLunar/chineseLunar.png
+install -m0755 %{_builddir}/%{name}-%{version}/chineseLunar.desktop %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_datadir}/applications/chineseLunar.desktop
 
 %clean
 rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/*.go
 rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/go.*
-rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/ChineseLunarCalendar*
-rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/ChineseLunarCalendar.png
+rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/chineseLunar*
+rm -rf %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/chineseLunar.png
 rm -rf %{_builddir}/%{name}-%{version}
 
 %files
 %defattr(-,root,root)
-%{_bindir}/ChineseLunarCalendar
-%{_datadir}/applications/ChineseLunarCalendar.desktop
-%{_datadir}/icons/ChineseLunarCalendar.png
+%{_bindir}/chineseLunar
+%{_datadir}/applications/chineseLunar.desktop
+%{_datadir}/icons/chineseLunar
+%{_datadir}/icons/chineseLunar/chineseLunar.png
 
 
 %changelog
