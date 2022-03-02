@@ -29,7 +29,7 @@ var (
 	}
 )
 
-//干支信息
+// GanZhi 干支信息
 type GanZhi struct {
 	year, month, day, hour int
 	YGZ                    string `json:"ygz"`
@@ -38,7 +38,7 @@ type GanZhi struct {
 	HGZ                    string `json:"hgz"`
 }
 
-//干支　精确到时
+// NewGanZhi 干支　精确到时
 func NewGanZhi(year, month, day, hour int) *GanZhi {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
 	lcb, _ := fixLiChun(year, cust)
