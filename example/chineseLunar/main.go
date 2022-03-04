@@ -112,6 +112,8 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.SetCaption("简易农历")
 	f.SetBorderStyle(types.BsSingle) //固定窗口大小
 	f.SetShowHint(true)
+	icon := f.Icon()
+	icon.LoadFromBytes(icons)
 	f.Title()
 	f.initLabels(sender)
 	f.initedit(sender)
