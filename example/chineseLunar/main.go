@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/ying32/govcl/vcl/rtl"
 	"github.com/ying32/govcl/vcl/types/messages"
 
@@ -92,6 +93,7 @@ func PrintVersion() {
 	os.Exit(0)
 }
 
+// go get -u github.com/ying32/liblclbinres
 // go build -o ChineseLunarCalendar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.0t' -X 'main.GoVersion=Go Version: go1.17.6' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
 func main() {
 	flag.BoolVar(&printVersion, "version", false, "print program build version")
