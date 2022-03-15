@@ -17,9 +17,9 @@ func TestXianChi(t *testing.T) {
 		"午": "卯", "未": "子", "申": "酉", "酉": "午", "戌": "卯", "亥": "子",
 	}
 	var smap = make(map[string]string)
-	for i := 1; i < len(Zhi); i++ {
-		s := XianChi(Zhi[i])
-		smap[Zhi[i]] = s
+	for i := 1; i < len(Zhis); i++ {
+		s := XianChi(Zhis[i])
+		smap[Zhis[i]] = s
 	}
 	if !reflect.DeepEqual(smap, want) {
 		t.Errorf("func XianChi()=%v want:%v", smap, want)

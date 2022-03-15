@@ -20,7 +20,7 @@ import (
 
 var (
 	Gans = []string{"err", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	Zhi  = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	Zhis = []string{"err", "子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	Jmc  = []string{
 		"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰",
 		"春分", "清明", "谷雨", "立夏", "小满", "芒种",
@@ -78,12 +78,12 @@ func yearGZ(year int, lcb bool) (string, string) {
 		if z -= 1; z < 1 {
 			z += 12
 		}
-		aliasZhi = Zhi[z]
+		aliasZhi = Zhis[z]
 	case true: //日期在立春之后
 		yearg := 1 + (year+6)%10
 		yearz := 1 + (year+8)%12
 		aliasGan = Gans[yearg] //Gan
-		aliasZhi = Zhi[yearz]
+		aliasZhi = Zhis[yearz]
 	}
 
 	return aliasGan, aliasZhi
@@ -128,7 +128,7 @@ func dayGanZhi(year, month, day int) (string, int) {
 	z := 1 + (jdI%60+1)%12 //支
 	//g 日干数字
 	daygM := Gans[gn]
-	dayzM := Zhi[z]
+	dayzM := Zhis[z]
 	dgz := daygM + dayzM
 	return dgz, gn
 }
@@ -274,26 +274,6 @@ func (obj *GanZhi) GuiRenYear() (string, string) {
 // GuiRenDay 贵人诀　日干支
 func (obj *GanZhi) GuiRenDay() (string, string) {
 	return GuiRenJue(obj.DGZ)
-}
-
-// ChangShengYgz 年长生
-func (obj *GanZhi) ChangShengYgz() *CS12 {
-	return NewChangSheng(pub.GetGanS(obj.YGZ))
-}
-
-// ChangShengMgz 月干支长生
-func (obj *GanZhi) ChangShengMgz() *CS12 {
-	return NewChangSheng(pub.GetGanS(obj.MGZ))
-}
-
-// ChangShengDgz 日干长生
-func (obj *GanZhi) ChangShengDgz() *CS12 {
-	return NewChangSheng(pub.GetGanS(obj.DGZ))
-}
-
-// ChangShengHgz 时干支长生
-func (obj *GanZhi) ChangShengHgz() *CS12 {
-	return NewChangSheng(pub.GetGanS(obj.HGZ))
 }
 
 // JieQi 当前节气名称:节气时间
