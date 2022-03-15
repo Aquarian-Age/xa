@@ -65,6 +65,15 @@ var (
 		"辛": "酉",
 		"壬": "亥",
 		"癸": "子"}
+	ganWuXingMap = map[string]string{
+		"甲": "木", "乙": "木",
+		"丙": "火", "丁": "火",
+		"戊": "土", "己": "土",
+		"庚": "金", "辛": "金",
+		"壬": "水", "癸": "水",
+	}
+	wuXingShengMap = map[string]string{"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"} //k生V
+	wuXingKeMap    = map[string]string{"木": "土", "火": "金", "土": "水", "金": "木", "水": "火"} //k克v
 )
 
 // AliasGan 日干 1+mod(JD正午-1,10) 这里传入的JD是时间精确到日计算
@@ -164,4 +173,27 @@ func (g GAN) ChangShengHide(name string) string {
 `
 	}
 	return s
+}
+
+// WuXing 五行
+func (g GAN) WuXing() string {
+	return ganWuXingMap[string(g)]
+}
+
+// WuXingShengKe 五行生克
+func (g GAN) WuXingShengKe() (string, string) {
+	wx := ganWuXingMap[string(g)]
+	return WuXingShengKe(wx)
+}
+
+// WuXingShengKe 五行生克
+func WuXingShengKe(wx string) (string, string) {
+	var sheng, ke string
+	if s, ok := wuXingShengMap[wx]; ok {
+		sheng = s
+	}
+	if k, ok := wuXingKeMap[wx]; ok {
+		ke = k
+	}
+	return sheng, ke
 }
