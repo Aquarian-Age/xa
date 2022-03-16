@@ -7,15 +7,10 @@
 package gz
 
 import (
-	"fmt"
 	"math"
-	"sort"
 	"time"
 
-	"github.com/Aquarian-Age/xa/pkg/pub"
-	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
-	"github.com/starainrt/astro/moon"
 )
 
 var (
@@ -204,186 +199,12 @@ func h24Toh12(h int) int {
 	return h12
 }
 
-// GetLunar 返回阴历月日　月相
-func (obj *GanZhi) GetLunar() (string, string) {
-	_, _, _, moons := calendar.Lunar(obj.year, obj.month, obj.day)
-	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
-	moons = fmt.Sprintf("阴历: %s", moons)
-	phase := moon.Phase(tx)
-	yueXiang := fmt.Sprintf("月相: %5f", phase)
-	return moons, yueXiang
-}
-
-// GetNaYin 年-月-日-时 纳因
-func (obj *GanZhi) GetNaYin() string {
-	return GetNaYin(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
-}
-
-//日建除
-//func (obj *GanZhi) RiJianChu() string {
-//	return GetRiJianChu(obj.MGZ, obj.DGZ)
-//}
-
-// JianChu 日建除
-func (obj *GanZhi) JianChu() string {
-	return JianChu(obj.MGZ, obj.DGZ)
-}
-
-////日黄黑
-//func (obj *GanZhi) RiHuangHei() string {
-//	return GetRiHuangHei(obj.MGZ, obj.DGZ)
-//}
-
-// RiHuangHei1 日黄黑
-func (obj *GanZhi) RiHuangHei1() string {
-	return HuangHei(obj.MGZ, obj.DGZ)
-}
-
-////时黄黑
-//func (obj *GanZhi) ShiHuangHei() string {
-//	return GetRiHuangHei(obj.DGZ, obj.HGZ)
-//}
-
-// ShiHuangHei1 时黄黑
-func (obj *GanZhi) ShiHuangHei1() string {
-	return HuangHei(obj.DGZ, obj.HGZ)
-}
-
-// RiQin 日禽
-func (obj *GanZhi) RiQin(weekN int) string {
-	return GetRiQin(weekN, obj.DGZ)
-}
-
-// YueJiangStruct 月将
-func (obj GanZhi) YueJiangStruct() *YJ {
-	return NewYueJiang(obj.year, obj.month, obj.day, obj.MGZ)
-}
-
-// YueJiang 月将
-//返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
-func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
-	zhis := pub.GetZhiS(obj.MGZ)
-	return yueJiang(obj.year, obj.month, obj.day, zhis)
-}
-
-// GuiRenYear 贵人诀 默认传入年干支
-func (obj *GanZhi) GuiRenYear() (string, string) {
-	return GuiRenJue(obj.YGZ)
-}
-
-// GuiRenDay 贵人诀　日干支
-func (obj *GanZhi) GuiRenDay() (string, string) {
-	return GuiRenJue(obj.DGZ)
-}
-
-// JieQi 当前节气名称:节气时间
-func (obj *GanZhi) JieQi() string {
-	year := obj.year
-	arr := jq24(year)
-	arr1 := jq24(year + 1)
-	arr = append(arr, arr1[1:3]...)
-	Jmc = append(Jmc, Jmc[1:3]...)
-
-	var jqs string //当前时间节气
-	ct := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
-	for i := 0; i < len(arr); i++ {
-		xt := arr[i]
-		xth := time.Date(xt.Year(), xt.Month(), xt.Day(), xt.Hour(), 0, 0, 0, time.Local)
-		if xth.Equal(ct) || xth.After(ct) {
-			index := i - 1
-			if index > 24 {
-				index = i + 1
-			}
-			xts := arr[index].Format("2006-01-02 15:04:05")
-			jqs = fmt.Sprintf("%s: %s", Jmc[index], xts)
-			break
-		}
-	}
-	return jqs
-}
-
-// Jq24 24节气
-func (obj *GanZhi) Jq24() []string {
-	year := obj.year
-	arr := jq24(year)
-	arr1 := jq24(year + 1)
-	arr = append(arr, arr1[1:3]...)
-	Jmc = append(Jmc, Jmc[1:3]...)
-
-	var tmp []string
-	for i := 0; i < len(arr); i++ {
-		x := Jmc[i] + ": " + arr[i].Format("2006-01-02 :15:04:05")
-		tmp = append(tmp, x)
-	}
-	return tmp[:len(tmp)-24]
-}
-func (obj *GanZhi) Jq24T() []time.Time {
-	return GetJq24(obj.year)
-}
-func GetJq24(year int) []time.Time {
-	return jq24(year)
-}
-func jq24(year int) []time.Time {
-	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
-	jq := basic.GetOneYearJQ(year)
-	var keys []int
-	for k := range jq {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-	var arr []time.Time
-	for _, v := range keys {
-		xt := calendar.JDE2Date(jq[v])
-		arr = append(arr, xt)
-	}
-	return arr
-}
-
 // GetYGZ 年干支
 func GetYGZ(year, month, day int) string {
 	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到时
 	lcb, _ := fixLiChun(year, cust)
 	g, z := yearGZ(year, lcb)
 	return g + z
-}
-
-//传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
-//获取本年立春时间戳
-func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
-	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
-	jq := basic.GetOneYearJQ(year)
-	var keys []int
-	for k := range jq {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-	//k:1上一年冬至...k4:立春... k:25本年冬至
-	/*
-		"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰",
-		"春分", "清明", "谷雨", "立夏", "小满", "芒种",
-		"夏至", "小暑", "大暑", "立秋", "处暑", "白露",
-		"秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至",
-	*/
-	var zqArr []time.Time  //中气(0:上一年冬至 到本年冬至)
-	var jieArr []time.Time //12节
-	var lct time.Time
-	for _, v := range keys {
-		if v%2 == 1 { //中气
-			zqArr = append(zqArr, calendar.JDE2Date(jq[v]))
-		}
-		if v%2 == 0 { //节
-			jieArr = append(jieArr, calendar.JDE2Date(jq[v]))
-		}
-		if v == 4 {
-			lct = calendar.JDE2Date(jq[v])
-		}
-	}
-	//12中气
-	// 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪 冬至
-	//12节
-	// 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
-	//排序后对应的k值 2 4 6 8 10 12 14 16 18 20 22 24
-	return lct, jieArr, zqArr
 }
 
 // GetMonthGZ 月干支
@@ -414,46 +235,6 @@ func GetMonthGZ(year, month, day, hour int) string {
 		}
 	}
 	return gzArr[index]
-}
-
-//正月立春节 二月惊蛰节 三月清明节 四月立夏节 五月忙钟节 六月小暑节
-//七月立秋节 八月白露节 九月寒露节 十月立东节 冬月大雪节 腊月小寒节
-//12节  0:上一年小寒 1今年立春...11大雪 12:本年小寒 13:下年立春
-// 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
-//12中气 0:上一年冬至　12:本年冬至时间戳 13:下一年大寒
-// 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪
-//2年的节气和中气时间戳　时间精确到秒
-//上一年小寒到下一年节气的时间戳数组 len=24 上一年冬至到本年冬至中气时间戳数组 len=25
-func getJieArr(year int) ([]time.Time, []time.Time) {
-	_, j12arr, zq1Arr := getJie12T(year)
-	_, j4arr, zq2Arr := getJie12T(year + 1)
-	var zqArrT []time.Time //12中气
-	zq2Arr = zq2Arr[1:]    //去掉数组中本年冬至重复的时间戳
-	zqArrT = append(zqArrT, zq1Arr...)
-	zqArrT = append(zqArrT, zq2Arr...)
-	var arrT []time.Time //12节气
-	arrT = append(arrT, j12arr...)
-	arrT = append(arrT, j4arr...)
-	return arrT, zqArrT
-}
-
-//true节气之后 false节气之前 节气计算精确到日
-func findJie(cust time.Time, jarrT []time.Time) (bool, int) {
-	cust = time.Date(cust.Year(), cust.Month(), cust.Day(), 0, 0, 0, 0, time.Local)
-	var b bool
-	var index int
-	for i := 0; i < len(jarrT)-1; i++ {
-		j0 := jarrT[i]
-		j1 := jarrT[i+1]
-		j0 = time.Date(j0.Year(), j0.Month(), j0.Day(), 0, 0, 0, 0, time.Local) //精确到日
-		j1 = time.Date(j1.Year(), j1.Month(), j1.Day(), 0, 0, 0, 0, time.Local)
-		if (cust.Equal(j0) || cust.After(j0)) && cust.Before(j1) {
-			index = i
-			b = true //节气之后
-			break
-		}
-	}
-	return b, index
 }
 
 // 五虎盾元 甲己之年丙作初，乙庚之歲戊為頭，丙辛歲首從庚起，丁壬壬位順流行，若問戊癸何方法，甲寅之上好推求
