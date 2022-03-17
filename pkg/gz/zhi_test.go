@@ -13,6 +13,13 @@ import (
 	"time"
 )
 
+func TestZHI_WuXing(t *testing.T) {
+	zhi := "寅"
+	zhiT := Zhi(zhi)
+	wxs := zhiT.WuXing()
+	s, k := zhiT.WuXingShengKe()
+	fmt.Println(zhi, wxs, s, k)
+}
 func TestAliasZhi(t *testing.T) {
 	tx := time.Now().Local()
 	for i := 0; i <= 31; i++ {

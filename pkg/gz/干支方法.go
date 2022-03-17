@@ -56,9 +56,14 @@ func (obj *GanZhi) GetLunar() (string, string) {
 	return moons, yueXiang
 }
 
-// GetNaYin 年-月-日-时 纳因
-func (obj *GanZhi) GetNaYin() string {
+// GetNaYinString 纳因(年-月-日-时)
+func (obj *GanZhi) GetNaYinString() string {
 	return GetNaYin(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
+}
+
+// NaYin 干支纳因
+func (obj *GanZhi) NaYin(gzx string) string {
+	return naYinMap[gzx]
 }
 
 //日建除

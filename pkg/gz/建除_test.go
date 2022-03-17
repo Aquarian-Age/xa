@@ -52,7 +52,7 @@ func TestJianChu(t *testing.T) {
 	}
 }
 func TestGetRiJianChu(t *testing.T) {
-	jz60 := GetJzArr()
+	jz60 := JiaZiArr
 	for i := 0; i < len(jz60); i++ {
 		mgz := "甲寅"
 		mgz = "乙卯"

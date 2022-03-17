@@ -12,7 +12,7 @@ var naYinMap = map[string]string{
 	"甲子": "海中金", "乙丑": "海中金",
 	"丙寅": "炉中火", "丁卯": "炉中火",
 	"戊辰": "大林木", "己巳": "大林木",
-	"庚午": "路傍土", "辛未": "路傍土",
+	"庚午": "路旁土", "辛未": "路旁土",
 	"壬申": "剑锋金", "癸酉": "剑锋金",
 
 	"甲戌": "山头火", "乙亥": "山头火",
@@ -29,7 +29,7 @@ var naYinMap = map[string]string{
 
 	"甲午": "沙中金", "乙未": "沙中金",
 	"丙申": "山下火", "丁酉": "山下火",
-	"戊戌": "平土木", "己亥": "平土木",
+	"戊戌": "平地木", "己亥": "平地木",
 	"庚子": "壁上土", "辛丑": "壁上土",
 	"壬寅": "金箔金", "癸卯": "金箔金",
 
@@ -46,51 +46,17 @@ var naYinMap = map[string]string{
 	"壬戌": "大海水", "癸亥": "大海水",
 }
 
-// NaYin 纳因 传入干支 返回对应纳因
+// NaYin 指定干支的纳因 传入干支 返回对应纳因
 func NaYin(gzx string) string {
-	var s string
-	for k, v := range naYinMap {
-		if strings.EqualFold(gzx, k) {
-			s = v
-			break
-		}
-	}
-	return s
+	return naYinMap[gzx]
 }
 
 // GetNaYin 年月日时 的干支纳音
 func GetNaYin(gzx ...string) string {
 	var arr []string
 	for i := 0; i < len(gzx); i++ {
-		nyx := naYin(gzx[i])
-		s := nyx[gzx[i]]
+		s := NaYin(gzx[i])
 		arr = append(arr, s)
 	}
 	return strings.Join(arr, "-")
-}
-
-//干支纳音
-func naYin(gz string) (nywx map[string]string) {
-	arr := []string{
-		"海中金", "炉中火", "大林木", "路旁土",
-		"剑锋金", "山头火", "涧下水", "城头土",
-		"白蜡金", "杨柳木", "泉中水", "屋上土",
-		"霹雳火", "松柏木", "长流水", //14
-		"沙中金", "山下火", "平地木", "壁上土",
-		"金箔金", "覆灯火", "天河水", "大驿土",
-		"钗钏金", "桑柘木", "大溪水", "沙中土",
-		"天上火", "石榴木", "大海水", //29
-	}
-	//六十甲子
-	jz := GetJzArr()
-	//纳音
-	nywx = make(map[string]string)
-	//六十甲子数组索引号除以2求商　商为当前干支的纳音索引数字
-	for i := 0; i < len(jz); i++ {
-		if strings.EqualFold(gz, jz[i]) {
-			index := i / 2
-			nywx[jz[i]] = arr[index]
-		}
-	}
-	return
 }

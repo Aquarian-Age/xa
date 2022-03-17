@@ -1,6 +1,9 @@
 package gz
 
-import "math"
+import (
+	"math"
+	"strings"
+)
 
 var (
 	shiErZhiYiXiang = map[string]string{
@@ -63,6 +66,14 @@ var (
 		"辰": "土", "未": "土", "戌": "土", "丑": "土",
 		"巳": "火", "午": "火",
 		"申": "金", "酉": "金",
+	}
+	zhiHuaHeMap = map[string]string{
+		"午": "未", "未": "午",
+		"子": "丑", "丑": "子",
+		"寅": "亥", "亥": "寅",
+		"卯": "戌", "戌": "卯",
+		"辰": "酉", "酉": "辰",
+		"巳": "申", "申": "巳",
 	}
 )
 
@@ -435,4 +446,21 @@ func (z ZHI) WuXing() string {
 func (z ZHI) WuXingShengKe() (string, string) {
 	wx := zhiWuXingMap[string(z)]
 	return WuXingShengKe(wx)
+}
+
+// HuaHe 六合 子丑合化土，寅亥合化木，卯戍合化火，辰酉合化金，巳申合化水，午与未合化土。
+func (z ZHI) HuaHe(zhi string) (bool, string) {
+	huaHeMap := map[string]string{
+		"午": "土", "未": "土",
+		"子": "土", "丑": "土",
+		"寅": "木", "亥": "木",
+		"卯": "火", "戌": "火",
+		"辰": "金", "酉": "金",
+		"巳": "水", "申": "水",
+	}
+	heZhi := zhiHuaHeMap[string(z)]
+	if strings.EqualFold(zhi, heZhi) {
+		return true, huaHeMap[string(z)]
+	}
+	return false, ""
 }

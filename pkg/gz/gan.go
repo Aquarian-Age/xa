@@ -8,6 +8,7 @@ package gz
 
 import (
 	"math"
+	"strings"
 )
 
 var (
@@ -74,6 +75,13 @@ var (
 	}
 	wuXingShengMap = map[string]string{"木": "火", "火": "土", "土": "金", "金": "水", "水": "木"} //k生V
 	wuXingKeMap    = map[string]string{"木": "土", "火": "金", "土": "水", "金": "木", "水": "火"} //k克v
+	ganHuaHeMap    = map[string]string{
+		"甲": "己", "己": "甲",
+		"乙": "庚", "庚": "乙",
+		"丙": "辛", "辛": "丙",
+		"丁": "壬", "壬": "丁",
+		"戊": "癸", "癸": "戊",
+	} //k化合v
 )
 
 // AliasGan 日干 1+mod(JD正午-1,10) 这里传入的JD是时间精确到日计算
@@ -196,4 +204,21 @@ func WuXingShengKe(wx string) (string, string) {
 		ke = k
 	}
 	return sheng, ke
+}
+
+// HuaHe 化合 甲己合化土，乙庚合化金，丙辛合化水，丁壬合化木，戊癸合化火
+func (g GAN) HuaHe(gan string) (bool, string) {
+	huaHeMap := map[string]string{
+		"甲": "土", "己": "土",
+		"乙": "金", "庚": "金",
+		"丙": "水", "辛": "水",
+		"丁": "木", "壬": "木",
+		"戊": "火", "癸": "火",
+	}
+	hegan := ganHuaHeMap[string(g)]
+	if strings.EqualFold(gan, hegan) {
+		return true, huaHeMap[string(g)]
+	}
+	return false, ""
+
 }

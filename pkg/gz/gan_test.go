@@ -13,6 +13,13 @@ import (
 	"time"
 )
 
+func TestGAN_WuXingShengKe(t *testing.T) {
+	gan := "甲"
+	ganT := Gan(gan)
+	wxs := ganT.WuXing()
+	s, k := ganT.WuXingShengKe()
+	fmt.Println(gan, wxs, s, k)
+}
 func TestAliasGan(t *testing.T) {
 	tx := time.Now().Local()
 	for i := 0; i <= 31; i++ {
