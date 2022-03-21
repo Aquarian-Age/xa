@@ -49,8 +49,8 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 	arrT, _ := getJieArr(year)
 	jieqib, index := findJie(cust, arrT)
 	mgz := monthGZ(cust, lcb, jieqib, index)
-	dgz, gn := dayGanZhi(year, month, day)
-	hgz := GetHourGZ(gn, hour)
+	dgz, dayGan := dayGanZhi(year, month, day)
+	hgz := GetHourGZ(dayGan, hour)
 	return &GanZhi{
 		year:  year,
 		month: month,
@@ -119,7 +119,7 @@ func monthGZ(cust time.Time, lcb bool, jieqib bool, index int) string {
 }
 
 //传入阳历日期 返回日干支 日干数字 1甲 2乙 3丙...10癸
-func dayGanZhi(year, month, day int) (string, int) {
+func dayGanZhi(year, month, day int) (string, string) {
 	t := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 	jd := calendar.Date2JDE(t)
 	jdI := int(math.Ceil(jd)) //>=
@@ -132,47 +132,59 @@ func dayGanZhi(year, month, day int) (string, int) {
 	daygM := Gans[gn]
 	dayzM := Zhis[z]
 	dgz := daygM + dayzM
-	return dgz, gn
+	return dgz, daygM
 }
 
 // GetHourGZ 计算时干支
 //传入日干数字 现代24小时制的时间数字 返回对应的干支
-func GetHourGZ(gn, hour int) string {
+func GetHourGZ(dayGan string, hour int) string {
 	h := h24Toh12(hour)
-	arr := hgzArr(gn)
+	var arr []string
+	switch dayGan {
+	case "甲", "己": //甲己 甲子
+		arr = []string{"甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉", "甲戌", "乙亥"}
+	case "乙", "庚": //乙庚 丙子
+		arr = []string{"丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未", "甲申", "乙酉", "丙戌", "丁亥"}
+	case "丙", "辛": //丙辛 戊子
+		arr = []string{"戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳", "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥"}
+	case "丁", "壬": //丁壬 庚子
+		arr = []string{"庚子", "辛丑", "壬寅", "癸卯", "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥"}
+	case "戊", "癸": //戊癸 壬子
+		arr = []string{"壬子", "癸丑", "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"}
+	}
 	return arr[h-1]
 }
 
 //gn:1=甲 gn:2=乙 gn:10=癸
 //五鼠遁元
-func hgzArr(gn int) []string {
-	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
-	var arr []string //月干支数组
-	switch gn {
-	case 1, 6: //甲己 甲子
-		end := gan
-		head := gan
-		arr = arrX(gan, zhi, head, end)
-	case 2, 7: //乙庚 丙子
-		end := gan[:2]
-		head := gan[2:]
-		arr = arrX(gan, zhi, head, end)
-	case 3, 8: //丙辛 戊子
-		end := gan[:4]
-		head := gan[4:]
-		arr = arrX(gan, zhi, head, end)
-	case 4, 9: //丁壬 庚子
-		end := gan[:6]
-		head := gan[6:]
-		arr = arrX(gan, zhi, head, end)
-	case 5, 10: //戊癸 壬子
-		end := gan[:8]
-		head := gan[8:]
-		arr = arrX(gan, zhi, head, end)
-	}
-	return arr
-}
+//func hgzArr(gn int) []string {
+//	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
+//	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+//	var arr []string //月干支数组
+//	switch gn {
+//	case 1, 6: //甲己 甲子
+//		end := gan
+//		head := gan
+//		arr = arrX(gan, zhi, head, end)
+//	case 2, 7: //乙庚 丙子
+//		end := gan[:2]
+//		head := gan[2:]
+//		arr = arrX(gan, zhi, head, end)
+//	case 3, 8: //丙辛 戊子
+//		end := gan[:4]
+//		head := gan[4:]
+//		arr = arrX(gan, zhi, head, end)
+//	case 4, 9: //丁壬 庚子
+//		end := gan[:6]
+//		head := gan[6:]
+//		arr = arrX(gan, zhi, head, end)
+//	case 5, 10: //戊癸 壬子
+//		end := gan[:8]
+//		head := gan[8:]
+//		arr = arrX(gan, zhi, head, end)
+//	}
+//	return arr
+//}
 
 //现代24小时时间转换为古代12时辰
 func h24Toh12(h int) int {
@@ -248,50 +260,38 @@ func GetMonthGZ(year, month, day, hour int) string {
 // 传入年干 返回本年月干支数组
 // 月干支数组
 func mgzArr(yearGan string) []string {
-	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	zhi := []string{"寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"} //正月建寅
-	var arr []string                                                            //月干支数组
+	var arr []string //月干支数组
 	switch yearGan {
-	case gan[0], gan[5]: //甲己 丙寅
-		end := gan[:2]
-		head := gan[2:]
-		arr = arrX(gan, zhi, head, end)
-	case gan[1], gan[6]: //乙庚 戊寅
-		end := gan[:4]
-		head := gan[4:]
-		arr = arrX(gan, zhi, head, end)
-	case gan[2], gan[7]: //丙辛 庚寅
-		end := gan[:6]
-		head := gan[6:]
-		arr = arrX(gan, zhi, head, end)
-	case gan[3], gan[8]: //丁壬 壬寅
-		end := gan[:8]
-		head := gan[8:]
-		arr = arrX(gan, zhi, head, end)
-	case gan[4], gan[9]: //戊癸 甲寅
-		end := gan
-		head := gan
-		arr = arrX(gan, zhi, head, end)
+	case "甲", "己": //甲己 丙寅
+		arr = []string{"丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉", "甲戌", "乙亥", "丙子", "丁丑"}
+	case "乙", "庚": //乙庚 戊寅
+		arr = []string{"戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未", "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑"}
+	case "丙", "辛": //丙辛 庚寅
+		arr = []string{"庚寅", "辛卯", "壬辰", "癸巳", "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑"}
+	case "丁", "壬": //丁壬 壬寅
+		arr = []string{"壬寅", "癸卯", "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑"}
+	case "戊", "癸": //戊癸 甲寅
+		arr = []string{"甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥", "甲子", "乙丑"}
 	}
 	return arr
 }
 
 //干支数组
-func arrX(gan, zhi, head, end []string) []string {
-	var arr []string
-	gan = append(head, end...)
-	gan = append(gan, gan...)
-	for i := 0; i < len(gan); i++ {
-		for j := i; j < len(zhi); j++ {
-			s := gan[j] + zhi[j]
-			arr = append(arr, s)
-			if j == i {
-				break
-			}
-		}
-	}
-	return arr
-}
+//func arrX(gan, zhi, head, end []string) []string {
+//	var arr []string
+//	gan = append(head, end...)
+//	gan = append(gan, gan...)
+//	for i := 0; i < len(gan); i++ {
+//		for j := i; j < len(zhi); j++ {
+//			s := gan[j] + zhi[j]
+//			arr = append(arr, s)
+//			if j == i {
+//				break
+//			}
+//		}
+//	}
+//	return arr
+//}
 
 // GetDayGZ 日干支
 func GetDayGZ(year, month, day int) string {
