@@ -14,9 +14,9 @@ import (
 
 // YJ 月将(太阳过宫)
 type YJ struct {
-	Zhi         string `json:"yue_jiang"`
+	Zhi         string `json:"zhi"`
 	Name        string `json:"name"`
-	ZhongQiT    string `json:"t"`
+	ZhongQiT    string `json:"zhong_qi_t"`
 	ZhongQiName string `json:"zhong_qi_name"`
 }
 
@@ -74,4 +74,22 @@ func yueJiang(year, month, day int, zhis string) (string, string, time.Time, str
 	}
 
 	return yjZhi, shenJiangName, zqt, zhongQiName
+}
+
+// TaiChongTianMa 太冲天马
+func (yj *YJ) TaiChongTianMa(hgz string) string {
+	yjz := yj.Zhi
+	hz := pub.GetZhiS(hgz)
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	yjarr := pub.SortArr(yjz, zhis)
+	hzarr := pub.SortArr(hz, zhis)
+
+	var s string
+	for i := 0; i < len(yjarr); i++ {
+		if strings.EqualFold(yjarr[i], "卯") {
+			s = hzarr[i]
+			break
+		}
+	}
+	return s
 }

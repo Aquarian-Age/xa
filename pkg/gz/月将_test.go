@@ -7,6 +7,7 @@
 package gz
 
 import (
+	"fmt"
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 	"testing"
@@ -54,4 +55,24 @@ func TestGetYueJiang(t *testing.T) {
 				zqt[i].Year(), int(zqt[i].Month()), zqt[i].Day(), pub.GetZhiS(obj.MGZ), yj, want[i])
 		}
 	}
+}
+func TestYJ_TaiChongTianMa(t *testing.T) {
+	//[亥 子 丑 寅 卯 辰 巳 午 未 申 酉 戌]
+	//[寅 卯 辰 巳 午 未 申 酉 戌 亥 子 丑]
+	yjo := &YJ{Zhi: "亥"}
+	hgz := "丙寅" //午
+	//[午 未 申 酉 戌 亥 子 丑 寅 卯 辰 巳]
+	//[午 未 申 酉 戌 亥 子 丑 寅 卯 辰 巳]
+	yjo = &YJ{Zhi: "午"}
+	hgz = "甲午" //卯
+	//[子 丑 寅 卯 辰 巳 午 未 申 酉 戌 亥]
+	//[卯 辰 巳 午 未 申 酉 戌 亥 子 丑 寅]
+	yjo = &YJ{Zhi: "子"}
+	hgz = "丁卯" //午
+	//[丑 寅 卯 辰 巳 午 未 申 酉 戌 亥 子]
+	//[戌 亥 子 丑 寅 卯 辰 巳 午 未 申 酉]
+	yjo = &YJ{Zhi: "丑"}
+	hgz = "戊戌" //子
+	tm := yjo.TaiChongTianMa(hgz)
+	fmt.Println(tm)
 }
