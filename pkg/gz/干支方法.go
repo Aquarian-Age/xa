@@ -5,8 +5,87 @@ import (
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"github.com/starainrt/astro/calendar"
 	"github.com/starainrt/astro/moon"
+	"strings"
 	"time"
 )
+
+var (
+	xunKongMap = map[string]string{"甲子": "戌亥", "甲戌": "申酉", "甲申": "午未", "甲午": "辰巳", "甲辰": "寅卯", "甲寅": "子丑"}
+	naYinMap   = map[string]string{
+		"甲子": "海中金", "乙丑": "海中金",
+		"丙寅": "炉中火", "丁卯": "炉中火",
+		"戊辰": "大林木", "己巳": "大林木",
+		"庚午": "路旁土", "辛未": "路旁土",
+		"壬申": "剑锋金", "癸酉": "剑锋金",
+
+		"甲戌": "山头火", "乙亥": "山头火",
+		"丙子": "涧下水", "丁丑": "涧下水",
+		"戊寅": "城头土", "己卯": "城头土",
+		"庚辰": "白蜡金", "辛巳": "白蜡金",
+		"壬午": "杨柳木", "癸未": "杨柳木",
+
+		"甲申": "泉中水", "乙酉": "泉中水", //己酉-->乙酉
+		"丙戌": "屋上土", "丁亥": "屋上土",
+		"戊子": "霹雳火", "己丑": "霹雳火",
+		"庚寅": "松柏木", "辛卯": "松柏木",
+		"壬辰": "长流水", "癸巳": "长流水",
+
+		"甲午": "沙中金", "乙未": "沙中金",
+		"丙申": "山下火", "丁酉": "山下火",
+		"戊戌": "平地木", "己亥": "平地木",
+		"庚子": "壁上土", "辛丑": "壁上土",
+		"壬寅": "金箔金", "癸卯": "金箔金",
+
+		"甲辰": "覆灯火", "乙巳": "覆灯火", //己巳-->乙巳
+		"丙午": "天河水", "丁未": "天河水",
+		"戊申": "大鄢土", "己酉": "大鄢土", //yān
+		"庚戌": "钗钏金", "辛亥": "钗钏金",
+		"壬子": "桑柘木", "癸丑": "桑柘木",
+
+		"甲寅": "大溪水", "乙卯": "大溪水",
+		"丙辰": "沙中土", "丁巳": "沙中土",
+		"戊午": "天上火", "己未": "天上火",
+		"庚申": "石榴木", "辛酉": "石榴木",
+		"壬戌": "大海水", "癸亥": "大海水",
+	}
+)
+
+func (obj *GanZhi) XunShou(xgz string) (string, []string) {
+	return XunShou(xgz)
+}
+
+// XunShou 旬首
+func XunShou(xgz string) (string, []string) {
+	var s string
+	var arr []string
+	switch xgz {
+	case "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉":
+		s = "甲子"
+		arr = []string{"甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉"}
+	case "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未":
+		s = "甲戌"
+		arr = []string{"甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未"}
+	case "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳":
+		s = "甲申"
+		arr = []string{"甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳"}
+	case "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯":
+		s = "甲午"
+		arr = []string{"甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯"}
+	case "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑":
+		s = "甲辰"
+		arr = []string{"甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑"}
+	case "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥":
+		s = "甲寅"
+		arr = []string{"甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"}
+	}
+	return s, arr
+}
+
+// XunKong 旬空
+func XunKong(xgz string) string {
+	xunShous, _ := XunShou(xgz)
+	return xunKongMap[xunShous]
+}
 
 // FuTou 干支的符头--甲/己(默认为日干支)
 func (obj *GanZhi) FuTou(dgz string) string {
@@ -58,12 +137,27 @@ func (obj *GanZhi) GetLunar() (string, string) {
 
 // GetNaYinString 纳因(年-月-日-时)
 func (obj *GanZhi) GetNaYinString() string {
-	return GetNaYin(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
+	return GetNaYinString(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
 }
 
 // NaYin 干支纳因
 func (obj *GanZhi) NaYin(gzx string) string {
 	return naYinMap[gzx]
+}
+
+// NaYin 指定干支的纳因 传入干支 返回对应纳因
+func NaYin(gzx string) string {
+	return naYinMap[gzx]
+}
+
+// GetNaYinString 年月日时 的干支纳音
+func GetNaYinString(gzx ...string) string {
+	var arr []string
+	for i := 0; i < len(gzx); i++ {
+		s := NaYin(gzx[i])
+		arr = append(arr, s)
+	}
+	return strings.Join(arr, "-")
 }
 
 //日建除
