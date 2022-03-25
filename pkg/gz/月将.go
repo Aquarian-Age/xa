@@ -12,6 +12,12 @@ import (
 	"time"
 )
 
+var (
+	//k天月将 v天月将名称
+	yjmap       = map[string]string{"丑": "大吉", "亥": "登明", "午": "胜光", "卯": "太冲", "子": "神后", "寅": "功曹", "巳": "太乙", "戌": "河魁", "未": "小吉", "申": "传送", "辰": "天罡", "酉": "从魁"}
+	yueJiangArr = []string{"神后", "大吉", "功曹", "太冲", "天罡", "太乙", "胜光", "小吉", "传送", "从魁", "河魁", "登明"}
+)
+
 // YJ 月将(太阳过宫)
 type YJ struct {
 	Zhi         string `json:"zhi"`
@@ -92,4 +98,28 @@ func (yj *YJ) TaiChongTianMa(hgz string) string {
 		}
 	}
 	return s
+}
+
+// TianSanMen 天三门(天盘卯酉未临下方地支是也)
+func (yj *YJ) TianSanMen(hgz string) (string, string, string) {
+	yjz := yj.Zhi
+	hz := pub.GetZhiS(hgz)
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	yjarr := pub.SortArr(yjz, zhis)
+	hzarr := pub.SortArr(hz, zhis)
+	yjnames := pub.SortArr(yjmap[yjz], yueJiangArr)
+
+	var a, b, c string
+	for i := 0; i < len(yjarr); i++ {
+		if strings.EqualFold(yjarr[i], "卯") {
+			a = yjnames[i] + ":" + hzarr[i]
+		}
+		if strings.EqualFold(yjarr[i], "酉") {
+			b = yjnames[i] + ":" + hzarr[i]
+		}
+		if strings.EqualFold(yjarr[i], "未") {
+			c = yjnames[i] + ":" + hzarr[i]
+		}
+	}
+	return a, b, c
 }
