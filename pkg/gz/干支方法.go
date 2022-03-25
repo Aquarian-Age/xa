@@ -50,6 +50,43 @@ var (
 	}
 )
 
+// Gan 干
+func (obj *GanZhi) Gan(gan string) GAN {
+	return GAN(gan)
+}
+
+// Zhi 支
+func (obj *GanZhi) Zhi(zhi string) ZHI {
+	return ZHI(zhi)
+}
+
+// DiSiHu 地四户 危除定开下临方既是
+//月建加时支上
+//建除满平一顺流,定执破危相接去,成收开闭掌中周,除定危开为四户,此方有难来逃避
+func (obj *GanZhi) DiSiHu() (string, string, string, string) {
+	hz := pub.GetZhiS(obj.HGZ) //时支
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	jcs := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"}
+	hourArr := pub.SortArr(hz, zhis)
+
+	var a, b, c, d string
+	for i := 0; i < len(jcs); i++ {
+		if strings.EqualFold(jcs[i], "危") {
+			a = hourArr[i]
+		}
+		if strings.EqualFold(jcs[i], "除") {
+			b = hourArr[i]
+		}
+		if strings.EqualFold(jcs[i], "定") {
+			c = hourArr[i]
+		}
+		if strings.EqualFold(jcs[i], "开") {
+			d = hourArr[i]
+		}
+	}
+	return a, b, c, d
+}
+
 func (obj *GanZhi) XunShou(xgz string) (string, []string) {
 	return XunShou(xgz)
 }
