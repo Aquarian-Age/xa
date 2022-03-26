@@ -1,4 +1,4 @@
-// Package xa 中国农历干支计算
+//中国农历干支计算
 package xa
 
 /*
