@@ -97,11 +97,26 @@ func TestTMonthGanZhi(t *testing.T) {
 	//year, month, day, hour = 2034, 2, 4, 1 //2034-2-4 1H  癸年 月干支:乙丑
 	//year, month, day, hour = 2034, 2, 4, 2 //2034-2-4 2H  甲年 月干支:丙寅
 
-	ygz, mgz := TMonthGanZhi(year, month, day, hour)
+	ygz, mgz, _, _, _, _ := TMonthGanZhi(year, month, day, hour)
 	fmt.Printf(" %d %d %d %dH %s年 月干支:%s\n", year, month, day, hour, ygz, mgz)
 }
+
+/*
+2033, 12, 22, 3
+jieQiArrT:14
+[2033-01-05 09:00:00 +0800 CST 2033-02-03 20:00:00 +0800 CST 2033-03-05 14:00:00 +0800 CST 2033-04-04 19:00:00 +0800 CST 2033-05-05 12:00:00 +0800 CST 2033-06-05 16:00:00 +0800 CST 2033-07-07 02:00:00 +0800 CST 2033-08-07 12:00:00 +0800 CST 2033-09-07 15:00:00 +0800 CST 2033-10-08 07:00:00 +0800 CST 2033-11-07 10:00:00 +0800 CST 2033-12-07 03:00:00 +0800 CST 2034-01-05 15:00:00 +0800 CST 2034-02-04 02:00:00 +0800 CST]
+jieQiNames:[小寒 立春 惊蛰 清明 立夏 芒种 小暑 立秋 白露 寒露 立冬 大雪 小寒 立春]
+
+zhongQiArrT:14
+[2032-12-21 15:00:00 +0800 CST 2033-01-20 02:00:00 +0800 CST 2033-02-18 16:00:00 +0800 CST 2033-03-20 15:00:00 +0800 CST 2033-04-20 02:00:00 +0800 CST 2033-05-21 01:00:00 +0800 CST 2033-06-21 09:00:00 +0800 CST 2033-07-22 19:00:00 +0800 CST 2033-08-23 03:00:00 +0800 CST 2033-09-23 00:00:00 +0800 CST 2033-10-23 10:00:00 +0800 CST 2033-11-22 08:00:00 +0800 CST 2033-12-21 21:00:00 +0800 CST 2034-01-20 08:00:00 +0800 CST]
+zhongQiNames:[冬至 大寒 雨水 春分 谷雨 小满 夏至 大暑 处暑 秋分 霜降 小雪 冬至 大寒]
+*/
 func TestTYearGanZhi(t *testing.T) {
 	gzo := NewTGanZhi(2033, 12, 22, 3)
 	lunars, moons := gzo.GetLunar()
 	fmt.Println(lunars, moons) //阴历: 闰冬月初一 月相: 0.001879
+	fmt.Printf("jieQiArrT:%d %v\n", len(gzo.JieQiArrT), gzo.JieQiArrT)
+	fmt.Printf("jieQiNames:%s\n", gzo.JieQiNames)
+	fmt.Printf("zhongQiArrT:%d %v\n", len(gzo.ZhongQiArrT), gzo.ZhongQiArrT)
+	fmt.Printf("zhongQiNames:%s\n", gzo.ZhongQiNames)
 }

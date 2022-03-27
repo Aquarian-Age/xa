@@ -9,22 +9,24 @@ import (
 
 // NewTGanZhi 月干支精确到时辰
 func NewTGanZhi(year, month, day, hour int) *GanZhi {
-	ygz, mgz := TMonthGanZhi(year, month, day, hour)
+	ygz, mgz, jieQiArrT, jieQiNames, zhongQiArrT, zhongQiNames := TMonthGanZhi(year, month, day, hour)
 	dgz, dayGan := dayGanZhi(year, month, day)
 	hgz := GetHourGZ(dayGan, hour)
 	return &GanZhi{
-		year:  year,
-		month: month,
-		day:   day,
-		hour:  hour,
-		Ygz:   ygz,
-		Mgz:   mgz,
-		Dgz:   dgz,
-		Hgz:   hgz,
+		year:         year,
+		month:        month,
+		day:          day,
+		hour:         hour,
+		Ygz:          ygz,
+		Mgz:          mgz,
+		Dgz:          dgz,
+		Hgz:          hgz,
+		JieQiArrT:    jieQiArrT,
+		JieQiNames:   jieQiNames,
+		ZhongQiArrT:  zhongQiArrT,
+		ZhongQiNames: zhongQiNames,
 	}
 }
-
-var ()
 
 func TFixLiChun(lct, cust time.Time) bool {
 	var b bool
@@ -35,6 +37,8 @@ func TFixLiChun(lct, cust time.Time) bool {
 	}
 	return b
 }
+
+// TjieQi 本年节气数组 精确到小时 0:冬至 1:小寒 2:大寒 3:立春 4:雨水...冬至 立春节气时间
 func TjieQi(year int) ([]time.Time, time.Time) {
 	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
 	jq := basic.GetOneYearJQ(year)
@@ -57,45 +61,48 @@ func TYearGanZhi(year int, lcb bool) (string, string) {
 	return yearGZ(year, lcb)
 }
 
-func TMonthGanZhi(year, month, day, hour int) (string, string) {
+func TMonthGanZhi(year, month, day, hour int) (string, string, []time.Time, []string, []time.Time, []string) {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
 	arr, lct := TjieQi(year)
 	lcb := TFixLiChun(lct, cust)
-	//fmt.Println("fix lichun: ", lct.String()[:19], lcb)
 	yearGan, yearZhi := yearGZ(year, lcb)
-	//fmt.Println("年干:", yearGan)
 
 	//小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
-	var jqArr []time.Time //0:上年小寒 1:立春
+	var jqArr []time.Time //节气 0:上年小寒 1:立春
+	var zqArr []time.Time //中气
 	for i := 0; i < len(arr); i++ {
 		if i%2 == 1 {
 			jqArr = append(jqArr, arr[i])
 		}
+		if i%2 == 0 {
+			zqArr = append(zqArr, arr[i])
+		}
 	}
-	//fmt.Println("jqArr: ", jqArr)
+
 	arr, _ = TjieQi(year + 1)
 	for i := 0; i < len(arr); i++ {
 		if i%2 == 1 {
 			jqArr = append(jqArr, arr[i])
 		}
+		if i%2 == 0 && i != 0 {
+			zqArr = append(zqArr, arr[i])
+		}
 	}
-	//fmt.Println(len(jqArr), jqArr)
-	arrName := []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "小暑", "立秋", "白露", "寒露", "立冬", "大雪"}
-	arrName = append(arrName, arrName...)
-	//fmt.Println(len(arrName), arrName)
-	//
+
+	//节(len=24 不含中气)
+	jieQiNames := []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "小暑", "立秋", "白露", "寒露", "立冬", "大雪", "小寒", "立春"}
+	zhongQiNames := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至", "大寒"}
+	jieQiArrT := jqArr[:14]
+	zhongQiArrT := zqArr[:14]
+
 	var jqb bool //当前时间等于节气或者在节气之后
-	//var jqt time.Time
 	var index int
 	for i := 0; i < len(jqArr); i++ {
 		if cust.Equal(jqArr[i]) || cust.After(jqArr[i]) {
 			index = i
-			//jqt = jqArr[i]
 			jqb = true
 		}
 	}
-	//fmt.Println(year, month, day, hour)
-	//fmt.Printf("jqb:%t jqt:%v index:%d\n", jqb, jqt.Format("2006-01-02 15:04:05"), index)
 
 	jiaJiArr := []string{"丙子", "丁丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉", "甲戌", "乙亥", "丙子", "丁丑"}
 	yiGengArr := []string{"戊子", "己丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未", "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑"}
@@ -118,13 +125,7 @@ func TMonthGanZhi(year, month, day, hour int) (string, string) {
 		case "戊", "癸":
 			monthGZs = wuGuiArr[index]
 		}
-		//if index == 0 { //当前时间在上年(子月:阴历11月)
-		//	fmt.Printf("%s年 月干支:%s\n", yearGan, dingRenArr[index])
-		//	fmt.Printf("%s年 月干支:%s\n", yearGan, wuGuiArr[index])
-		//}
 	case true:
-		//fmt.Printf("%s年 月干支:%s\n", yearGan, dingRenArr[index+1])
-		//fmt.Printf("%s年 月干支:%s\n", yearGan, wuGuiArr[index+1])
 		index += 1
 		switch yearGan {
 		case "甲", "己":
@@ -140,6 +141,5 @@ func TMonthGanZhi(year, month, day, hour int) (string, string) {
 		}
 	}
 	yearGZs := yearGan + yearZhi
-	//fmt.Printf("阳历: %d-%d-%d %dH  %s年 月干支:%s\n", year, month, day, hour, yearGZs, monthGZs)
-	return yearGZs, monthGZs
+	return yearGZs, monthGZs, jieQiArrT, jieQiNames, zhongQiArrT, zhongQiNames
 }

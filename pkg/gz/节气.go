@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// 冬至-冬至 len=25 索引单数为节 1,3,5,7,9,11,13,15,17,19,21,23 偶数为气
+// 冬至-冬至
 func jq24(year int) []time.Time {
 	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
 	jq := basic.GetOneYearJQ(year)
