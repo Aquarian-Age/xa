@@ -1,6 +1,9 @@
 package gz
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 /*
 2033-02-03 20:41:08.072283267 +0800 CST
@@ -9,7 +12,11 @@ import "testing"
 [2032-12-21 15:55:29.44856733 +0800 CST 2033-01-20 02:32:20.356376767 +0800 CST 2033-02-18 16:33:21.335982978 +0800 CST 2033-03-20 15:22:16.289714276 +0800 CST 2033-04-20 02:12:40.080179572 +0800 CST 2033-05-21 01:10:30.688458681 +0800 CST 2033-06-21 09:00:40.148927271 +0800 CST 2033-07-22 19:52:20.694437921 +0800 CST 2033-08-23 03:01:22.255035638 +0800 CST 2033-09-23 00:51:11.979917585 +0800 CST 2033-10-23 10:27:08.055931627 +0800 CST 2033-11-22 08:15:41.746826469 +0800 CST 2033-12-21 21:45:31.179110705 +0800 CST]
 */
 func TestTMonthGanZhi(t *testing.T) {
-	year, month, day, hour := 2033, 12, 7, 3
+
+	year, month, day, hour := 2022, 2, 4, 4 //2022 2 4 4H 壬寅年 月干支:壬寅
+	year, month, day, hour = 2022, 2, 4, 3
+
+	//year, month, day, hour = 2033, 12, 7, 3
 	//year, month, day, hour = 2033, 1, 5, 8
 	//year, month, day, hour = 2033, 1, 5, 9
 
@@ -25,8 +32,9 @@ func TestTMonthGanZhi(t *testing.T) {
 	//year, month, day, hour = 2034, 1, 5, 14 //2034-1-5 14H  癸年 月干支:甲子
 	//year, month, day, hour = 2034, 1, 5, 15 //2034-1-5 15H  癸年 月干支:乙丑
 
-	year, month, day, hour = 2034, 2, 4, 1 //2034-2-4 1H  癸年 月干支:乙丑
-	year, month, day, hour = 2034, 2, 4, 2 //2034-2-4 2H  甲年 月干支:丙寅
+	//year, month, day, hour = 2034, 2, 4, 1 //2034-2-4 1H  癸年 月干支:乙丑
+	//year, month, day, hour = 2034, 2, 4, 2 //2034-2-4 2H  甲年 月干支:丙寅
 
-	TMonthGanZhi(year, month, day, hour)
+	ygz, mgz := TMonthGanZhi(year, month, day, hour)
+	fmt.Printf(" %d %d %d %dH %s年 月干支:%s\n", year, month, day, hour, ygz, mgz)
 }
