@@ -15,7 +15,7 @@ import (
 
 func TestGAN_WuXingShengKe(t *testing.T) {
 	gan := "甲"
-	ganT := Gan(gan)
+	ganT := NewGan(gan)
 	wxs := ganT.WuXing()
 	s, k := ganT.WuXingShengKe()
 	fmt.Println(gan, wxs, s, k)
@@ -66,10 +66,10 @@ func TestAliasGan(t *testing.T) {
 */
 func TestGan_ChangSheng(t *testing.T) {
 	//gzo := NewGanZhi(2022, 2, 4, 4)
-	//fmt.Println(gzo.YGZ, gzo.MGZ, gzo.DGZ)
+	//fmt.Println(gzo.Ygz, gzo.Mgz, gzo.Dgz)
 	//gan := "庚"
 	//arr := gzo.ChangShengArr(gan)
-	//g := gzo.Gan(gan)
+	//g := gzo.NewGan(gan)
 	//changsheng := g.ChangSheng(arr)
 	//fmt.Println(gan, "长生", changsheng)
 	//fmt.Println(gan, "死", g.Si(arr))
@@ -80,3 +80,20 @@ func TestGan_ChangSheng(t *testing.T) {
 //	庚 长生 巳
 //	庚 死 子
 //	庚 绝 寅
+
+//
+func TestGan(t *testing.T) {
+	gans := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
+	for i := 0; i < len(gans); i++ {
+		g := NewGan(gans[i])
+		s1 := g.YinYang()
+		s2 := g.WuXing()
+		s3 := g.YinYang()
+		sa, sb := g.WuXingShengKe()
+		s5 := g.Lu()
+		sc, sd := g.ChangSheng()
+		s7 := g.JiGong()
+		fmt.Printf("%s: %d %v %v %v %v %v %v %v %v\n", g, s1, s2, s3, s5, s7, sa, sb, sc, sd)
+	}
+
+}

@@ -15,7 +15,7 @@ import (
 
 func TestZHI_WuXing(t *testing.T) {
 	zhi := "寅"
-	zhiT := Zhi(zhi)
+	zhiT := NewZhi(zhi)
 	wxs := zhiT.WuXing()
 	s, k := zhiT.WuXingShengKe()
 	fmt.Println(zhi, wxs, s, k)

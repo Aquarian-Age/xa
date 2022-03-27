@@ -34,13 +34,13 @@ var (
 // GanZhi 干支信息
 type GanZhi struct {
 	year, month, day, hour int
-	YGZ                    string `json:"ygz"`
-	MGZ                    string `json:"mgz"`
-	DGZ                    string `json:"dgz"`
-	HGZ                    string `json:"hgz"`
+	Ygz                    string `json:"ygz"`
+	Mgz                    string `json:"mgz"`
+	Dgz                    string `json:"dgz"`
+	Hgz                    string `json:"hgz"`
 }
 
-// NewGanZhi 干支　精确到时
+// NewGanZhi 干支　月干支精确到日
 func NewGanZhi(year, month, day, hour int) *GanZhi {
 	cust := time.Date(year, time.Month(month), day, hour, 0, 0, 0, time.Local)
 	lcb, _ := fixLiChun(year, cust)
@@ -56,10 +56,10 @@ func NewGanZhi(year, month, day, hour int) *GanZhi {
 		month: month,
 		day:   day,
 		hour:  hour,
-		YGZ:   ygz,
-		MGZ:   mgz,
-		DGZ:   dgz,
-		HGZ:   hgz,
+		Ygz:   ygz,
+		Mgz:   mgz,
+		Dgz:   dgz,
+		Hgz:   hgz,
 	}
 }
 
@@ -74,7 +74,7 @@ func yearGZ(year int, lcb bool) (string, string) {
 		if g -= 1; g < 1 {
 			g += 10
 		}
-		aliasGan = Gans[g] //Gan
+		aliasGan = Gans[g]
 		//支
 		z := 1 + (year+8)%12
 		if z -= 1; z < 1 {
@@ -84,7 +84,7 @@ func yearGZ(year int, lcb bool) (string, string) {
 	case true: //日期在立春之后
 		yearg := 1 + (year+6)%10
 		yearz := 1 + (year+8)%12
-		aliasGan = Gans[yearg] //Gan
+		aliasGan = Gans[yearg]
 		aliasZhi = Zhis[yearz]
 	}
 

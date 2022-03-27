@@ -50,21 +50,21 @@ var (
 	}
 )
 
-// Gan 干
-func (obj *GanZhi) Gan(gan string) GAN {
-	return GAN(gan)
+// NewGan 干
+func (obj *GanZhi) NewGan(gan string) Gan {
+	return Gan(gan)
 }
 
-// Zhi 支
-func (obj *GanZhi) Zhi(zhi string) ZHI {
-	return ZHI(zhi)
+// NewZhi 支
+func (obj *GanZhi) NewZhi(zhi string) Zhi {
+	return Zhi(zhi)
 }
 
 // DiSiHu 地四户 危除定开下临方既是
 //月建加时支上
 //建除满平一顺流,定执破危相接去,成收开闭掌中周,除定危开为四户,此方有难来逃避
 func (obj *GanZhi) DiSiHu() (string, string, string, string) {
-	hz := pub.GetZhiS(obj.HGZ) //时支
+	hz := pub.GetZhiS(obj.Hgz) //时支
 	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	jcs := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"}
 	hourArr := pub.SortArr(hz, zhis)
@@ -129,7 +129,7 @@ func (obj *GanZhi) FuTou(dgz string) string {
 	if dgz != "" {
 		return fuTou(dgz)
 	}
-	return fuTou(obj.DGZ)
+	return fuTou(obj.Dgz)
 }
 func fuTou(xgz string) string {
 	var zhis string
@@ -174,7 +174,7 @@ func (obj *GanZhi) GetLunar() (string, string) {
 
 // GetNaYinString 纳因(年-月-日-时)
 func (obj *GanZhi) GetNaYinString() string {
-	return GetNaYinString(obj.YGZ, obj.MGZ, obj.DGZ, obj.HGZ)
+	return GetNaYinString(obj.Ygz, obj.Mgz, obj.Dgz, obj.Hgz)
 }
 
 // NaYin 干支纳因
@@ -199,62 +199,62 @@ func GetNaYinString(gzx ...string) string {
 
 //日建除
 //func (obj *GanZhi) RiJianChu() string {
-//	return GetRiJianChu(obj.MGZ, obj.DGZ)
+//	return GetRiJianChu(obj.Mgz, obj.Dgz)
 //}
 
 // JianChu 日建除
 func (obj *GanZhi) JianChu() string {
-	return JianChu(obj.MGZ, obj.DGZ)
+	return JianChu(obj.Mgz, obj.Dgz)
 }
 
 ////日黄黑
 //func (obj *GanZhi) RiHuangHei() string {
-//	return GetRiHuangHei(obj.MGZ, obj.DGZ)
+//	return GetRiHuangHei(obj.Mgz, obj.Dgz)
 //}
 
 // RiHuangHei1 日黄黑
 func (obj *GanZhi) RiHuangHei1() string {
-	return HuangHei(obj.MGZ, obj.DGZ)
+	return HuangHei(obj.Mgz, obj.Dgz)
 }
 
 ////时黄黑
 //func (obj *GanZhi) ShiHuangHei() string {
-//	return GetRiHuangHei(obj.DGZ, obj.HGZ)
+//	return GetRiHuangHei(obj.Dgz, obj.Hgz)
 //}
 
 // ShiHuangHei1 时黄黑
 func (obj *GanZhi) ShiHuangHei1() string {
-	return HuangHei(obj.DGZ, obj.HGZ)
+	return HuangHei(obj.Dgz, obj.Hgz)
 }
 
 // RiQin 日禽
 func (obj *GanZhi) RiQin(weekN int) string {
-	return GetRiQin(weekN, obj.DGZ)
+	return GetRiQin(weekN, obj.Dgz)
 }
 
 // YueJiangStruct 月将
 func (obj GanZhi) YueJiangStruct() *YJ {
-	return NewYueJiang(obj.year, obj.month, obj.day, obj.MGZ)
+	return NewYueJiang(obj.year, obj.month, obj.day, obj.Mgz)
 }
 
 // YueJiang 月将
 //返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
 func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
-	zhis := pub.GetZhiS(obj.MGZ)
+	zhis := pub.GetZhiS(obj.Mgz)
 	return yueJiang(obj.year, obj.month, obj.day, zhis)
 }
 
 // GuiRenYear 贵人诀 默认传入年干支
 func (obj *GanZhi) GuiRenYear() (string, string) {
-	return GuiRenJue(obj.YGZ)
+	return GuiRenJue(obj.Ygz)
 }
 
 // GuiRenDay 贵人诀　日干支
 func (obj *GanZhi) GuiRenDay() (string, string) {
-	return GuiRenJue(obj.DGZ)
+	return GuiRenJue(obj.Dgz)
 }
 
-// JieQi 当前节气名称:节气时间
+// JieQi  当前节气时间 精确到小时
 func (obj *GanZhi) JieQi() string {
 	year := obj.year
 	arr := jq24(year)
@@ -280,7 +280,7 @@ func (obj *GanZhi) JieQi() string {
 	return jqs
 }
 
-// Jq24 24节气
+// Jq24 24节气数组
 func (obj *GanZhi) Jq24() []string {
 	year := obj.year
 	arr := jq24(year)

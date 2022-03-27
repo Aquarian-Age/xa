@@ -84,6 +84,23 @@ var (
 	} //k化合v
 )
 
+type TGan struct {
+	YearGan  string `json:"year_gan"`
+	MonthGan string `json:"month_gan"`
+	DayGan   string `json:"day_gan"`
+	HourGan  string `json:"hour_gan"`
+}
+
+func AliasYearGan() {
+
+}
+func AliasMonthGan() {
+
+}
+func AliasHourGan() {
+
+}
+
 // AliasGan 日干 1+mod(JD正午-1,10) 这里传入的JD是时间精确到日计算
 func AliasGan(jd float64) string {
 	n := int(math.Ceil(math.Mod(jd-1, 10)))
@@ -94,41 +111,41 @@ func AliasGan(jd float64) string {
 	return gans[n]
 }
 
-// GAN 天干
-type GAN string
+//Gan 天干
+type Gan string
 
-func Gan(gan string) GAN {
-	return GAN(gan)
+func NewGan(gan string) Gan {
+	return Gan(gan)
 }
 
 // YiXiang 天干意象
-func (g GAN) YiXiang() string {
+func (g Gan) YiXiang() string {
 	return shiGanYiXiangMap[string(g)]
 }
 
 // YinYang 阴阳属性 0阴 1阳
-func (g GAN) YinYang() int {
+func (g Gan) YinYang() int {
 	return ganYinYangMap[string(g)]
 }
 
 // Lu 禄
-func (g GAN) Lu() string {
+func (g Gan) Lu() string {
 	return shiGanLuMap[string(g)]
 }
 
 // JiGong 寄宫
-func (g GAN) JiGong() string {
+func (g Gan) JiGong() string {
 	return shiGanJiGongMap[string(g)]
 }
 
 // ChangSheng 十二长生
 //0:长生 1:沐浴 2冠带 3临官 4帝旺 5衰 6病 7死 8墓 9绝 10胎 11:养
-func (g GAN) ChangSheng() ([]string, []string) {
+func (g Gan) ChangSheng() ([]string, []string) {
 	return changShengMap[string(g)], changShengNames
 }
 
 // ChangShengHide 十二长生
-func (g GAN) ChangShengHide(name string) string {
+func (g Gan) ChangShengHide(name string) string {
 	var s string
 	switch name {
 	case "长生":
@@ -184,12 +201,12 @@ func (g GAN) ChangShengHide(name string) string {
 }
 
 // WuXing 五行
-func (g GAN) WuXing() string {
+func (g Gan) WuXing() string {
 	return ganWuXingMap[string(g)]
 }
 
 // WuXingShengKe 五行生克
-func (g GAN) WuXingShengKe() (string, string) {
+func (g Gan) WuXingShengKe() (string, string) {
 	wx := ganWuXingMap[string(g)]
 	return WuXingShengKe(wx)
 }
@@ -207,7 +224,7 @@ func WuXingShengKe(wx string) (string, string) {
 }
 
 // HuaHe 化合 甲己合化土，乙庚合化金，丙辛合化水，丁壬合化木，戊癸合化火
-func (g GAN) HuaHe(gan string) (bool, string) {
+func (g Gan) HuaHe(gan string) (bool, string) {
 	huaHeMap := map[string]string{
 		"甲": "土", "己": "土",
 		"乙": "金", "庚": "金",

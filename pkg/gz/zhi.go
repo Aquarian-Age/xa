@@ -77,6 +77,23 @@ var (
 	}
 )
 
+type TZhi struct {
+	YearZhi  string `json:"year_zhi"`
+	MonthZhi string `json:"month_zhi"`
+	DayZhi   string `json:"day_zhi"`
+	HourZhi  string `json:"hour_zhi"`
+}
+
+func AliasYearZhi() {
+
+}
+func AliasMonthZhi() {
+
+}
+func AliasHourZhi() {
+
+}
+
 // AliasZhi 日支 1+mod(JD正午+1,12) 这里传入的JD是时间精确到日计算
 func AliasZhi(jd float64) string {
 	n := int(math.Ceil(math.Mod(jd+1, 12)))
@@ -87,20 +104,20 @@ func AliasZhi(jd float64) string {
 	return zhis[n]
 }
 
-// ZHI 地支
-type ZHI string
+// Zhi 地支
+type Zhi string
 
-func Zhi(zhi string) ZHI {
-	return ZHI(zhi)
+func NewZhi(zhi string) Zhi {
+	return Zhi(zhi)
 }
 
 // YiXiang 地支意象
-func (z ZHI) YiXiang() string {
+func (z Zhi) YiXiang() string {
 	return shiErZhiYiXiang[string(z)]
 }
 
 // Xing 刑 寅申巳三刑 丑戌未三刑 子卯相刑 辰午酉亥自刑
-func (z ZHI) Xing() string {
+func (z Zhi) Xing() string {
 	xmap := map[string]string{
 		"子": "卯", "卯": "子", //子卯相刑多做殃，钱财难近病卧床。
 
@@ -121,7 +138,7 @@ func (z ZHI) Xing() string {
 }
 
 // XingHide 刑
-func (z ZHI) XingHide() string {
+func (z Zhi) XingHide() string {
 	xmap := map[string]string{
 		"子": `无礼之刑 子卯相刑多做殃，钱财难近病卧床。
 没气质 眼光高 讲话没礼貌 说话不客气 不随便与人交谈 自视清高 看到不喜欢的人 他就不会去理会对方，
@@ -182,7 +199,7 @@ func (z ZHI) XingHide() string {
 
 // Chong 冲
 //子午相冲、丑未相冲、寅申相冲、卯酉相冲、辰戌相冲、巳亥相冲、
-func (z ZHI) Chong() string {
+func (z Zhi) Chong() string {
 	xmap := map[string]string{
 		"子": `午`, "午": `子`,
 		"丑": `未`, "未": `丑`,
@@ -194,7 +211,7 @@ func (z ZHI) Chong() string {
 }
 
 // ChongHide 冲
-func (z ZHI) ChongHide() string {
+func (z Zhi) ChongHide() string {
 	xmap := map[string]string{
 		"子": `子午相冲难消闲，奔波忙碌空一场。
 身不安 水灾火光泪涟涟 问病身体总不好 主脑血管 血栓之类 水火不容 
@@ -246,7 +263,7 @@ func (z ZHI) ChongHide() string {
 }
 
 // Po 破
-func (z ZHI) Po() string {
+func (z Zhi) Po() string {
 	xmap := map[string]string{
 		"子": `酉`,
 		"丑": `辰`,
@@ -264,7 +281,7 @@ func (z ZHI) Po() string {
 }
 
 // PoHide 破
-func (z ZHI) PoHide() string {
+func (z Zhi) PoHide() string {
 	xmap := map[string]string{
 		"子": `酉子相破大不良，少小卧床闹疾荒
 经常面临经济困难 
@@ -306,7 +323,7 @@ func (z ZHI) PoHide() string {
 }
 
 // Hai 害
-func (z ZHI) Hai() string {
+func (z Zhi) Hai() string {
 	xmap := map[string]string{
 		"子": `未`,
 		"丑": `午`,
@@ -325,7 +342,7 @@ func (z ZHI) Hai() string {
 }
 
 // HaiHide 害
-func (z ZHI) HaiHide() string {
+func (z Zhi) HaiHide() string {
 	xmap := map[string]string{
 		"子": `子未相害口舌生，男人在外不顺情
 个性极端 容易犯小人 易换工作 貌合神离 无话可说 会要求对方 （最严重的害又称天地害南北害）
@@ -370,7 +387,7 @@ func (z ZHI) HaiHide() string {
 }
 
 // He 合
-func (z ZHI) He() string {
+func (z Zhi) He() string {
 	xmap := map[string]string{
 		"子": `丑`,
 		"丑": `子`,
@@ -388,7 +405,7 @@ func (z ZHI) He() string {
 }
 
 // HeHide 合
-func (z ZHI) HeHide() string {
+func (z Zhi) HeHide() string {
 	xmap := map[string]string{
 		"子": `子丑相合不为灾，老老少少卧起来
 逆合 凑合 问事失好后坏 问婚姻两人凑合过 不美满 也只违背意愿的遵从 不情愿 
@@ -438,18 +455,18 @@ func (z ZHI) HeHide() string {
 }
 
 // WuXing 五行
-func (z ZHI) WuXing() string {
+func (z Zhi) WuXing() string {
 	return zhiWuXingMap[string(z)]
 }
 
 // WuXingShengKe 五行生克
-func (z ZHI) WuXingShengKe() (string, string) {
+func (z Zhi) WuXingShengKe() (string, string) {
 	wx := zhiWuXingMap[string(z)]
 	return WuXingShengKe(wx)
 }
 
 // HuaHe 六合 子丑合化土，寅亥合化木，卯戍合化火，辰酉合化金，巳申合化水，午与未合化土。
-func (z ZHI) HuaHe(zhi string) (bool, string) {
+func (z Zhi) HuaHe(zhi string) (bool, string) {
 	huaHeMap := map[string]string{
 		"午": "土", "未": "土",
 		"子": "土", "丑": "土",
@@ -476,7 +493,7 @@ func (z ZHI) HuaHe(zhi string) (bool, string) {
 华盖要皆主福,若与岁干库同位为两重福,主大贵,三命提要华盖要见库墓冠带之乡,
 假令癸卯金人,华盖在未,见丁未为冠带之位,若辛卯木人见之,为库墓之位,见癸未是木人之正印,最为贵格,余皆仿此。(珞琭贵贱格)
 */
-func (z ZHI) HuaGai() string {
+func (z Zhi) HuaGai() string {
 	xmap := map[string]string{
 		"申": "辰", "子": "辰", "辰": "辰",
 		"寅": "戌", "午": "戌", "戌": "戌",
@@ -495,7 +512,7 @@ func (z ZHI) HuaGai() string {
 此人入命，有破无成，非为吉兆，妇人尤忌之。
 咸池非吉煞，日时与水命遇之尤凶。
 */
-func (z ZHI) XianChi() string {
+func (z Zhi) XianChi() string {
 	xmap := map[string]string{
 		"申": "酉", "子": "酉", "辰": "酉",
 		"寅": "卯", "午": "卯", "戌": "卯",

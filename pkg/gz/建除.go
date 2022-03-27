@@ -13,7 +13,7 @@ import (
 
 // JianChuDay 日建除另一个算法
 func (obj *GanZhi) JianChuDay() string {
-	return JianChu(obj.MGZ, obj.DGZ)
+	return JianChu(obj.Mgz, obj.Dgz)
 }
 
 // JianChu 日建除
