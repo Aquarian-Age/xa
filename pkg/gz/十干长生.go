@@ -1,5 +1,7 @@
 package gz
 
+import "strings"
+
 var (
 	jiaChangShengMap  = map[string]string{"丑": "冠带", "亥": "长生", "午": "死", "卯": "帝旺", "子": "沐浴", "寅": "临官", "巳": "病", "戌": "养", "未": "墓", "申": "绝", "辰": "衰", "酉": "胎"}
 	yiChangShengMap   = map[string]string{"丑": "衰", "亥": "死", "午": "长生", "卯": "临官", "子": "病", "寅": "帝旺", "巳": "沐浴", "戌": "墓", "未": "养", "申": "胎", "辰": "冠带", "酉": "绝"}
@@ -47,4 +49,54 @@ func ChangSheng(gan, zhi string) string {
 		s = guiChangShengMap[zhi]
 	}
 	return s
+}
+
+// ChangShengZhi 干在十二长生位置对应的地支
+//传入天干 十二长生名称(长生 沐浴 冠带 临官 帝旺 衰 病 死 墓 绝 胎 养) 返回对应的地支
+func ChangShengZhi(gan, name string) (zhis string) {
+	arr := findArr(gan, changShengMap)
+	index := findName(name, changShengNames)
+	switch gan {
+	case "甲":
+		zhis = arr[index]
+	case "乙":
+		zhis = arr[index]
+	case "丙":
+		zhis = arr[index]
+	case "丁":
+		zhis = arr[index]
+	case "戊":
+		zhis = arr[index]
+	case "己":
+		zhis = arr[index]
+	case "庚":
+		zhis = arr[index]
+	case "辛":
+		zhis = arr[index]
+	case "壬":
+		zhis = arr[index]
+	case "癸":
+		zhis = arr[index]
+	}
+	return
+}
+func findArr(name string, xmap map[string][]string) []string {
+	var array []string
+	for k, arr := range xmap {
+		if strings.EqualFold(name, k) {
+			array = arr
+			break
+		}
+	}
+	return array
+}
+func findName(name string, arr []string) int {
+	var index int
+	for i := 0; i < len(arr); i++ {
+		if strings.EqualFold(name, arr[i]) {
+			index = i
+			break
+		}
+	}
+	return index
 }

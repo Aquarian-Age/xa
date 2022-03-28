@@ -138,10 +138,20 @@ func (g Gan) JiGong() string {
 	return shiGanJiGongMap[string(g)]
 }
 
-// ChangSheng 十二长生
-//0:长生 1:沐浴 2冠带 3临官 4帝旺 5衰 6病 7死 8墓 9绝 10胎 11:养
-func (g Gan) ChangSheng() ([]string, []string) {
+// ChangShengArray 十二长生数组 长生名称数组(0:长生 1:沐浴 2冠带 3临官 4帝旺 5衰 6病 7死 8墓 9绝 10胎 11:养)
+func (g Gan) ChangShengArray() ([]string, []string) {
 	return changShengMap[string(g)], changShengNames
+}
+
+// ChangSheng 干在支的十二长生名称
+func (g Gan) ChangSheng(zhis string) string {
+	return ChangSheng(string(g), zhis)
+}
+
+// ChangShengZhi 干在十二长生位置对应的地支
+//传入天干 十二长生名称(长生 沐浴 冠带 临官 帝旺 衰 病 死 墓 绝 胎 养) 返回对应的地支
+func (g Gan) ChangShengZhi(name string) string {
+	return ChangShengZhi(string(g), name)
 }
 
 // ChangShengHide 十二长生

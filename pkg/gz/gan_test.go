@@ -70,7 +70,7 @@ func TestGan_ChangSheng(t *testing.T) {
 	//gan := "庚"
 	//arr := gzo.ChangShengArr(gan)
 	//g := gzo.NewGan(gan)
-	//changsheng := g.ChangSheng(arr)
+	//changsheng := g.ChangShengArray(arr)
 	//fmt.Println(gan, "长生", changsheng)
 	//fmt.Println(gan, "死", g.Si(arr))
 	//fmt.Println(gan, "绝", g.Jue(arr))
@@ -91,7 +91,7 @@ func TestGan(t *testing.T) {
 		s3 := g.YinYang()
 		sa, sb := g.WuXingShengKe()
 		s5 := g.Lu()
-		sc, sd := g.ChangSheng()
+		sc, sd := g.ChangShengArray()
 		s7 := g.JiGong()
 		fmt.Printf("%s: %d %v %v %v %v %v %v %v %v\n", g, s1, s2, s3, s5, s7, sa, sb, sc, sd)
 	}
