@@ -143,6 +143,18 @@ func (g Gan) ChangShengArray() ([]string, []string) {
 	return changShengMap[string(g)], changShengNames
 }
 
+//十干长生String
+//如 传入天干甲 返回
+func ChangShengString(gan string) string {
+	xarr := changShengMap[gan]
+	var s string
+	for i := 0; i < len(xarr); i++ {
+		s += changShengNames[i] + "于" + xarr[i] + " "
+	}
+	s = gan + s
+	return s
+}
+
 // ChangSheng 干在支的十二长生名称
 func (g Gan) ChangSheng(zhis string) string {
 	return ChangSheng(string(g), zhis)

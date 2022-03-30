@@ -74,6 +74,9 @@ func TestGan_ChangSheng(t *testing.T) {
 	//fmt.Println(gan, "长生", changsheng)
 	//fmt.Println(gan, "死", g.Si(arr))
 	//fmt.Println(gan, "绝", g.Jue(arr))
+	gan := "丙"
+	s := ChangShengString(gan)
+	fmt.Println(s)
 }
 
 //	壬寅 壬寅 戊子
