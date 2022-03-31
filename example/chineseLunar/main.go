@@ -241,6 +241,7 @@ func (f *TForm1) initedit(sender vcl.IObject) {
 	f.sheng.SetTop(f.Height() - 35)
 	f.sheng.SetWidth(70)
 	f.sheng.SetHint("输入省名称自动计算省经纬度")
+	f.sheng.SetTextBuf("广东省")
 
 	f.shi = vcl.NewEdit(f)
 	f.shi.SetParent(f)
@@ -248,6 +249,7 @@ func (f *TForm1) initedit(sender vcl.IObject) {
 	f.shi.SetTop(f.Height() - 35)
 	f.shi.SetWidth(70)
 	f.shi.SetHint("输入城市名称自动计算经纬度")
+	f.shi.SetTextBuf("深圳市")
 
 }
 func (f *TForm1) OnBtnClicked(sender vcl.IObject) {
@@ -345,8 +347,8 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, x.Tag())
 	gzo := gz.NewGanZhi(year, monthNow, x.Tag(), 0)
-	ganZhis := fmt.Sprintf("%s年 %s月 %s日\n", gzo.YGZ, gzo.MGZ, gzo.DGZ)
-	nayins := gz.NaYin(gzo.YGZ) + " " + gz.NaYin(gzo.MGZ) + " " + gz.NaYin(gzo.DGZ) + "\n"
+	ganZhis := fmt.Sprintf("%s年 %s月 %s日\n", gzo.Ygz, gzo.Mgz, gzo.Dgz)
+	nayins := gz.NaYin(gzo.Ygz) + " " + gz.NaYin(gzo.Mgz) + " " + gz.NaYin(gzo.Dgz) + "\n"
 	yjo := gzo.YueJiangStruct()
 	zhongqis := fmt.Sprintf("中气: %s\n中气时间: %s\n", yjo.ZhongQiName, yjo.ZhongQiT)
 	yuejiangs := fmt.Sprintf("月将: %s(%s)\n", yjo.Zhi, yjo.Name)
@@ -461,18 +463,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgz := dayGZ(year, monthNow, int(xday[i]))
+				dgzs := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgz)
+					gzLabels[i].SetCaption(dgzs)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -504,18 +506,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			}
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgz := dayGZ(year, monthNow, int(xday[i]))
+			dgzs := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-7])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgz)
+			gzLabels[i].SetCaption(dgzs)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -546,18 +548,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgz := dayGZ(year, monthNow, int(xday[i]))
+			dgzs := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-14])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgz)
+			gzLabels[i].SetCaption(dgzs)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -588,18 +590,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgz := dayGZ(year, monthNow, int(xday[i]))
+			dgzs := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-21])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgz)
+			gzLabels[i].SetCaption(dgzs)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -631,18 +633,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgz := dayGZ(year, monthNow, int(xday[i]))
+				dgzs := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i-28])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgz)
+					gzLabels[i].SetCaption(dgzs)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -673,18 +675,18 @@ func (f *TForm1) showLabels(t time.Time) {
 					labels[i].SetTag(int(xday[i]))
 					labels[i].SetOnClick(f.onLabelxClick)
 
-					dgz := dayGZ(year, monthNow, int(xday[i]))
+					dgzs := dayGZ(year, monthNow, int(xday[i]))
 					starNames := getRiQin(tx)
 					gzLabels[i].SetLeft(Lefts[i-28])
 					gzLabels[i].SetWidth(10)
 					gzLabels[i].SetTop(labels[i].Top() + 25)
-					gzLabels[i].SetCaption(dgz)
+					gzLabels[i].SetCaption(dgzs)
 					if starstat == -2 {
 						gzLabels[i].Font().SetSize(10)
 						gzLabels[i].SetCaption(starNames)
 					}
 					if starstat == 2 {
-						gzLabels[i].SetCaption(dgz)
+						gzLabels[i].SetCaption(dgzs)
 					}
 
 					_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -718,18 +720,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgz := dayGZ(year, monthNow, int(xday[i]))
+				dgzs := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i-35])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgz)
+				gzLabels[i].SetCaption(dgzs)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgz)
+					gzLabels[i].SetCaption(dgzs)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -749,10 +751,8 @@ func (f *TForm1) showLabels(t time.Time) {
 func dayGZ(year, month, day int) string {
 	t := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 	jd := calendar.Date2JDE(t)
-	jdi := int(math.Ceil(jd))
-	return dGz(jdi)
-}
-func dGz(jdI int) string {
+	jdI := int(math.Ceil(jd))
+
 	gn := 1 + (jdI%60-1)%10 //干
 	if gn == 0 {
 		gn += 10
