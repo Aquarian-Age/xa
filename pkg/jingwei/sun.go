@@ -10,21 +10,23 @@ import (
 	"fmt"
 	"github.com/starainrt/astro/sun"
 	"log"
+	"math"
 	"time"
 )
 
 type Sun struct {
-	Jing      float64 `json:"jing"`
-	Wei       float64 `json:"wei"`
-	ShengQi   string  `json:"up"`
-	LuoXia    string  `json:"luo_xia"`
-	ZhongTian string  `json:"zhong_tian"`
-	HuangChi  string  `json:"huang_chi"`
-	HuangJing string  `json:"huang_jing"`
-	JuLi      string  `json:"ju_li"`
+	Jing      float64   `json:"jing"`
+	Wei       float64   `json:"wei"`
+	ShengQi   string    `json:"up"`
+	LuoXia    string    `json:"luo_xia"`
+	ZhongTian string    `json:"zhong_tian"`
+	HuangChi  string    `json:"huang_chi"`
+	HuangJing string    `json:"huang_jing"`
+	JuLi      string    `json:"ju_li"`
+	LocalSun  time.Time `json:"local_sun"`
 }
 
-// GetSun 传入经纬度　时间 获取太阳时间
+// GetSun 传入经纬度　本地时间 获取太阳时间
 func GetSun(j, w float64, tx time.Time) *Sun {
 	//layout := "2006-01-02 15:04:05"
 	layout := "15:04:05"
@@ -47,6 +49,8 @@ func GetSun(j, w float64, tx time.Time) *Sun {
 	//太阳日地距离
 	t6 := sun.EarthDistance(tx)
 
+	sunT := ApparentSolarTime(tx, j)
+
 	t1s := t1.Format(layout)
 	t2s := t2.Format(layout)
 	t3s := t3.Format(layout)
@@ -62,5 +66,30 @@ func GetSun(j, w float64, tx time.Time) *Sun {
 		t4s,
 		t5s,
 		t6s,
+		sunT,
 	}
+}
+
+// ApparentSolarTime 真太阳时 真太阳时=太阳时角+12小时 传入:本地市区的时间戳,经度
+//本函数由 astro库(https://github.com/Starainrt/astro)的作者提供
+func ApparentSolarTime(date time.Time, lon float64) time.Time {
+	//真太阳时=太阳时角+12小时
+	trueTime := (sun.HourAngle(date, lon, 0) + 180) / 15
+	if trueTime > 24 {
+		trueTime -= 24
+	}
+	//真太阳时的分
+	minute := (trueTime - math.Floor(trueTime)) * 60
+	//真太阳时的秒
+	second := (minute - math.Floor(minute)) * 60
+	//当地经度下的本地时区
+	trueSunTime := date.In(time.FixedZone("LTZ", int(lon*3600.00/15.0)))
+	if trueSunTime.Hour()-int(trueTime) > 12 {
+		trueSunTime = trueSunTime.Add(time.Hour * 24)
+	} else if int(trueTime)-trueSunTime.Hour() > 12 {
+		trueSunTime = trueSunTime.Add(-time.Hour * 24)
+	}
+	return time.Date(trueSunTime.Year(), trueSunTime.Month(), trueSunTime.Day(),
+		int(trueTime), int(minute), int(second), int((second-math.Floor(second))*1000000000),
+		time.FixedZone("LTZ", int(lon*3600.00/15.0)))
 }
