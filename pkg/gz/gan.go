@@ -143,7 +143,7 @@ func (g Gan) ChangShengArray() ([]string, []string) {
 	return changShengMap[string(g)], changShengNames
 }
 
-//十干长生String
+// ChangShengString 十干长生String
 //如 传入天干甲 返回
 func ChangShengString(gan string) string {
 	xarr := changShengMap[gan]
@@ -234,6 +234,7 @@ func (g Gan) WuXingShengKe() (string, string) {
 }
 
 // WuXingShengKe 五行生克
+//例：木生火 木克土 传入木 返回 火，土
 func WuXingShengKe(wx string) (string, string) {
 	var sheng, ke string
 	if s, ok := wuXingShengMap[wx]; ok {
