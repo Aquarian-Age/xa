@@ -365,7 +365,7 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	s += jws
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
-	f.pubLabel.SetTop(10)
+	f.pubLabel.SetTop(15)
 	f.pubLabel.Font().SetColor(colors.ClSkyblue)
 	f.pubLabel.Font().SetSize(12)
 	f.pubLabel.SetCaption(s)
