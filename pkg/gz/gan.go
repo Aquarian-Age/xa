@@ -118,6 +118,11 @@ func NewGan(gan string) Gan {
 	return Gan(gan)
 }
 
+//
+func (g Gan) String() string {
+	return string(g)
+}
+
 // YiXiang 天干意象
 func (g Gan) YiXiang() string {
 	return shiGanYiXiangMap[string(g)]
@@ -261,4 +266,41 @@ func (g Gan) HuaHe(gan string) (bool, string) {
 	}
 	return false, ""
 
+}
+
+// GuiRen 贵人
+func (g Gan) GuiRen() (yang, yin string) {
+	switch string(g) {
+	case "甲":
+		yang = "未"
+		yin = "丑"
+	case "戊":
+		yang = "丑"
+		yin = "未"
+	case "乙":
+		yang = "申"
+		yin = "子"
+	case "己":
+		yang = "子"
+		yin = "申"
+	case "丙":
+		yang = "酉"
+		yin = "亥"
+	case "丁":
+		yang = "亥"
+		yin = "酉"
+	case "庚":
+		yang = "丑"
+		yin = "未"
+	case "辛":
+		yang = "寅"
+		yin = "午"
+	case "壬":
+		yang = "卯"
+		yin = "巳"
+	case "癸":
+		yang = "巳"
+		yin = "卯"
+	}
+	return
 }
