@@ -10,8 +10,8 @@ import (
 	"github.com/Aquarian-Age/xa/pkg/pub"
 )
 
-// GuiRenJue 阴阳贵人诀 返回干支对应的阳贵人　阴贵人
-func GuiRenJue(dgz string) (yang, yin string) {
+// GuiRen 阴阳贵人诀 返回干支对应的阳贵人　阴贵人
+func GuiRen(dgz string) (yang, yin string) {
 	gs := pub.GetGanS(dgz)
 	switch gs {
 	case "甲":

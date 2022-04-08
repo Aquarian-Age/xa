@@ -244,15 +244,15 @@ func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
 	return yueJiang(obj.year, obj.month, obj.day, zhis)
 }
 
-// GuiRenYear 贵人诀 默认传入年干支
-func (obj *GanZhi) GuiRenYear() (string, string) {
-	return GuiRenJue(obj.Ygz)
+// GuiRen 贵人诀 默认传入年干支
+func (obj *GanZhi) GuiRen(xgz string) (string, string) {
+	return GuiRen(xgz)
 }
 
 // GuiRenDay 贵人诀　日干支
-func (obj *GanZhi) GuiRenDay() (string, string) {
-	return GuiRenJue(obj.Dgz)
-}
+//func (obj *GanZhi) GuiRenDay() (string, string) {
+//	return GuiRenJue(obj.Dgz)
+//}
 
 // JieQi  当前节气时间 精确到小时
 func (obj *GanZhi) JieQi() string {
