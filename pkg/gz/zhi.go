@@ -116,7 +116,7 @@ func (z Zhi) YiXiang() string {
 	return shiErZhiYiXiang[string(z)]
 }
 
-// Xing 刑 寅申巳三刑 丑戌未三刑 子卯相刑 辰午酉亥自刑
+// Xing 刑 寅巳申三刑 未丑戌三刑 子卯相刑 辰午酉亥自刑
 func (z Zhi) Xing() string {
 	xmap := map[string]string{
 		"子": "卯", "卯": "子", //子卯相刑多做殃，钱财难近病卧床。
@@ -125,9 +125,9 @@ func (z Zhi) Xing() string {
 		"巳": "申", //巳申相刑大不祥，中年必见伤一场。
 		"申": "寅",
 
+		"未": "丑",
 		"丑": "戌", //丑戍相刑不为强，房房男子见刑伤
 		"戌": "未", //戍未相刑煞气来，三口之家一个亡。
-		"未": "丑",
 
 		"酉": "酉",
 		"午": "午",

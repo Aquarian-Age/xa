@@ -170,3 +170,14 @@ func WeekName(n int) (w string) {
 	}
 	return
 }
+
+// DelElement 去除切片空元素
+func DelElement(s []string) []string {
+	news := []string{}
+	for _, v := range s {
+		if len(v) > 0 {
+			news = append(news, v)
+		}
+	}
+	return news
+}

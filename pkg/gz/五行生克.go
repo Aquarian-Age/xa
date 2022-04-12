@@ -11,6 +11,20 @@ import (
 	"strings"
 )
 
+// ShengKeMap k 克 v
+var ShengKeMap = map[string]string{"木": "土", "火": "金", "土": "水", "金": "木", "水": "火"}
+
+// WuXingGanVsGan 天干五行生克 true 后者克前者
+func WuXingGanVsGan(gan1, gan2 string) bool {
+	wx1 := ganWuXingMap[gan1]
+	wx2 := ganWuXingMap[gan2]
+	wx := ShengKeMap[wx2]
+	if strings.EqualFold(wx, wx1) {
+		return true
+	}
+	return false
+}
+
 //返回五行生克的字符形式
 func GetWXSKS(gz string) string {
 	wx1, wx2, gan, zhi := gzWuXing(gz)
