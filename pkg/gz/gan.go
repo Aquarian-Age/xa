@@ -82,6 +82,15 @@ var (
 		"丁": "壬", "壬": "丁",
 		"戊": "癸", "癸": "戊",
 	} //k化合v
+
+	//喜神方位
+	xiShenMap = map[string]int{
+		"甲": 8, "己": 8,
+		"乙": 6, "庚": 6,
+		"丙": 2, "辛": 2,
+		"丁": 9, "壬": 9,
+		"戊": 4, "癸": 4,
+	}
 )
 
 type TGan struct {
@@ -303,4 +312,9 @@ func (g Gan) GuiRen() (yang, yin string) {
 		yin = "卯"
 	}
 	return
+}
+
+// XiShen 喜神方 返回喜神方对应的九宫数字
+func (g Gan) XiShen() int {
+	return xiShenMap[string(g)]
 }

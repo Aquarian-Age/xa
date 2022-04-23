@@ -75,6 +75,16 @@ var (
 		"辰": "酉", "酉": "辰",
 		"巳": "申", "申": "巳",
 	}
+	yiMaMap = map[string]string{
+		"寅": "申", "午": "申", "戌": "申",
+		"亥": "巳", "卯": "巳", "未": "巳",
+		"申": "寅", "子": "寅", "辰": "寅",
+		"巳": "亥", "酉": "亥", "丑": "亥"}
+	xianChiMap = map[string]string{
+		"申": "酉", "子": "酉", "辰": "酉",
+		"寅": "卯", "午": "卯", "戌": "卯",
+		"巳": "午", "酉": "午", "丑": "午",
+		"亥": "子", "卯": "子", "未": "子"}
 )
 
 type TZhi struct {
@@ -513,10 +523,14 @@ func (z Zhi) HuaGai() string {
 咸池非吉煞，日时与水命遇之尤凶。
 */
 func (z Zhi) XianChi() string {
-	xmap := map[string]string{
-		"申": "酉", "子": "酉", "辰": "酉",
-		"寅": "卯", "午": "卯", "戌": "卯",
-		"巳": "午", "酉": "午", "丑": "午",
-		"亥": "子", "卯": "子", "未": "子"}
-	return xmap[string(z)]
+	return xianChiMap[string(z)]
+}
+
+// YiMa 驿马 申子辰马在寅，寅午戌马在申，巳酉丑马在亥，亥卯未马在巳。
+func (z Zhi) YiMa() string {
+	return yiMaMap[string(z)]
+}
+
+func YiMa(zhi string) string {
+	return yiMaMap[zhi]
 }
