@@ -17,7 +17,7 @@
 
 
 Name:           chineseLunar
-Version:        1.0.6
+Version:        1.0.9
 Release:        0
 Summary:        Constellation chineseLunar
 License:        MIT
@@ -46,7 +46,7 @@ tar xzvf %{_sourcedir}/chineseLunar.tar.gz -C %{_builddir}/%{name}-%{version}
 %build
 cd %{_builddir}/%{name}-%{version}
 
-go build -o chineseLunar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.6t' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
+go build -o chineseLunar -mod=vendor -tags tempdll -ldflags="-s -w -X 'main.Version=1.0.9t' -X 'main.Mail=bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo='" -trimpath .
 
 %install
 mkdir -p %{_buildrootdir}/%{name}-%{version}-%{release}.%{_arch}/%{_bindir}/
