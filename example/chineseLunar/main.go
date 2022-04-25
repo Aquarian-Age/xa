@@ -4,18 +4,18 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/ying32/govcl/vcl/rtl"
-	"github.com/ying32/govcl/vcl/types/messages"
-
 	"github.com/Aquarian-Age/xa/pkg/gz"
 	"github.com/Aquarian-Age/xa/pkg/jingwei"
 	"github.com/starainrt/astro/basic"
 	"github.com/starainrt/astro/calendar"
+	"github.com/ying32/govcl/vcl/rtl"
 	"github.com/ying32/govcl/vcl/types"
+	"github.com/ying32/govcl/vcl/types/messages"
 
 	"math"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 	_ "time/tzdata"
 
@@ -23,7 +23,7 @@ import (
 	"github.com/ying32/govcl/vcl/types/colors"
 )
 
-type TForm1 struct {
+type TFormChineseLunar struct {
 	*vcl.TForm
 	title0, title1, title2, title3, title4, title5, title6 *vcl.TLabel
 	//
@@ -52,15 +52,18 @@ type TForm1 struct {
 	labels, gzLabels, moonLabels []*vcl.TLabel
 	pubLabel                     *vcl.TLabel
 	sheng, shi                   *vcl.TEdit
+
+	yse, mse  *vcl.TSpinEdit
+	btnSelect *vcl.TButton
 }
 
 var (
-	form1        *TForm1
-	printVersion bool
-	T            = time.Now().Local()
-	monthNow     int
-	weekname     = []string{"日", "一", "二", "三", "四", "五", "六"}
-	moonMonthMap = map[int]string{1: "正月", 2: "二月", 3: "三月", 4: "四月", 5: "五月", 6: "六月",
+	formChineseLunar *TFormChineseLunar
+	printVersion     bool
+	T                = time.Now().Local()
+	monthNow         int
+	weekname         = []string{"日", "一", "二", "三", "四", "五", "六"}
+	moonMonthMap     = map[int]string{1: "正月", 2: "二月", 3: "三月", 4: "四月", 5: "五月", 6: "六月",
 		7: "七月", 8: "八月", 9: "九月", 10: "十月", 11: "冬月", 12: "廿月"}
 	dayMap = map[int]string{1: "初一", 2: "初二", 3: "初三", 4: "初四", 5: "初五", 6: "初六", 7: "初七",
 		8: "初八", 9: "初九", 10: "初十", 11: "十一", 12: "十二", 13: "十三", 14: "十四",
@@ -104,10 +107,10 @@ func main() {
 
 	vcl.Application.Initialize()
 	vcl.Application.SetMainFormOnTaskBar(true)
-	vcl.Application.CreateForm(&form1)
+	vcl.Application.CreateForm(&formChineseLunar)
 	vcl.Application.Run()
 }
-func (f *TForm1) OnFormCreate(sender vcl.IObject) {
+func (f *TFormChineseLunar) OnFormCreate(sender vcl.IObject) {
 	f.SetWidth(500)
 	f.SetHeight(550)
 	f.ScreenCenter()
@@ -116,6 +119,7 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.SetShowHint(true)
 	icon := f.Icon()
 	icon.LoadFromBytes(icons)
+
 	f.Title()
 	f.initLabels(sender)
 	f.initedit(sender)
@@ -123,21 +127,58 @@ func (f *TForm1) OnFormCreate(sender vcl.IObject) {
 	f.showLabels(T)
 	f.OnBtnClicked(sender)
 	f.about()
+	f.selectTime(sender)
 }
-func (f *TForm1) about() {
+
+//自选时间
+func (f *TFormChineseLunar) selectTime(sencer vcl.IObject) {
+	f.yse = vcl.NewSpinEdit(f)
+	f.yse.SetParent(f)
+	f.yse.SetLeft(3)
+	f.yse.SetTop(f.Height() - 35)
+	f.yse.SetWidth(70)
+	f.yse.SetMaxValue(9999)
+	f.yse.SetMinValue(300)
+	f.yse.SetTextBuf(strconv.Itoa(T.Year()))
+
+	f.mse = vcl.NewSpinEdit(f)
+	f.mse.SetParent(f)
+	f.mse.SetLeft(f.yse.Left() + f.yse.Width())
+	f.mse.SetTop(f.yse.Top())
+	f.mse.SetWidth(70)
+	f.mse.SetMinValue(1)
+	f.mse.SetMaxValue(12)
+	f.mse.SetTextBuf(strconv.Itoa(int(T.Month())))
+
+	f.btnSelect = vcl.NewButton(f)
+	f.btnSelect.SetParent(f)
+	f.btnSelect.SetLeft(f.mse.Left() + f.mse.Width())
+	f.btnSelect.SetTop(f.mse.Top())
+	f.btnSelect.SetHeight(33)
+	f.btnSelect.SetWidth(50)
+	f.btnSelect.SetCaption("show")
+	f.btnSelect.SetOnClick(func(sender vcl.IObject) {
+		y := int(f.yse.Value())
+		m := int(f.mse.Value())
+		tselect := time.Date(y, time.Month(m), 1, 0, 0, 0, 0, time.Local)
+		f.showLabels(tselect)
+	})
+
+}
+func (f *TFormChineseLunar) about() {
 	btn := vcl.NewButton(f)
 	btn.SetParent(f)
 	btn.SetLeft(f.Width() - 45)
 	btn.SetTop(f.Height() - 35)
 	btn.SetWidth(40)
-	btn.SetHeight(30)
+	btn.SetHeight(33)
 	btn.SetCaption("关于")
 	btn.SetOnClick(f.OnBtnAboutClicked)
 }
-func (f *TForm1) OnBtnAboutClicked(sender vcl.IObject) {
+func (f *TFormChineseLunar) OnBtnAboutClicked(sender vcl.IObject) {
 	fromabout := vcl.NewForm(f)
-	fromabout.SetWidth(300)
-	fromabout.SetHeight(300)
+	fromabout.SetWidth(400)
+	fromabout.SetHeight(400)
 	fromabout.SetBorderStyle(types.BsSingle)
 	fromabout.ScreenCenter()
 	fromabout.SetCaption("关于")
@@ -148,9 +189,10 @@ func (f *TForm1) OnBtnAboutClicked(sender vcl.IObject) {
 	about.SetTop(5)
 	about.SetCaption(`
 简易农历
-v1.0.6t
+v1.0.9t
 橙色阴历,鼠标悬停会显示宗教相关节日
 可切换干支/日禽
+mail: bGlhbmd6aTIwMjFAeWFuZGV4LmNvbQo=
 `)
 
 	link := vcl.NewLinkLabel(fromabout)
@@ -175,7 +217,7 @@ v1.0.6t
 
 }
 
-func (f *TForm1) Title() {
+func (f *TFormChineseLunar) Title() {
 	titles := []*vcl.TLabel{f.title0, f.title1, f.title2, f.title3, f.title4, f.title5, f.title6}
 	for i := 0; i < len(titles); i++ {
 		titles[i] = vcl.NewLabel(f)
@@ -185,7 +227,7 @@ func (f *TForm1) Title() {
 		titles[i].SetCaption(weekname[i])
 	}
 }
-func (f *TForm1) initLabels(sender vcl.IObject) {
+func (f *TFormChineseLunar) initLabels(sender vcl.IObject) {
 	labels := []*vcl.TLabel{
 		f.label1, f.label2, f.label3, f.label4, f.label5, f.label6, f.label7,
 		f.label8, f.label9, f.label10, f.label11, f.label12, f.label13, f.label14,
@@ -213,6 +255,7 @@ func (f *TForm1) initLabels(sender vcl.IObject) {
 	for i := 0; i < len(labels); i++ {
 		labels[i] = vcl.NewLabel(f)
 		labels[i].SetParent(f)
+		//labels[i].SetAlignment(types.AsrCenter)
 
 		gzLabels[i] = vcl.NewLabel(f)
 		gzLabels[i].SetParent(f)
@@ -234,25 +277,26 @@ func (f *TForm1) initLabels(sender vcl.IObject) {
 	f.pubLabel = vcl.NewLabel(f)
 	f.pubLabel.SetParent(f)
 }
-func (f *TForm1) initedit(sender vcl.IObject) {
+func (f *TFormChineseLunar) initedit(sender vcl.IObject) {
 	f.sheng = vcl.NewEdit(f)
 	f.sheng.SetParent(f)
 	f.sheng.SetLeft(f.Width() - 200)
 	f.sheng.SetTop(f.Height() - 35)
 	f.sheng.SetWidth(70)
-	f.sheng.SetHint("输入省名称自动计算省经纬度")
 	f.sheng.SetTextBuf("广东省")
+	f.sheng.SetHint(`输入省名称自动计算省经纬度`)
 
 	f.shi = vcl.NewEdit(f)
 	f.shi.SetParent(f)
 	f.shi.SetLeft(f.Width() - 120)
 	f.shi.SetTop(f.Height() - 35)
 	f.shi.SetWidth(70)
-	f.shi.SetHint("输入城市名称自动计算经纬度")
 	f.shi.SetTextBuf("深圳市")
+	f.shi.SetHint("输入城市名称自动计算经纬度")
 
 }
-func (f *TForm1) OnBtnClicked(sender vcl.IObject) {
+
+func (f *TFormChineseLunar) OnBtnClicked(sender vcl.IObject) {
 	f.btna = vcl.NewButton(f)
 	f.btna.SetParent(f)
 	f.btna.SetLeft(f.Width() - 30)
@@ -289,7 +333,7 @@ func (f *TForm1) OnBtnClicked(sender vcl.IObject) {
 `)
 }
 
-func (f *TForm1) btnaClick(sender vcl.IObject) {
+func (f *TFormChineseLunar) btnaClick(sender vcl.IObject) {
 	monthNow += 1
 	if monthNow > 12 {
 		monthNow = 1
@@ -304,7 +348,7 @@ func (f *TForm1) btnaClick(sender vcl.IObject) {
 	f.pubLabel.SetCaption(years)
 }
 
-func (f *TForm1) btnbClick(sender vcl.IObject) {
+func (f *TFormChineseLunar) btnbClick(sender vcl.IObject) {
 	monthNow -= 1
 	if monthNow <= 0 {
 		monthNow = 12
@@ -312,7 +356,6 @@ func (f *TForm1) btnbClick(sender vcl.IObject) {
 	}
 	t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
 	f.showLabels(t)
-
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, 1)
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
@@ -320,7 +363,7 @@ func (f *TForm1) btnbClick(sender vcl.IObject) {
 	f.pubLabel.SetCaption(years)
 }
 
-func (f *TForm1) btncClick(sender vcl.IObject) {
+func (f *TFormChineseLunar) btncClick(sender vcl.IObject) {
 	f.showLabels(T)
 	years := fmt.Sprintf("%d年%d月%d日\n", year, monthNow, T.Day())
 	f.pubLabel.Refresh()
@@ -330,7 +373,9 @@ func (f *TForm1) btncClick(sender vcl.IObject) {
 }
 
 //干支与日禽切换 配合鼠标双击
-func (f *TForm1) btnstarClick(sender vcl.IObject) {
+//鼠标左键双击+点击星标 显示日干支
+//鼠标右键双击+点击星标 显示日禽
+func (f *TFormChineseLunar) btnstarClick(sender vcl.IObject) {
 	t := time.Date(year, time.Month(monthNow), 1, 0, 0, 0, 0, time.Local)
 	f.showLabels(t)
 
@@ -340,8 +385,7 @@ func (f *TForm1) btnstarClick(sender vcl.IObject) {
 	f.pubLabel.SetTop(10)
 	f.pubLabel.SetCaption(years)
 }
-
-func (f *TForm1) onLabelxClick(sender vcl.IObject) {
+func (f *TFormChineseLunar) onLabelxClick(sender vcl.IObject) {
 	x := vcl.AsLabel(sender)
 	tl := time.Date(year, time.Month(monthNow), x.Tag(), 0, 0, 0, 0, time.Local)
 
@@ -350,7 +394,7 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	ganZhis := fmt.Sprintf("%s年 %s月 %s日\n", gzo.Ygz, gzo.Mgz, gzo.Dgz)
 	nayins := gz.NaYin(gzo.Ygz) + " " + gz.NaYin(gzo.Mgz) + " " + gz.NaYin(gzo.Dgz) + "\n"
 	yjo := gzo.YueJiangStruct()
-	zhongqis := fmt.Sprintf("中气: %s\n中气时间: %s\n", yjo.ZhongQiName, yjo.ZhongQiT)
+	zhongqis := fmt.Sprintf("中气: %s(%s)\n", yjo.ZhongQiName, yjo.ZhongQiT)
 	yuejiangs := fmt.Sprintf("月将: %s(%s)\n", yjo.Zhi, yjo.Name)
 	jianchus := fmt.Sprintf("建除: %s\n", gzo.JianChuDay())
 	huangheis := fmt.Sprintf("黄黑: %s\n", gzo.RiHuangHei1())
@@ -363,10 +407,11 @@ func (f *TForm1) onLabelxClick(sender vcl.IObject) {
 	wei := f.shi.Text()
 	jws := jingweix(jing, wei, tl)
 	s += jws
+
 	f.pubLabel.Refresh()
 	f.pubLabel.SetLeft(290)
-	f.pubLabel.SetTop(15)
-	f.pubLabel.Font().SetColor(colors.ClSkyblue)
+	f.pubLabel.SetTop(10)
+	f.pubLabel.Font().SetColor(colors.ClBlack)
 	f.pubLabel.Font().SetSize(12)
 	f.pubLabel.SetCaption(s)
 }
@@ -396,7 +441,7 @@ func jingweix(jing, wei string, tx time.Time) string {
 // 	return s
 // }
 
-func (f *TForm1) showLabels(t time.Time) {
+func (f *TFormChineseLunar) showLabels(t time.Time) {
 	monthNow = int(t.Month())
 	lastmonth := monthNow - 1
 	if lastmonth == 0 {
@@ -463,18 +508,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgzs := dayGZ(year, monthNow, int(xday[i]))
+				dgz := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgzs)
+					gzLabels[i].SetCaption(dgz)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -506,18 +551,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			}
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgzs := dayGZ(year, monthNow, int(xday[i]))
+			dgz := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-7])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgzs)
+			gzLabels[i].SetCaption(dgz)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -548,18 +593,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgzs := dayGZ(year, monthNow, int(xday[i]))
+			dgz := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-14])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgzs)
+			gzLabels[i].SetCaption(dgz)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -590,18 +635,18 @@ func (f *TForm1) showLabels(t time.Time) {
 			labels[i].SetTag(int(xday[i]))
 			labels[i].SetOnClick(f.onLabelxClick)
 
-			dgzs := dayGZ(year, monthNow, int(xday[i]))
+			dgz := dayGZ(year, monthNow, int(xday[i]))
 			starNames := getRiQin(tx)
 			gzLabels[i].SetLeft(Lefts[i-21])
 			gzLabels[i].SetWidth(10)
 			gzLabels[i].SetTop(labels[i].Top() + 25)
-			gzLabels[i].SetCaption(dgzs)
+			gzLabels[i].SetCaption(dgz)
 			if starstat == -2 {
 				gzLabels[i].Font().SetSize(10)
 				gzLabels[i].SetCaption(starNames)
 			}
 			if starstat == 2 {
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 			}
 
 			_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -633,18 +678,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgzs := dayGZ(year, monthNow, int(xday[i]))
+				dgz := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i-28])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgzs)
+					gzLabels[i].SetCaption(dgz)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -675,18 +720,18 @@ func (f *TForm1) showLabels(t time.Time) {
 					labels[i].SetTag(int(xday[i]))
 					labels[i].SetOnClick(f.onLabelxClick)
 
-					dgzs := dayGZ(year, monthNow, int(xday[i]))
+					dgz := dayGZ(year, monthNow, int(xday[i]))
 					starNames := getRiQin(tx)
 					gzLabels[i].SetLeft(Lefts[i-28])
 					gzLabels[i].SetWidth(10)
 					gzLabels[i].SetTop(labels[i].Top() + 25)
-					gzLabels[i].SetCaption(dgzs)
+					gzLabels[i].SetCaption(dgz)
 					if starstat == -2 {
 						gzLabels[i].Font().SetSize(10)
 						gzLabels[i].SetCaption(starNames)
 					}
 					if starstat == 2 {
-						gzLabels[i].SetCaption(dgzs)
+						gzLabels[i].SetCaption(dgz)
 					}
 
 					_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -720,18 +765,18 @@ func (f *TForm1) showLabels(t time.Time) {
 				labels[i].SetTag(int(xday[i]))
 				labels[i].SetOnClick(f.onLabelxClick)
 
-				dgzs := dayGZ(year, monthNow, int(xday[i]))
+				dgz := dayGZ(year, monthNow, int(xday[i]))
 				starNames := getRiQin(tx)
 				gzLabels[i].SetLeft(Lefts[i-35])
 				gzLabels[i].SetWidth(10)
 				gzLabels[i].SetTop(labels[i].Top() + 25)
-				gzLabels[i].SetCaption(dgzs)
+				gzLabels[i].SetCaption(dgz)
 				if starstat == -2 {
 					gzLabels[i].Font().SetSize(10)
 					gzLabels[i].SetCaption(starNames)
 				}
 				if starstat == 2 {
-					gzLabels[i].SetCaption(dgzs)
+					gzLabels[i].SetCaption(dgz)
 				}
 
 				_, moonday, _, aliasMoon := calendar.ChineseLunar(tx)
@@ -751,8 +796,10 @@ func (f *TForm1) showLabels(t time.Time) {
 func dayGZ(year, month, day int) string {
 	t := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 	jd := calendar.Date2JDE(t)
-	jdI := int(math.Ceil(jd))
-
+	jdi := int(math.Ceil(jd))
+	return dGz(jdi)
+}
+func dGz(jdI int) string {
 	gn := 1 + (jdI%60-1)%10 //干
 	if gn == 0 {
 		gn += 10
@@ -816,7 +863,7 @@ func getRiQin(tx time.Time) string {
 var starstat int
 
 // OnFormWndProc 鼠标事件
-func (f *TForm1) OnFormWndProc(msg *types.TMessage) {
+func (f *TFormChineseLunar) OnFormWndProc(msg *types.TMessage) {
 	f.InheritedWndProc(msg)
 	switch msg.Msg {
 	case messages.WM_LBUTTONDBLCLK: //左键双击

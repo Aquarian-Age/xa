@@ -3,7 +3,7 @@ module chineseLunar
 go 1.17
 
 require (
-	github.com/Aquarian-Age/xa v1.0.10-0.20220331132708-df9bbd12040b
+	github.com/Aquarian-Age/xa v1.0.9
 	github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
 	github.com/ying32/govcl v2.2.0+incompatible
 )

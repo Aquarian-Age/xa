@@ -1,0 +1,31 @@
+# github.com/Aquarian-Age/xa v1.0.9
+## explicit; go 1.17
+github.com/Aquarian-Age/xa/pkg/gz
+github.com/Aquarian-Age/xa/pkg/jingwei
+github.com/Aquarian-Age/xa/pkg/pub
+# github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
+## explicit; go 1.15
+github.com/starainrt/astro/basic
+github.com/starainrt/astro/calendar
+github.com/starainrt/astro/moon
+github.com/starainrt/astro/planet
+github.com/starainrt/astro/sun
+github.com/starainrt/astro/tools
+# github.com/ying32/dylib v0.0.0-20220227124818-fdf9ea9fbc96
+## explicit
+github.com/ying32/dylib
+# github.com/ying32/govcl v2.2.0+incompatible
+## explicit
+github.com/ying32/govcl/pkgs/libname
+github.com/ying32/govcl/vcl
+github.com/ying32/govcl/vcl/api
+github.com/ying32/govcl/vcl/api/memorydll
+github.com/ying32/govcl/vcl/api/memorydll/btmemorymodule
+github.com/ying32/govcl/vcl/rtl
+github.com/ying32/govcl/vcl/types
+github.com/ying32/govcl/vcl/types/colors
+github.com/ying32/govcl/vcl/types/messages
+github.com/ying32/govcl/vcl/win
+# github.com/ying32/liblclbinres v0.0.0-20220111074620-df670ba4baf4
+## explicit
+github.com/ying32/liblclbinres

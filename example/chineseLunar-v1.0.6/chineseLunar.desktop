@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=chineseLunar
+Name[zh_CN]=简易农历
+Exec=/usr/bin/chineseLunar
+Icon=/usr/share/icons/chineseLunar/chineseLunar.png
+Terminal=false
+Type=Application
+Version=1.0.6
+Categories=Utility;Other;
