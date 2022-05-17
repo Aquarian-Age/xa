@@ -1,6 +1,9 @@
 package gz
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 var (
 	jiaChangShengMap  = map[string]string{"丑": "冠带", "亥": "长生", "午": "死", "卯": "帝旺", "子": "沐浴", "寅": "临官", "巳": "病", "戌": "养", "未": "墓", "申": "绝", "辰": "衰", "酉": "胎"}
@@ -14,6 +17,18 @@ var (
 	renChangShengMap  = map[string]string{"丑": "衰", "亥": "临官", "午": "胎", "卯": "死", "子": "帝旺", "寅": "病", "巳": "绝", "戌": "冠带", "未": "养", "申": "长生", "辰": "墓", "酉": "沐浴"}
 	guiChangShengMap  = map[string]string{"丑": "冠带", "亥": "帝旺", "午": "绝", "卯": "长生", "子": "临官", "寅": "沐浴", "巳": "胎", "戌": "衰", "未": "墓", "申": "死", "辰": "养", "酉": "病"}
 )
+
+// ChangShengZhiS 干 支 返回干在支的长生状态
+func ChangShengZhiS(gan, zhi string) string {
+	s := ChangSheng(gan, zhi)
+	return fmt.Sprintf("%s在%s位:%s ", gan, zhi, s)
+}
+
+// ChangShengMonthS 干在月支的长生状态
+func ChangShengMonthS(gan, zhi string) string {
+	s := ChangSheng(gan, zhi)
+	return fmt.Sprintf("%s在%s月:%s ", gan, zhi, s)
+}
 
 // GanZhiChangSheng 干支长生 返回干与支在十二长生的关系 比如甲子 甲在子位沐浴 则甲临沐浴
 func GanZhiChangSheng(xgz string) string {
@@ -49,6 +64,51 @@ func ChangSheng(gan, zhi string) string {
 		s = guiChangShengMap[zhi]
 	}
 	return s
+}
+
+var localGn8ZhiMap = map[int]string{1: "子", 8: "丑", 3: "卯", 4: "巳", 9: "午", 2: "未", 7: "酉", 6: "亥"}
+var localGn4ZhiMap = map[int]string{8: "寅", 4: "辰", 2: "申", 6: "戌"}
+
+// ChangSheng8 八宫的十干长生 传入干 本宫数字(坎1 艮8 震3....)
+func ChangSheng8(gan string, localGn int) string {
+	name := ChangSheng(gan, localGn8ZhiMap[localGn])
+	if name == "冠带" {
+		name = "冠"
+	}
+	if name == "长生" {
+		name = "生"
+	}
+	if name == "帝旺" {
+		name = "旺"
+	}
+	if name == "沐浴" {
+		name = "沐"
+	}
+	if name == "临官" {
+		name = "临"
+	}
+	return name
+}
+
+// ChangSheng4 四维宫的十干长生 传入干 本宫数字( 艮8 巽4 坤2 乾6)
+func ChangSheng4(gan string, localGn int) string {
+	name := ChangSheng(gan, localGn4ZhiMap[localGn])
+	if name == "冠带" {
+		name = "冠"
+	}
+	if name == "长生" {
+		name = "生"
+	}
+	if name == "帝旺" {
+		name = "旺"
+	}
+	if name == "沐浴" {
+		name = "沐"
+	}
+	if name == "临官" {
+		name = "临"
+	}
+	return name
 }
 
 // ChangShengZhi 干在十二长生位置对应的地支

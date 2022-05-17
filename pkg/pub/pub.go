@@ -171,7 +171,7 @@ func WeekName(n int) (w string) {
 	return
 }
 
-// DelElement 去除切片空元素
+// DelElement 去除切片空元 同时去除切片的相同元素
 func DelElement(s []string) []string {
 	news := []string{}
 	for _, v := range s {
@@ -179,5 +179,24 @@ func DelElement(s []string) []string {
 			news = append(news, v)
 		}
 	}
+	news = RemoveRepeatedElement(news)
 	return news
+}
+
+// RemoveRepeatedElement 去除重复元素
+func RemoveRepeatedElement(arr []string) (newArr []string) {
+	newArr = make([]string, 0)
+	for i := 0; i < len(arr); i++ {
+		repeat := false
+		for j := i + 1; j < len(arr); j++ {
+			if arr[i] == arr[j] {
+				repeat = true
+				break
+			}
+		}
+		if !repeat {
+			newArr = append(newArr, arr[i])
+		}
+	}
+	return newArr
 }
