@@ -21,13 +21,13 @@ var (
 // ChangShengZhiS 干 支 返回干在支的长生状态
 func ChangShengZhiS(gan, zhi string) string {
 	s := ChangSheng(gan, zhi)
-	return fmt.Sprintf("%s在%s位:%s ", gan, zhi, s)
+	return fmt.Sprintf("%s在%s位:%s\n", gan, zhi, s)
 }
 
 // ChangShengMonthS 干在月支的长生状态
 func ChangShengMonthS(gan, zhi string) string {
 	s := ChangSheng(gan, zhi)
-	return fmt.Sprintf("%s在%s月:%s ", gan, zhi, s)
+	return fmt.Sprintf("%s在%s月:%s\n", gan, zhi, s)
 }
 
 // GanZhiChangSheng 干支长生 返回干与支在十二长生的关系 比如甲子 甲在子位沐浴 则甲临沐浴

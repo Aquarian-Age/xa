@@ -14,7 +14,14 @@
 2022 2 4 4H 壬寅年 月干支:壬寅
 2022 2 4 3H 辛丑年 月干支:辛丑
 ```
- 
+
+- func NewTMGanZhi(year, month, day, hour, min int) *GanZhi{} 干支精确到分钟
+```text
+y, m, d, h, min := 2022, 5, 21, 9, 21 //立夏: 2022-05-05 20:25:46
+y, m, d, h, min = 2022, 5, 21, 9, 23  //小满: 2022-05-21 09:22:24
+```
+
+### 示例
 ```go
 package main
 

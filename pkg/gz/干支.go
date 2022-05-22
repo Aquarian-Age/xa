@@ -33,15 +33,15 @@ var (
 
 // GanZhi 干支信息
 type GanZhi struct {
-	year, month, day, hour int
-	Ygz                    string      `json:"ygz"`
-	Mgz                    string      `json:"mgz"`
-	Dgz                    string      `json:"dgz"`
-	Hgz                    string      `json:"hgz"`
-	JieQiArrT              []time.Time `json:"jie_qi_arr_t"` //节气 len=14 [小寒 立春 惊蛰 清明 立夏 芒种 小暑 立秋 白露 寒露 立冬 大雪 小寒 立春]
-	JieQiNames             []string    `json:"jie_qi_names"`
-	ZhongQiArrT            []time.Time `json:"zhong_qi_arr_t"` //中气 len=14 [冬至 大寒 雨水 春分 谷雨 小满 夏至 大暑 处暑 秋分 霜降 小雪 冬至 大寒]
-	ZhongQiNames           []string    `json:"zhong_qi_names"`
+	year, month, day, hour, min int
+	Ygz                         string      `json:"ygz"`
+	Mgz                         string      `json:"mgz"`
+	Dgz                         string      `json:"dgz"`
+	Hgz                         string      `json:"hgz"`
+	JieQiArrT                   []time.Time `json:"jie_qi_arr_t"` //节气 len=14 [小寒 立春 惊蛰 清明 立夏 芒种 小暑 立秋 白露 寒露 立冬 大雪 小寒 立春]
+	JieQiNames                  []string    `json:"jie_qi_names"`
+	ZhongQiArrT                 []time.Time `json:"zhong_qi_arr_t"` //中气 len=14 [冬至 大寒 雨水 春分 谷雨 小满 夏至 大暑 处暑 秋分 霜降 小雪 冬至 大寒]
+	ZhongQiNames                []string    `json:"zhong_qi_names"`
 }
 
 // NewGanZhi 干支　月干支精确到日
