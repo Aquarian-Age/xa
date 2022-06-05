@@ -60,10 +60,15 @@ func (obj *GanZhi) NewZhi(zhi string) Zhi {
 	return Zhi(zhi)
 }
 
-// DiSiHu 地四户 危除定开下临方既是
-//月建加时支上
+// DiSiHu 地四户(除 定 危 开)
+func (obj *GanZhi) DiSiHu() *DiSiHuStruct {
+	return DiSiHu(obj.Hgz)
+}
+
+// DiSiHuZhi DiSiHu 地四户 危 除 定 开 对应的地支
+//月建加时支上 危除定开下临方既是
 //建除满平一顺流,定执破危相接去,成收开闭掌中周,除定危开为四户,此方有难来逃避
-func (obj *GanZhi) DiSiHu() (string, string, string, string) {
+func (obj *GanZhi) DiSiHuZhi() (string, string, string, string) {
 	hz := pub.GetZhiS(obj.Hgz) //时支
 	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	jcs := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"}
@@ -165,7 +170,8 @@ func fuTou(xgz string) string {
 // GetLunar 返回阴历月日　月相
 func (obj *GanZhi) GetLunar() (string, string) {
 	_, _, _, moons := calendar.Lunar(obj.year, obj.month, obj.day)
-	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, 0, 0, 0, time.Local)
+	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, obj.min, 0, 0, time.Local)
+	//_, _, _, moons := calendar.SolarToLunar(tx)
 	moons = fmt.Sprintf("阴历: %s", moons)
 	phase := moon.Phase(tx)
 	yueXiang := fmt.Sprintf("月相: %5f", phase)

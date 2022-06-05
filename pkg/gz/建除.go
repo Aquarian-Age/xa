@@ -7,6 +7,7 @@
 package gz
 
 import (
+	"fmt"
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 )
@@ -59,6 +60,43 @@ func JianChu(mgz, dgz string) string {
 		s = "闭"
 	}
 	return s
+}
+
+// DiSiHuStruct 地四户
+type DiSiHuStruct struct {
+	Chu  string // 除
+	Ding string // 定
+	Wei  string // 危
+	Kai  string // 开
+}
+
+// DiSiHu 地四户(除 定 危 开) 建加于时支上顺排
+func DiSiHu(hgz string) *DiSiHuStruct {
+	//jcArr := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"} //顺序固定
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	hz := hgz[3:]
+	zhis = pub.SortArr(hz, zhis)
+	return &DiSiHuStruct{
+		Chu:  zhis[1],
+		Ding: zhis[4],
+		Wei:  zhis[7],
+		Kai:  zhis[10],
+	}
+}
+
+// 地四户String
+func (d *DiSiHuStruct) String() string {
+	return fmt.Sprintf("地四户: 除在:%s 定在:%s 危在:%s 开在:%s", d.Chu, d.Ding, d.Wei, d.Kai)
+}
+
+// Map 地四户Map k:地支 v:除/定/危/开
+func (d *DiSiHuStruct) Map() map[string]string {
+	var xmap = make(map[string]string)
+	xmap[d.Chu] = "除"
+	xmap[d.Ding] = "定"
+	xmap[d.Wei] = "危"
+	xmap[d.Kai] = "开"
+	return xmap
 }
 
 // GetRiJianChu 日建除
