@@ -8,10 +8,8 @@ package jingwei
 
 import (
 	"fmt"
-	"github.com/starainrt/astro/calendar"
 	"github.com/starainrt/astro/moon"
 	"github.com/starainrt/astro/sun"
-	"github.com/starainrt/astro/venus"
 	"log"
 	"testing"
 	"time"
@@ -51,7 +49,7 @@ func TestGetJingWei(t *testing.T) {
 	m1 := moon.ShuoYue(2022.6)
 	fmt.Println(m1.String())
 	fmt.Println(moon.Phase(time.Now().Local()))
-	fmt.Println(venus.SeeRaDec(calendar.Date2JDE(time.Now().Local())))
+	//fmt.Println(venus.SeeRaDec(calendar.Date2JDE(time.Now().Local())))
 }
 
 /*
