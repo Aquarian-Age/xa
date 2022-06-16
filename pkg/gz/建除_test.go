@@ -12,6 +12,12 @@ import (
 	"testing"
 )
 
+func TestDiSiHu(t *testing.T) {
+	hgz := "乙亥"
+	hgz = "己巳"
+	dsh := DiSiHu(hgz)
+	fmt.Println(dsh.DiSiHuString())
+}
 func TestJianChu(t *testing.T) {
 	arr := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	arrx := [][]string{

@@ -115,7 +115,7 @@ func (d *DiSiHuStruct) Kai() (string, string) {
 
 // DiSiHuString 地四户String
 func (d *DiSiHuStruct) DiSiHuString() string {
-	return fmt.Sprintf("地四户: 除在:%s 定在:%s 危在:%s 开在:%s", d.Chu, d.DingZhi, d.Wei, d.Kai)
+	return fmt.Sprintf("地四户: 除在:%s 定在:%s 危在:%s 开在:%s", d.ChuZhi, d.DingZhi, d.WeiZhi, d.KaiZhi)
 }
 
 // DiSiHuMap Map 地四户Map k:地支 v:除/定/危/开
