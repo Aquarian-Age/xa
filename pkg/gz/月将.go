@@ -113,6 +113,58 @@ func (yj *YJ) TaiChongTianMa(hgz string) string {
 	return s
 }
 
+// TianSanMenStruct 天三门
+func (yj *YJ) TianSanMenStruct(hgz string) *TianSanMenStruct {
+	mao, you, wei := TianSanMen(yj.Zhi, hgz)
+	return &TianSanMenStruct{
+		TaiCongZhi: mao,
+		CongKuiZhi: you,
+		XiaoJiZhi:  wei,
+	}
+}
+
+// TianSanMenStruct 天三门
+type TianSanMenStruct struct {
+	TaiCongZhi string `json:"tai_cong_zhi"`
+	CongKuiZhi string `json:"cong_kui_zhi"`
+	XiaoJiZhi  string `json:"xiao_ji_zhi"`
+}
+
+func (tsm *TianSanMenStruct) TaiChong() (string, string) {
+	return "太冲", tsm.TaiCongZhi
+}
+func (tsm *TianSanMenStruct) CongKui() (string, string) {
+	return "从魁", tsm.CongKuiZhi
+}
+func (tsm *TianSanMenStruct) XiaoJi() (string, string) {
+	return "小吉", tsm.XiaoJiZhi
+}
+func (tsm *TianSanMenStruct) TianSanMenString() string {
+	return fmt.Sprintf("%s:%s %s:%s %s:%s", "太冲", tsm.TaiCongZhi, "小吉", tsm.XiaoJiZhi, "从魁", tsm.CongKuiZhi)
+}
+
+// TianSanMen 天三门
+func TianSanMen(yueJiangZhi, hgz string) (string, string, string) {
+	hz := pub.GetZhiS(hgz)
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	yjarr := pub.SortArr(yueJiangZhi, zhis)
+	hzarr := pub.SortArr(hz, zhis)
+
+	var taiChong, congKui, xiaoJi string
+	for i := 0; i < len(yjarr); i++ {
+		if strings.EqualFold(yjarr[i], "卯") {
+			taiChong = hzarr[i]
+		}
+		if strings.EqualFold(yjarr[i], "酉") {
+			congKui = hzarr[i]
+		}
+		if strings.EqualFold(yjarr[i], "未") {
+			xiaoJi = hzarr[i]
+		}
+	}
+	return taiChong, congKui, xiaoJi
+}
+
 // TianSanMen 天三门(天盘卯酉未临下方地支是也)
 func (yj *YJ) TianSanMen(hgz string) (string, string, string) {
 	yjz := yj.Zhi
