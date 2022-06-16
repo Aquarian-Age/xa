@@ -64,38 +64,67 @@ func JianChu(mgz, dgz string) string {
 
 // DiSiHuStruct 地四户
 type DiSiHuStruct struct {
-	Chu  string // 除
-	Ding string // 定
-	Wei  string // 危
-	Kai  string // 开
+	ChuZhi  string `json:"chu_zhi"`  // 除
+	DingZhi string `json:"ding_zhi"` // 定
+	WeiZhi  string `json:"wei_zhi"`  // 危
+	KaiZhi  string `json:"kai_zhi"`  // 开
 }
 
 // DiSiHu 地四户(除 定 危 开) 建加于时支上顺排
 func DiSiHu(hgz string) *DiSiHuStruct {
-	//jcArr := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"} //顺序固定
+	jcs := []string{"建", "除", "满", "平", "定", "执", "破", "危", "成", "收", "开", "闭"} //顺序固定
 	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+
 	hz := hgz[3:]
-	zhis = pub.SortArr(hz, zhis)
+	hzhis := pub.SortArr(hz, zhis)
+	var chu, ding, wei, kai string
+	for i := 0; i < len(jcs); i++ {
+		if strings.EqualFold(jcs[i], "除") {
+			chu = hzhis[i]
+		}
+		if strings.EqualFold(jcs[i], "定") {
+			ding = hzhis[i]
+		}
+		if strings.EqualFold(jcs[i], "危") {
+			wei = hzhis[i]
+		}
+		if strings.EqualFold(jcs[i], "开") {
+			kai = hzhis[i]
+		}
+	}
 	return &DiSiHuStruct{
-		Chu:  zhis[1],
-		Ding: zhis[4],
-		Wei:  zhis[7],
-		Kai:  zhis[10],
+		ChuZhi:  chu,
+		DingZhi: ding,
+		WeiZhi:  wei,
+		KaiZhi:  kai,
 	}
 }
 
-// 地四户String
-func (d *DiSiHuStruct) String() string {
-	return fmt.Sprintf("地四户: 除在:%s 定在:%s 危在:%s 开在:%s", d.Chu, d.Ding, d.Wei, d.Kai)
+func (d *DiSiHuStruct) Chu() (string, string) {
+	return "除", d.ChuZhi
+}
+func (d *DiSiHuStruct) Ding() (string, string) {
+	return "定", d.DingZhi
+}
+func (d *DiSiHuStruct) Wei() (string, string) {
+	return "危", d.WeiZhi
+}
+func (d *DiSiHuStruct) Kai() (string, string) {
+	return "开", d.KaiZhi
 }
 
-// Map 地四户Map k:地支 v:除/定/危/开
-func (d *DiSiHuStruct) Map() map[string]string {
+// DiSiHuString 地四户String
+func (d *DiSiHuStruct) DiSiHuString() string {
+	return fmt.Sprintf("地四户: 除在:%s 定在:%s 危在:%s 开在:%s", d.Chu, d.DingZhi, d.Wei, d.Kai)
+}
+
+// DiSiHuMap Map 地四户Map k:地支 v:除/定/危/开
+func (d *DiSiHuStruct) DiSiHuMap() map[string]string {
 	var xmap = make(map[string]string)
-	xmap[d.Chu] = "除"
-	xmap[d.Ding] = "定"
-	xmap[d.Wei] = "危"
-	xmap[d.Kai] = "开"
+	xmap[d.ChuZhi] = "除"
+	xmap[d.DingZhi] = "定"
+	xmap[d.WeiZhi] = "危"
+	xmap[d.KaiZhi] = "开"
 	return xmap
 }
 
