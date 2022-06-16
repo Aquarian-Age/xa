@@ -7,12 +7,25 @@
 package gz
 
 import (
+	"fmt"
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 	"time"
 )
 
 var (
+	GuiRenMap = map[string]struct{ Yang, Yin string }{
+		"甲": {Yang: "未", Yin: "丑"},
+		"乙": {Yang: "申", Yin: "子"},
+		"丙": {Yang: "酉", Yin: "亥"},
+		"丁": {Yang: "亥", Yin: "酉"},
+		"戊": {Yang: "丑", Yin: "未"},
+		"己": {Yang: "子", Yin: "申"},
+		"庚": {Yang: "丑", Yin: "未"},
+		"辛": {Yang: "寅", Yin: "午"},
+		"壬": {Yang: "卯", Yin: "巳"},
+		"癸": {Yang: "巳", Yin: "卯"},
+	}
 	//k天月将 v天月将名称
 	yjmap       = map[string]string{"丑": "大吉", "亥": "登明", "午": "胜光", "卯": "太冲", "子": "神后", "寅": "功曹", "巳": "太乙", "戌": "河魁", "未": "小吉", "申": "传送", "辰": "天罡", "酉": "从魁"}
 	yueJiangArr = []string{"神后", "大吉", "功曹", "太冲", "天罡", "太乙", "胜光", "小吉", "传送", "从魁", "河魁", "登明"}
@@ -296,4 +309,137 @@ func (yj *YJ) GuiDengTianMen(dgz string) (string, string) {
 		}
 	}
 	return dan, mu
+}
+
+// DiSiMen 地私门
+func (yj *YJ) DiSiMen(dgz, hgz string) *DiSiMenStruct {
+	return DiSiMen(yj.Zhi, dgz, hgz)
+}
+
+// DiSiMenStruct 地私门
+type DiSiMenStruct struct {
+	LiuHeZhi    string `json:"liu_he"`
+	TaiYinZhi   string `json:"tai_yin"`
+	TaiChangZhi string `json:"tai_chang"`
+}
+
+// LiuHe 地私门六合 六合对应的地支
+func (dsm *DiSiMenStruct) LiuHe() (string, string) {
+	return "六合", dsm.LiuHeZhi
+}
+
+// TaiYin 地私门太阴 太阴对应的地支
+func (dsm *DiSiMenStruct) TaiYin() (string, string) {
+	return "太阴", dsm.TaiYinZhi
+}
+
+// TaiChang 地私门太常 太常对应的地支
+func (dsm *DiSiMenStruct) TaiChang() (string, string) {
+	return "太常", dsm.TaiChangZhi
+}
+
+// DiSiMenString DiSiMen 地私门结果  六合:卯 太阴:申 太常:酉
+func (dsm *DiSiMenStruct) DiSiMenString() string {
+	return fmt.Sprintf("%s:%s %s:%s %s:%s", "六合", dsm.LiuHeZhi, "太阴", dsm.TaiYinZhi, "太常", dsm.TaiChangZhi)
+}
+
+// DiSiMen 地私门 传入月将 日干支 时干支
+// 以日支 定本日使用的贵人 自子至巳为阳用阳贵神 自午至亥为阴用阴贵神
+// 审太阳过宫，以月将加用时，寻本日贵人起星，求地私门。
+//月将加时辰 寻日干阳贵和阴贵下临的时辰地支 以该支定顺逆  亥至辰为阳贵顺行  巳至戌为阴贵逆行
+func DiSiMen(yueJiang string, dgz, hgz string) *DiSiMenStruct {
+	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+	gro := GuiRenMap[dgz[:3]]
+	guirenYang := gro.Yang
+	guirenYin := gro.Yin
+	hz := hgz[3:]
+	tyjs := pub.SortArr(yueJiang, zhis)
+	hgzs := pub.SortArr(hz, zhis)
+
+	//日干支定本日贵人顺逆 自子至巳为阳用阳贵神 自午至亥为阴用阴贵神
+	dayZhi := dgz[3:]
+	names := []string{"贵人", "腾蛇", "朱雀", "六合", "勾陈", "青龙", "天空", "白虎", "太常", "玄武", "太阴", "天后"}
+	reNames := []string{"贵人", "天后", "太阴", "玄武", "太常", "白虎", "天空", "青龙", "勾陈", "六合", "朱雀", "腾蛇"}
+
+	var liuhes, taiyins, taichangs string
+	switch dayZhi {
+	case "子", "丑", "寅", "卯", "辰", "巳":
+		var index int
+		for i := 0; i < len(tyjs); i++ {
+			if strings.EqualFold(tyjs[i], guirenYang) {
+				index = i
+				break
+			}
+		}
+		yangZhi := hgzs[index]
+		arr := pub.SortArr(yangZhi, zhis)
+		switch yangZhi {
+		case "亥", "子", "丑", "寅", "卯", "辰":
+			for i := 0; i < len(arr); i++ {
+				if strings.EqualFold(names[i], "六合") {
+					liuhes = arr[i]
+				}
+				if strings.EqualFold(names[i], "太阴") {
+					taiyins = arr[i]
+				}
+				if strings.EqualFold(names[i], "太常") {
+					taichangs = arr[i]
+				}
+			}
+		case "巳", "午", "未", "申", "酉", "戌":
+			for i := 0; i < len(reNames); i++ {
+				if strings.EqualFold(reNames[i], "六合") {
+					liuhes = arr[i]
+				}
+				if strings.EqualFold(reNames[i], "太阴") {
+					taiyins = arr[i]
+				}
+				if strings.EqualFold(reNames[i], "太常") {
+					taichangs = arr[i]
+				}
+			}
+		}
+	case "午", "未", "申", "酉", "戌", "亥":
+		var index int
+		for i := 0; i < len(tyjs); i++ {
+			if strings.EqualFold(tyjs[i], guirenYin) {
+				index = i
+				break
+			}
+		}
+		yinZhi := hgzs[index]
+		arr := pub.SortArr(yinZhi, zhis)
+		switch yinZhi {
+		case "亥", "子", "丑", "寅", "卯", "辰":
+			for i := 0; i < len(arr); i++ {
+				if strings.EqualFold(names[i], "六合") {
+					liuhes = arr[i]
+				}
+				if strings.EqualFold(names[i], "太阴") {
+					taiyins = arr[i]
+				}
+				if strings.EqualFold(names[i], "太常") {
+					taichangs = arr[i]
+				}
+			}
+		case "巳", "午", "未", "申", "酉", "戌":
+			for i := 0; i < len(reNames); i++ {
+				if strings.EqualFold(reNames[i], "六合") {
+					liuhes = arr[i]
+				}
+				if strings.EqualFold(reNames[i], "太阴") {
+					taiyins = arr[i]
+				}
+				if strings.EqualFold(reNames[i], "太常") {
+					taichangs = arr[i]
+				}
+			}
+		}
+	}
+
+	return &DiSiMenStruct{
+		LiuHeZhi:    liuhes,
+		TaiYinZhi:   taiyins,
+		TaiChangZhi: taichangs,
+	}
 }

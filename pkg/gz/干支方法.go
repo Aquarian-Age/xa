@@ -286,7 +286,7 @@ func (obj *GanZhi) JieQi() string {
 	return jqs
 }
 
-// Jq24 24节气数组
+// Jq24 全年24节气数组 上年冬至到本年大雪
 func (obj *GanZhi) Jq24() []string {
 	year := obj.year
 	arr := jq24(year)
@@ -296,10 +296,10 @@ func (obj *GanZhi) Jq24() []string {
 
 	var tmp []string
 	for i := 0; i < len(arr); i++ {
-		x := Jmc[i] + ": " + arr[i].Format("2006-01-02 :15:04:05")
+		x := Jmc[i] + ":" + arr[i].Format("2006-01-02 15:04:05")
 		tmp = append(tmp, x)
 	}
-	return tmp[:len(tmp)-24]
+	return tmp
 }
 func (obj *GanZhi) Jq24T() []time.Time {
 	return GetJq24(obj.year)
