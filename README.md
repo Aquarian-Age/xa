@@ -45,7 +45,7 @@ func main() {
 	fmt.Printf("%s %s\n", lunars, moons)
 	djc := gzo.JianChuDay()
 	fmt.Printf("日建除:%s\n", djc)
-	fmt.Println(gzo.DiSiHu().String()) //地四户
+	fmt.Println(gzo.DiSiHu().DiSiHuString()) //地四户
 
 	t := time.Date(y, time.Month(m), d, h, 0, 0, 0, time.Local)
 	wn := int(t.Weekday())
