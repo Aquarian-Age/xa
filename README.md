@@ -123,3 +123,9 @@ func main() {
 小寒:2023-01-05 23:04:39
 大寒:2023-01-20 16:29:21
 ```
+
+### License
+
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2017-present, Aquarian-Age
