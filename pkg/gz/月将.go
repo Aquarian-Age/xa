@@ -39,6 +39,7 @@ type YJ struct {
 	ZhongQiName string `json:"zhong_qi_name"`
 }
 
+// NewYueJiang 月将
 func NewYueJiang(y, m, d int, mgz string) *YJ {
 	mz := pub.GetZhiS(mgz)
 	yj, name, t, zqName := yueJiang(y, m, d, mz)
@@ -93,6 +94,32 @@ func yueJiang(year, month, day int, zhis string) (string, string, time.Time, str
 	}
 
 	return yjZhi, shenJiangName, zqt, zhongQiName
+}
+
+// YueJiang 月将  传入节气名称
+//以中气计算 这里不包含ZhongQiT(中气对应的阳历时间)
+func YueJiang(jieQi string) *YJ {
+	var yjz, name, zqn string
+	//中气
+	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"}
+	jieQiName := []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "小暑", "立秋", "白露", "寒露", "立冬", "大雪", "小寒"}
+	//天月将的地支
+	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}
+	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"}
+	for i := 0; i < len(zqName); i++ {
+		if strings.EqualFold(zqName[i], jieQi) || strings.EqualFold(jieQiName[i], jieQi) {
+			yjz = tyj[i]
+			name = sj[i]
+			zqn = zqName[i]
+			break
+		}
+	}
+	return &YJ{
+		Zhi:         yjz,
+		Name:        name,
+		ZhongQiName: zqn,
+		ZhongQiT:    "",
+	}
 }
 
 // TaiChongTianMa 太冲天马

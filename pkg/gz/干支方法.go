@@ -3,8 +3,6 @@ package gz
 import (
 	"fmt"
 	"github.com/Aquarian-Age/xa/pkg/pub"
-	"github.com/starainrt/astro/calendar"
-	"github.com/starainrt/astro/moon"
 	"strings"
 	"time"
 )
@@ -165,17 +163,6 @@ func fuTou(xgz string) string {
 		zhis = "未"
 	}
 	return zhis
-}
-
-// GetLunar 返回阴历月日　月相
-func (obj *GanZhi) GetLunar() (string, string) {
-	_, _, _, moons := calendar.Lunar(obj.year, obj.month, obj.day)
-	tx := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, obj.min, 0, 0, time.Local)
-	//_, _, _, moons := calendar.SolarToLunar(tx)
-	moons = fmt.Sprintf("阴历: %s", moons)
-	phase := moon.Phase(tx)
-	yueXiang := fmt.Sprintf("月相: %5f", phase)
-	return moons, yueXiang
 }
 
 // GetNaYinString 纳因(年-月-日-时)
