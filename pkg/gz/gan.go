@@ -318,3 +318,8 @@ func (g Gan) GuiRen() (yang, yin string) {
 func (g Gan) XiShen() int {
 	return xiShenMap[string(g)]
 }
+// 禄
+func Lu(gan string) string {
+	return shiGanLuMap[string(gan)]
+}
+
