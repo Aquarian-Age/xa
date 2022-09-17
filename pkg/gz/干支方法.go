@@ -2,9 +2,11 @@ package gz
 
 import (
 	"fmt"
-	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 	"time"
+
+	"github.com/Aquarian-Age/xa/pkg/pub"
+	"github.com/starainrt/astro/calendar"
 )
 
 var (
@@ -64,8 +66,8 @@ func (obj *GanZhi) DiSiHu() *DiSiHuStruct {
 }
 
 // DiSiHuZhi DiSiHu 地四户 危 除 定 开 对应的地支
-//月建加时支上 危除定开下临方既是
-//建除满平一顺流,定执破危相接去,成收开闭掌中周,除定危开为四户,此方有难来逃避
+// 月建加时支上 危除定开下临方既是
+// 建除满平一顺流,定执破危相接去,成收开闭掌中周,除定危开为四户,此方有难来逃避
 func (obj *GanZhi) DiSiHuZhi() (string, string, string, string) {
 	hz := pub.GetZhiS(obj.Hgz) //时支
 	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
@@ -231,7 +233,7 @@ func (obj GanZhi) YueJiangStruct() *YJ {
 }
 
 // YueJiang 月将
-//返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
+// 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
 func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
 	zhis := pub.GetZhiS(obj.Mgz)
 	return yueJiang(obj.year, obj.month, obj.day, zhis)
@@ -293,4 +295,104 @@ func (obj *GanZhi) Jq24T() []time.Time {
 }
 func GetJq24(year int) []time.Time {
 	return jq24(year)
+}
+
+// Info 基础信息(阴历，阳历，日建除，日禽，月将，日黄黑，时黄黑，旬空，纳音,绝离日，忌探病日)
+type Info struct {
+	T              time.Time `json:"t"`
+	Ygz            string    `json:"ygz"`
+	Mgz            string    `json:"mgz"`
+	Dgz            string    `json:"dgz"`
+	Hgz            string    `json:"hgz"`
+	Moon           string    `json:"moon"`
+	Solar          string    `json:"solar"`
+	Lu             string    `json:"lu"`
+	GanZhiString   string    `json:"gan_zhi"`
+	XunKong        string    `json:"xun_kong"`
+	NaYin          string    `json:"na_yin"`
+	ZhongQiString  string    `json:"zhong_qi_string"`
+	YueJiangString string    `json:"yue_jiang_string"`
+	JianChu        string    `json:"jian_chu"`
+	RiQin          string    `json:"ri_qin"`
+	HuangHei       string    `json:"huang_hei"`
+	HuangHeiH      string    `json:"huang_hei_h"`
+
+	JueLiRi   string `json:"jue_li_ri"`
+	JiTanBing string `json:"ji_tan_bing"`
+}
+
+func (info *Info) String() string {
+	t := info.T
+	_, _, _, moon := calendar.Lunar(t.Year(), int(t.Month()), t.Day())
+
+	nayins := "纳音: " + GetNaYinString(info.Ygz, info.Mgz, info.Dgz, info.Hgz) + "\n"
+	lus := fmt.Sprintf("禄位: %s - %s - %s - %s\n", Lu(info.Ygz[:3]), Lu(info.Mgz[:3]), Lu(info.Dgz[:3]), info.Hgz[:3])
+	gzs := fmt.Sprintf("干支: %s %s %s %s\n", info.Ygz, info.Mgz, info.Dgz, info.Hgz)
+
+	xk1, xk2, xk3, xk4 := XunKong(info.Ygz), XunKong(info.Mgz), XunKong(info.Dgz), XunKong(info.Hgz)
+	xks := fmt.Sprintf("旬空: %s %s %s %s\n", xk1, xk2, xk3, xk4)
+
+	yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
+	zhongQi := fmt.Sprintf("中气: %s(%s)\n", yjo.ZhongQiName, yjo.ZhongQiT)
+	yjs := fmt.Sprintf("月将: %s(%s)\n", yjo.Zhi, yjo.Name)
+
+	riqins := "日禽: " + GetRiQin(int(t.Weekday()), info.Dgz) + "\n"
+	jianchu := "建除: " + JianChu(info.Mgz, info.Dgz) + "\n"
+
+	hhd := "黄黑: " + HuangHei(info.Mgz, info.Dgz) + "\n"
+	hhh := "黄黑H: " + HuangHei(info.Dgz, info.Hgz) + "\n"
+
+	juelis := pub.JueLiRi(t) + " "
+	jitanb := pub.JiTanBing(info.Dgz) + "\n"
+
+	infos := t.Format("2006-01-02 15:04:05") + "\n" + lus + gzs + xks + nayins + zhongQi + yjs + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "\n"
+	return infos
+}
+
+// Info 基本信息
+func (obj *GanZhi) Info() *Info {
+	t := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, obj.min, 0, 0, time.Local)
+	_, _, _, moon := calendar.Lunar(t.Year(), int(t.Month()), t.Day())
+
+	nayins := "纳音: " + obj.GetNaYinString()
+	lus := fmt.Sprintf("禄位: %s - %s - %s - %s", Lu(obj.Ygz[:3]), Lu(obj.Mgz[:3]), Lu(obj.Dgz[:3]), obj.Hgz[:3])
+	gzs := fmt.Sprintf("干支: %s %s %s %s", obj.Ygz, obj.Mgz, obj.Dgz, obj.Hgz)
+
+	xk1, xk2, xk3, xk4 := XunKong(obj.Ygz), XunKong(obj.Mgz), XunKong(obj.Dgz), XunKong(obj.Hgz)
+	xks := fmt.Sprintf("旬空: %s %s %s %s", xk1, xk2, xk3, xk4)
+
+	yjo := obj.YueJiangStruct()
+	zhongQi := fmt.Sprintf("中气: %s(%s)", yjo.ZhongQiName, yjo.ZhongQiT)
+	yjs := fmt.Sprintf("月将: %s(%s)", yjo.Zhi, yjo.Name)
+
+	riqins := "日禽: " + obj.RiQin(int(t.Weekday()))
+	jianchu := "建除: " + obj.JianChuDay()
+
+	hhd := "黄黑: " + obj.RiHuangHei1()
+	hhh := "黄黑H: " + obj.ShiHuangHei1()
+
+	juelis := pub.JueLiRi(t)
+	jitanb := pub.JiTanBing(obj.Dgz)
+
+	return &Info{
+		T:              t,
+		Ygz:            obj.Ygz,
+		Mgz:            obj.Mgz,
+		Dgz:            obj.Dgz,
+		Hgz:            obj.Hgz,
+		Moon:           moon,
+		Solar:          t.Format("2006-01-02 15:04:05"),
+		Lu:             lus,
+		GanZhiString:   gzs,
+		XunKong:        xks,
+		NaYin:          nayins,
+		ZhongQiString:  zhongQi,
+		YueJiangString: yjs,
+		JianChu:        jianchu,
+		RiQin:          riqins,
+		HuangHei:       hhd,
+		HuangHeiH:      hhh,
+		JueLiRi:        juelis,
+		JiTanBing:      jitanb,
+	}
 }

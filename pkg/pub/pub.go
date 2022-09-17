@@ -11,6 +11,9 @@ import (
 	"log"
 	"regexp"
 	"strings"
+	"time"
+
+	"github.com/starainrt/astro/calendar"
 )
 
 // GetGanS 取天干 传干支 返回干
@@ -199,4 +202,53 @@ func RemoveRepeatedElement(arr []string) (newArr []string) {
 		}
 	}
 	return newArr
+}
+
+// JueLiRi XJBF四离四绝
+// 离 冬至 夏至 春分 秋分 前一日
+// 绝 立春 立夏 立秋 立冬 前一日
+// st :阳历当日时间戳 jqt:节气时间戳数组
+func JueLiRi(st time.Time) (sjs string) {
+	st = time.Date(st.Year(), st.Month(), st.Day(), 0, 0, 0, 0, time.Local) //时间精确到日
+	lichunt := calendar.JieQi(st.Year(), calendar.JQ_立春)                    //立春日 jqt[3]
+	lixiat := calendar.JieQi(st.Year(), calendar.JQ_立夏)                     //立夏 jqt[9]
+	liqiut := calendar.JieQi(st.Year(), calendar.JQ_立冬)                     //立秋 jqt[15]
+	lidongt := calendar.JieQi(st.Year(), calendar.JQ_立冬)                    //立冬 jqt[21]
+
+	chunfent := calendar.JieQi(st.Year(), calendar.JQ_春分) //春分 jqt[6]
+	xiazhit := calendar.JieQi(st.Year(), calendar.JQ_夏至)  //夏至 jqt[12]
+	qiufent := calendar.JieQi(st.Year(), calendar.JQ_秋分)  //秋分 jqt[18]
+	dongzhit := calendar.JieQi(st.Year(), calendar.JQ_冬至) //冬至  jqt[24]
+	//绝
+	lichunt = time.Date(lichunt.Year(), lichunt.Month(), lichunt.Day(), 0, 0, 0, 0, time.Local)
+	lixiat = time.Date(lixiat.Year(), lixiat.Month(), lixiat.Day(), 0, 0, 0, 0, time.Local)
+	liqiut = time.Date(liqiut.Year(), liqiut.Month(), liqiut.Day(), 0, 0, 0, 0, time.Local)
+	lidongt = time.Date(lidongt.Year(), lidongt.Month(), lidongt.Day(), 0, 0, 0, 0, time.Local)
+	//离
+	chunfent = time.Date(chunfent.Year(), chunfent.Month(), chunfent.Day(), 0, 0, 0, 0, time.Local)
+	xiazhit = time.Date(xiazhit.Year(), xiazhit.Month(), xiazhit.Day(), 0, 0, 0, 0, time.Local)
+	qiufent = time.Date(qiufent.Year(), qiufent.Month(), qiufent.Day(), 0, 0, 0, 0, time.Local)
+	dongzhit = time.Date(dongzhit.Year(), dongzhit.Month(), dongzhit.Day(), 0, 0, 0, 0, time.Local)
+
+	nst := time.Date(st.Year(), st.Month(), st.Day()+1, 0, 0, 0, 0, time.Local)
+
+	if nst.Equal(lichunt) || nst.Equal(lixiat) || nst.Equal(liqiut) || nst.Equal(lidongt) {
+		sjs = "绝日"
+	}
+	if nst.Equal(chunfent) || nst.Equal(xiazhit) || nst.Equal(qiufent) || nst.Equal(dongzhit) {
+		sjs = "离日"
+	}
+	return
+}
+
+// JiTanBing 忌探病日
+func JiTanBing(dgz string) (jtb string) {
+	arrs := []string{"壬寅", "壬午", "庚午", "甲寅", "乙卯", "己卯"}
+	for i := 0; i < len(arrs); i++ {
+		if strings.EqualFold(dgz, arrs[i]) {
+			jtb = "忌探病"
+			break
+		}
+	}
+	return
 }

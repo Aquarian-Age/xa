@@ -120,14 +120,13 @@ func AliasGan(jd float64) string {
 	return gans[n]
 }
 
-//Gan 天干
+// Gan 天干
 type Gan string
 
 func NewGan(gan string) Gan {
 	return Gan(gan)
 }
 
-//
 func (g Gan) String() string {
 	return string(g)
 }
@@ -158,7 +157,7 @@ func (g Gan) ChangShengArray() ([]string, []string) {
 }
 
 // ChangShengString 十干长生String
-//如 传入天干甲 返回
+// 如 传入天干甲 返回
 func ChangShengString(gan string) string {
 	xarr := changShengMap[gan]
 	var s string
@@ -175,7 +174,7 @@ func (g Gan) ChangSheng(zhis string) string {
 }
 
 // ChangShengZhi 干在十二长生位置对应的地支
-//传入天干 十二长生名称(长生 沐浴 冠带 临官 帝旺 衰 病 死 墓 绝 胎 养) 返回对应的地支
+// 传入天干 十二长生名称(长生 沐浴 冠带 临官 帝旺 衰 病 死 墓 绝 胎 养) 返回对应的地支
 func (g Gan) ChangShengZhi(name string) string {
 	return ChangShengZhi(string(g), name)
 }
@@ -242,13 +241,14 @@ func (g Gan) WuXing() string {
 }
 
 // WuXingShengKe 五行生克
+// 如天干甲生火 克土 这里返回 火 土
 func (g Gan) WuXingShengKe() (string, string) {
 	wx := ganWuXingMap[string(g)]
 	return WuXingShengKe(wx)
 }
 
 // WuXingShengKe 五行生克
-//例：木生火 木克土 传入木 返回 火，土
+// 例：木生火 木克土 传入木 返回 火，土
 func WuXingShengKe(wx string) (string, string) {
 	var sheng, ke string
 	if s, ok := wuXingShengMap[wx]; ok {
@@ -258,6 +258,35 @@ func WuXingShengKe(wx string) (string, string) {
 		ke = k
 	}
 	return sheng, ke
+}
+
+// IsWuXingSheng 干五行相生
+func (g Gan) IsWuXingSheng(ganb string) bool {
+	return IsGanShengGan(string(g), ganb)
+}
+
+// IsGanShengGan 判断干五行相生 传入干的五行属性 对比干的五行属性
+// 如 天干甲五行属木 对比天干丙五行属火 判断甲是否生丙
+func IsGanShengGan(gana, ganb string) bool {
+	wxa := ganWuXingMap[gana]
+	wxb := ganWuXingMap[ganb]
+	is := wuXingShengMap[wxa]
+	if strings.EqualFold(is, wxb) {
+		return true
+	}
+	return false
+}
+
+// IsGnShengGn 宫位五行相生 传入奇门的九宫数字
+func IsGnShengGn(gna, gnb int) bool {
+	gnwx := map[int]string{1: "水", 8: "土", 2: "土", 5: "", 3: "木", 4: "木", 9: "火", 7: "金", 6: "金"}
+	wxa := gnwx[gna]
+	wxb := gnwx[gnb]
+	is := wuXingShengMap[wxa]
+	if strings.EqualFold(is, wxb) {
+		return true
+	}
+	return false
 }
 
 // HuaHe 化合 甲己合化土，乙庚合化金，丙辛合化水，丁壬合化木，戊癸合化火
@@ -318,8 +347,8 @@ func (g Gan) GuiRen() (yang, yin string) {
 func (g Gan) XiShen() int {
 	return xiShenMap[string(g)]
 }
-// 禄
+
+// Lu 禄
 func Lu(gan string) string {
 	return shiGanLuMap[string(gan)]
 }
-
