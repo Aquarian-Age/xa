@@ -17,6 +17,7 @@ import (
 var (
 	tn   = time.Now().Local()
 	t    = flag.String("t", tn.Format(layout), layout)
+	info = flag.Bool("info", false, "显示基础信息")
 	jq   = flag.Bool("jq", false, "显示二十四节气时间")
 	star = flag.Bool("star", false, "显示阳历 干支历 建除 黄黑 日禽 阴历")
 	cal  = flag.Bool("cal", false, "显示阴/阳历 干支")
@@ -30,11 +31,12 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+	if *info {
+		gzo := gz.NewTMGanZhi(tx.Year(), int(tx.Month()), tx.Day(), tx.Hour(), tx.Minute())
 
-	gzo := gz.NewTMGanZhi(tx.Year(), int(tx.Month()), tx.Day(), tx.Hour(), tx.Minute())
-
-	info := gzo.Info()
-	fmt.Println(info.String())
+		info := gzo.Info()
+		fmt.Println(info.String())
+	}
 
 	if *jq {
 		jieQi(tx)
@@ -93,12 +95,16 @@ func calFunc(tx time.Time) {
 			str1 = append(str1, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty1 = append(gzsty1, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty1 = append(moonsty1, moonx)
 			//}
 		case 7, 8, 9, 10, 11, 12, 13:
@@ -107,12 +113,16 @@ func calFunc(tx time.Time) {
 			str2 = append(str2, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty2 = append(gzsty2, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty2 = append(moonsty2, moonx)
 		case 14, 15, 16, 17, 18, 19, 20:
 			tx := time.Date(y, time.Month(m), int(days[i]), 0, 0, 0, 0, time.Local)
@@ -120,12 +130,16 @@ func calFunc(tx time.Time) {
 			str3 = append(str3, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty3 = append(gzsty3, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty3 = append(moonsty3, moonx)
 		case 21, 22, 23, 24, 25, 26, 27:
 			tx := time.Date(y, time.Month(m), int(days[i]), 0, 0, 0, 0, time.Local)
@@ -133,12 +147,16 @@ func calFunc(tx time.Time) {
 			str4 = append(str4, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty4 = append(gzsty4, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty4 = append(moonsty4, moonx)
 		case 28, 29, 30, 31, 32, 33, 34:
 			tx := time.Date(y, time.Month(m), int(days[i]), 0, 0, 0, 0, time.Local)
@@ -146,12 +164,16 @@ func calFunc(tx time.Time) {
 			str5 = append(str5, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty5 = append(gzsty5, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty5 = append(moonsty5, moonx)
 		case 35, 36, 37, 38, 39, 40, 41:
 			tx := time.Date(y, time.Month(m), int(days[i]), 0, 0, 0, 0, time.Local)
@@ -159,23 +181,27 @@ func calFunc(tx time.Time) {
 			str6 = append(str6, strx)
 
 			dgz := gz.GetDayGZ(tx.Year(), int(tx.Month()), tx.Day())
-			gzx := lipgloss.NewStyle().Width(width).SetString(dgz).Align(lipgloss.Center)
+			gzx := lipgloss.NewStyle().Width(width).SetString(gchalk.Red(dgz)).Align(lipgloss.Center)
 			gzsty6 = append(gzsty6, gzx)
 
 			_, _, _, moon := calendar.ChineseLunar(tx)
-			moon = moon[6:12]
-			moonx := lipgloss.NewStyle().Width(width).SetString(moon).Align(lipgloss.Center)
+			if len(moon) == 15 {
+				moon = "闰" + moon[9:15]
+			} else {
+				moon = moon[6:12]
+			}
+			moonx := lipgloss.NewStyle().Width(width).SetString(gchalk.Yellow(moon)).Align(lipgloss.Center)
 			moonsty6 = append(moonsty6, moonx)
 		}
 	}
 	weeksty := []lipgloss.Style{
-		lipgloss.NewStyle().Width(width).SetString("周日").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周一").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周二").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周三").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周四").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周五").Align(lipgloss.Center),
-		lipgloss.NewStyle().Width(width).SetString("周六").Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周日")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周一")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周二")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周三")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周四")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周五")).Align(lipgloss.Center),
+		lipgloss.NewStyle().Width(width).SetString(gchalk.Blue("周六")).Align(lipgloss.Center),
 	}
 	for i := 0; i < len(weeksty); i++ {
 		fmt.Printf("%v", weeksty[i].String())
