@@ -42,10 +42,10 @@ func (dr *DegreeRadian) RadianToDegree() float64 {
 
 // x坐标(left)
 func (dr *DegreeRadian) X1() float64 {
-	return dr.X0 + dr.R*math.Cos(dr.Radian)
+	return dr.R + dr.R*math.Cos(dr.Degree*math.Pi/180)
 }
 
 // y坐标(top)
 func (dr *DegreeRadian) Y1() float64 {
-	return dr.Y0 + dr.R*math.Sin(dr.Radian)
+	return dr.R + dr.R*math.Sin(dr.Degree*math.Pi/180)
 }
