@@ -7,6 +7,8 @@ require github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
 //require github.com/starainrt/astro v0.0.0-20220517045710-51b9f1642f72
 
 retract (
+	v1.0.9
+	v1.0.8
 	v1.0.7
 	v1.0.6
 	v1.0.5
