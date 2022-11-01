@@ -299,23 +299,23 @@ func GetJq24(year int) []time.Time {
 
 // Info 基础信息(阴历，阳历，日建除，日禽，月将，日黄黑，时黄黑，旬空，纳音,绝离日，忌探病日)
 type Info struct {
-	T              time.Time `json:"t"`
-	Ygz            string    `json:"ygz"`
-	Mgz            string    `json:"mgz"`
-	Dgz            string    `json:"dgz"`
-	Hgz            string    `json:"hgz"`
-	Moon           string    `json:"moon"`
-	Solar          string    `json:"solar"`
-	Lu             string    `json:"lu"`
-	GanZhiString   string    `json:"gan_zhi"`
-	XunKong        string    `json:"xun_kong"`
-	NaYin          string    `json:"na_yin"`
-	ZhongQiString  string    `json:"zhong_qi_string"`
-	YueJiangString string    `json:"yue_jiang_string"`
-	JianChu        string    `json:"jian_chu"`
-	RiQin          string    `json:"ri_qin"`
-	HuangHei       string    `json:"huang_hei"`
-	HuangHeiH      string    `json:"huang_hei_h"`
+	T         time.Time `json:"t"`
+	Ygz       string    `json:"ygz"`
+	Mgz       string    `json:"mgz"`
+	Dgz       string    `json:"dgz"`
+	Hgz       string    `json:"hgz"`
+	Moon      string    `json:"moon"`
+	Solar     string    `json:"solar"`
+	Lu        [4]string `json:"lu"`       //禄位 Array
+	Gzs       string    `json:"gzs"`      //干支 String
+	XunKong   [4]string `json:"xun_kong"` //旬空 Array
+	NaYin     string    `json:"na_yin"`
+	ZhongQi   string    `json:"zhong_qi"`
+	YueJiang  string    `json:"yue_jiang"`
+	JianChu   string    `json:"jian_chu"`
+	RiQin     string    `json:"ri_qin"`
+	HuangHei  string    `json:"huang_hei"`
+	HuangHeiH string    `json:"huang_hei_h"`
 
 	JueLiRi   string `json:"jue_li_ri"`
 	JiTanBing string `json:"ji_tan_bing"`
@@ -354,45 +354,38 @@ func (obj *GanZhi) Info() *Info {
 	t := time.Date(obj.year, time.Month(obj.month), obj.day, obj.hour, obj.min, 0, 0, time.Local)
 	_, _, _, moon := calendar.Lunar(t.Year(), int(t.Month()), t.Day())
 
-	nayins := "纳音: " + obj.GetNaYinString()
-	lus := fmt.Sprintf("禄位: %s - %s - %s - %s", Lu(obj.Ygz[:3]), Lu(obj.Mgz[:3]), Lu(obj.Dgz[:3]), obj.Hgz[:3])
+	luarr := [4]string{Lu(obj.Ygz[:3]), Lu(obj.Mgz[:3]), Lu(obj.Dgz[:3]), obj.Hgz[:3]}
 	gzs := fmt.Sprintf("干支: %s %s %s %s", obj.Ygz, obj.Mgz, obj.Dgz, obj.Hgz)
 
 	xk1, xk2, xk3, xk4 := XunKong(obj.Ygz), XunKong(obj.Mgz), XunKong(obj.Dgz), XunKong(obj.Hgz)
-	xks := fmt.Sprintf("旬空: %s %s %s %s", xk1, xk2, xk3, xk4)
+	xkarr := [4]string{xk1, xk2, xk3, xk4}
 
 	yjo := obj.YueJiangStruct()
 	zhongQi := fmt.Sprintf("中气: %s(%s)", yjo.ZhongQiName, yjo.ZhongQiT)
 	yjs := fmt.Sprintf("月将: %s(%s)", yjo.Zhi, yjo.Name)
 
-	riqins := "日禽: " + obj.RiQin(int(t.Weekday()))
-	jianchu := "建除: " + obj.JianChuDay()
-
-	hhd := "黄黑: " + obj.RiHuangHei1()
-	hhh := "黄黑H: " + obj.ShiHuangHei1()
-
 	juelis := pub.JueLiRi(t)
 	jitanb := pub.JiTanBing(obj.Dgz)
 
 	return &Info{
-		T:              t,
-		Ygz:            obj.Ygz,
-		Mgz:            obj.Mgz,
-		Dgz:            obj.Dgz,
-		Hgz:            obj.Hgz,
-		Moon:           moon,
-		Solar:          t.Format("2006-01-02 15:04:05"),
-		Lu:             lus,
-		GanZhiString:   gzs,
-		XunKong:        xks,
-		NaYin:          nayins,
-		ZhongQiString:  zhongQi,
-		YueJiangString: yjs,
-		JianChu:        jianchu,
-		RiQin:          riqins,
-		HuangHei:       hhd,
-		HuangHeiH:      hhh,
-		JueLiRi:        juelis,
-		JiTanBing:      jitanb,
+		T:         t,
+		Ygz:       obj.Ygz,
+		Mgz:       obj.Mgz,
+		Dgz:       obj.Dgz,
+		Hgz:       obj.Hgz,
+		Moon:      moon,
+		Solar:     t.Format("2006-01-02 15:04:05"),
+		Lu:        luarr,
+		Gzs:       gzs,
+		XunKong:   xkarr,
+		NaYin:     obj.GetNaYinString(),
+		ZhongQi:   zhongQi,
+		YueJiang:  yjs,
+		JianChu:   obj.JianChuDay(),
+		RiQin:     obj.RiQin(int(t.Weekday())),
+		HuangHei:  obj.RiHuangHei1(),
+		HuangHeiH: obj.ShiHuangHei1(),
+		JueLiRi:   juelis,
+		JiTanBing: jitanb,
 	}
 }
