@@ -1,11 +1,13 @@
 ### 干支计算
 
 - 传入阳历年月日时
+
 - func NewGanZhi(year, month, day, hour int) *GanZhi{} 月干支计算精确到日
 ```text
 例如： 2022年2月4日 4:50分立春. 
 传入: 2022, 2, 4, 0 显示: 壬寅 壬寅 戊子 壬子
 ```
+
 - func NewTGanZhi(year, month, day, hour int) *GanZhi{} 月干支计算精确到时
 ```text
 2033-2-3 19H  壬年 月干支:癸丑
