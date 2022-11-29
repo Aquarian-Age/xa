@@ -389,3 +389,30 @@ func (obj *GanZhi) Info() *Info {
 		JiTanBing: jitanb,
 	}
 }
+func (info *Info) Html() string {
+	t := info.T
+	_, _, _, moon := calendar.Lunar(t.Year(), int(t.Month()), t.Day())
+
+	nayins := "纳音: " + GetNaYinString(info.Ygz, info.Mgz, info.Dgz, info.Hgz) + "<br>"
+	lus := fmt.Sprintf("禄位: %s - %s - %s - %s<br>", Lu(info.Ygz[:3]), Lu(info.Mgz[:3]), Lu(info.Dgz[:3]), info.Hgz[:3])
+	gzs := fmt.Sprintf("干支: %s %s %s %s<br>", info.Ygz, info.Mgz, info.Dgz, info.Hgz)
+
+	xk1, xk2, xk3, xk4 := XunKong(info.Ygz), XunKong(info.Mgz), XunKong(info.Dgz), XunKong(info.Hgz)
+	xks := fmt.Sprintf("旬空: %s %s %s %s<br>", xk1, xk2, xk3, xk4)
+
+	yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
+	zhongQi := fmt.Sprintf("中气: %s(%s)<br>", yjo.ZhongQiName, yjo.ZhongQiT)
+	yjs := fmt.Sprintf("月将: %s(%s)<br>", yjo.Zhi, yjo.Name)
+
+	riqins := "日禽: " + GetRiQin(int(t.Weekday()), info.Dgz) + "<br>"
+	jianchu := "建除: " + JianChu(info.Mgz, info.Dgz) + "<br>"
+
+	hhd := "黄黑: " + HuangHei(info.Mgz, info.Dgz) + "<br>"
+	hhh := "黄黑H: " + HuangHei(info.Dgz, info.Hgz) + "<br>"
+
+	juelis := pub.JueLiRi(t) + " "
+	jitanb := pub.JiTanBing(info.Dgz) + "<br>"
+
+	infos := t.Format("2006-01-02 15:04:05") + "<br>" + lus + gzs + xks + nayins + zhongQi + yjs + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "<br>"
+	return infos
+}
