@@ -11,8 +11,32 @@ import (
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
 	"testing"
+	"time"
 )
 
+func TestYJZQ(t *testing.T) {
+	y := 2022
+	hour := 22
+	for m := 1; m <= 12; m++ {
+		days := 31
+		if m == 2 && ((y%4 == 0 && y%100 != 0) || y%400 == 0) {
+			days = 29
+		}
+		if m == 2 && !((y%4 == 0 && y%100 != 0) || y%400 == 0) {
+			days = 28
+		}
+		if m == 4 || m == 6 || m == 9 || m == 11 {
+			days = 30
+		}
+		for d := 1; d <= days; d++ {
+			gzo := NewTGanZhi(y, m, d, hour)
+			yjo := NewYueJiang(y, m, d, gzo.Mgz)
+			date := time.Date(y, time.Month(m), d, hour, 0, 0, 0, time.Local)
+			times := date.String()[:13]
+			fmt.Printf("%s %s %s %s %s\n", times, yjo.Zhi, yjo.Name, yjo.ZhongQiT, yjo.ZhongQiName)
+		}
+	}
+}
 func TestGetYueJiang(t *testing.T) {
 	want := []struct {
 		yj, name, ts string

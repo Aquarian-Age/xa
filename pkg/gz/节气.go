@@ -24,8 +24,8 @@ func jq24(year int) []time.Time {
 	return arr
 }
 
-//传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
-//获取本年立春时间戳
+// 传入阳历年数字 返回本年立春阳历时间戳 12节时间戳数组(上一年冬至到本年冬至)
+// 获取本年立春时间戳
 func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
 	year -= 1 //k:1-->上一年冬至时间 k:25-->本年冬至时间 k:4--本年立春
 	jq := basic.GetOneYearJQ(year)
@@ -58,18 +58,18 @@ func getJie12T(year int) (time.Time, []time.Time, []time.Time) {
 	//12中气
 	// 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪 冬至
 	//12节(0:上年冬至)
-	//冬至 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
+	// 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
 	return lct, jieArr, zqArr
 }
 
-//正月立春节 二月惊蛰节 三月清明节 四月立夏节 五月忙钟节 六月小暑节
-//七月立秋节 八月白露节 九月寒露节 十月立东节 冬月大雪节 腊月小寒节
-//12节  0:上一年小寒 1今年立春...11大雪 12:本年小寒 13:下年立春
+// 正月立春节 二月惊蛰节 三月清明节 四月立夏节 五月忙钟节 六月小暑节
+// 七月立秋节 八月白露节 九月寒露节 十月立东节 冬月大雪节 腊月小寒节
+// 12节  0:上一年小寒 1今年立春...11大雪 12:本年小寒 13:下年立春
 // 小寒  立春  惊蛰  清明  立夏  芒种  小暑  立秋  白露  寒露  立冬  大雪
-//12中气 0:上一年冬至　12:本年冬至时间戳 13:下一年大寒
+// 12中气 0:上一年冬至　12:本年冬至时间戳 13:下一年大寒
 // 冬至  大寒  雨水  春分  谷雨  小满  夏至  大暑  处暑  秋分  霜降  小雪
-//2年的节气和中气时间戳　时间精确到秒
-//上一年小寒到下一年节气的时间戳数组 len=24 上一年冬至到本年冬至中气时间戳数组 len=25
+// 2年的节气和中气时间戳　时间精确到秒
+// 上一年小寒到下一年节气的时间戳数组 len=24 上一年冬至到本年冬至中气时间戳数组 len=25
 func getJieArr(year int) ([]time.Time, []time.Time) {
 	_, j12arr, zq1Arr := getJie12T(year)
 	_, j4arr, zq2Arr := getJie12T(year + 1)
@@ -83,7 +83,7 @@ func getJieArr(year int) ([]time.Time, []time.Time) {
 	return arrT, zqArrT
 }
 
-//true节气之后 false节气之前 节气计算精确到日
+// true节气之后 false节气之前 节气计算精确到日
 func findJie(cust time.Time, jarrT []time.Time) (bool, int) {
 	cust = time.Date(cust.Year(), cust.Month(), cust.Day(), 0, 0, 0, 0, time.Local)
 	var b bool

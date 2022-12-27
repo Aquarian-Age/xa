@@ -52,8 +52,8 @@ func NewYueJiang(y, m, d int, mgz string) *YJ {
 	}
 }
 
-//传入阳历时间(年　月　日)　月干支
-//返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
+// 传入阳历时间(年　月　日)　月干支
+// 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
 func yueJiang(year, month, day int, zhis string) (string, string, time.Time, string) {
 	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到日
 	_, _, zqArrT := getJie12T(year)
@@ -66,8 +66,18 @@ func yueJiang(year, month, day int, zhis string) (string, string, time.Time, str
 	var zqt time.Time                                                                                //中气时间戳　精确到日
 	var yjZhi string                                                                                 //月将的地支
 	var shenJiangName, zhongQiName string                                                            //神将名称,中气名称
-	for i := 1; i < len(zhi); i++ {
-		if strings.EqualFold(zhis, zhi[i]) {
+	for i := 0; i < len(zhi); i++ {
+		if i == 0 {
+			zqt = zqArrT[i]
+			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
+			zhongQiName = zqName[i]
+			if cust.Equal(zqt) || cust.After(zqt) {
+				yjZhi = tyj[i]
+				shenJiangName = sj[i]
+			}
+			//fmt.Printf("月地支:%s i=:%d 月将地支:%s 神将:%s\n", zhi[i], i, yjZhi, shenJiangName)
+		}
+		if strings.EqualFold(zhis, zhi[i]) && i > 0 {
 			zqt = zqArrT[i]
 			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
 			zhongQiName = zqName[i]
@@ -97,7 +107,7 @@ func yueJiang(year, month, day int, zhis string) (string, string, time.Time, str
 }
 
 // YueJiang 月将  传入节气名称
-//以中气计算 这里不包含ZhongQiT(中气对应的阳历时间)
+// 以中气计算 这里不包含ZhongQiT(中气对应的阳历时间)
 func YueJiang(jieQi string) *YJ {
 	var yjz, name, zqn string
 	//中气
@@ -425,7 +435,7 @@ func (dsm *DiSiMenStruct) DiSiMenString() string {
 // DiSiMen 地私门 传入月将 日干支 时干支
 // 以日支 定本日使用的贵人 自子至巳为阳用阳贵神 自午至亥为阴用阴贵神
 // 审太阳过宫，以月将加用时，寻本日贵人起星，求地私门。
-//月将加时辰 寻日干阳贵和阴贵下临的时辰地支 以该支定顺逆  亥至辰为阳贵顺行  巳至戌为阴贵逆行
+// 月将加时辰 寻日干阳贵和阴贵下临的时辰地支 以该支定顺逆  亥至辰为阳贵顺行  巳至戌为阴贵逆行
 func DiSiMen(yueJiang string, dgz, hgz string) *DiSiMenStruct {
 	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
 	gro := GuiRenMap[dgz[:3]]
