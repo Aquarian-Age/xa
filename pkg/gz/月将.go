@@ -67,17 +67,7 @@ func yueJiang(year, month, day int, zhis string) (string, string, time.Time, str
 	var yjZhi string                                                                                 //月将的地支
 	var shenJiangName, zhongQiName string                                                            //神将名称,中气名称
 	for i := 0; i < len(zhi); i++ {
-		if i == 0 {
-			zqt = zqArrT[i]
-			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
-			zhongQiName = zqName[i]
-			if cust.Equal(zqt) || cust.After(zqt) {
-				yjZhi = tyj[i]
-				shenJiangName = sj[i]
-			}
-			//fmt.Printf("月地支:%s i=:%d 月将地支:%s 神将:%s\n", zhi[i], i, yjZhi, shenJiangName)
-		}
-		if strings.EqualFold(zhis, zhi[i]) && i > 0 {
+		if strings.EqualFold(zhis, zhi[i]) {
 			zqt = zqArrT[i]
 			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
 			zhongQiName = zqName[i]
