@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"github.com/Aquarian-Age/xa/pkg/pub"
 	"strings"
-	"time"
 )
 
 var (
@@ -32,123 +31,123 @@ var (
 )
 
 // YJ 月将(太阳过宫)
-type YJ struct {
-	Zhi         string `json:"zhi"`
-	Name        string `json:"name"`
-	ZhongQiT    string `json:"zhong_qi_t"`
-	ZhongQiName string `json:"zhong_qi_name"`
-}
-
-// NewYueJiang 月将
-func NewYueJiang(y, m, d int, mgz string) *YJ {
-	mz := pub.GetZhiS(mgz)
-	yj, name, t, zqName := yueJiang(y, m, d, mz)
-	ts := t.Format("2006-01-02")
-	return &YJ{
-		yj,
-		name,
-		ts,
-		zqName,
-	}
-}
-
-// 传入阳历时间(年　月　日)　月干支
-// 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
-func yueJiang(year, month, day int, zhis string) (string, string, time.Time, string) {
-	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到日
-	_, _, zqArrT := getJie12T(year)
-
-	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子"}             //月支从上年冬月开始
-	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}             //天月将的地支 从子月到子月
-	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"} //从子月到子月
-
-	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"} //中气
-	var zqt time.Time                                                                                //中气时间戳　精确到日
-	var yjZhi string                                                                                 //月将的地支
-	var shenJiangName, zhongQiName string                                                            //神将名称,中气名称
-	for i := 0; i < len(zhi); i++ {
-		if strings.EqualFold(zhis, zhi[i]) {
-			zqt = zqArrT[i]
-			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
-			zhongQiName = zqName[i]
-			if cust.Equal(zqt) || cust.After(zqt) {
-				yjZhi = tyj[i]
-				shenJiangName = sj[i]
-				//fmt.Printf("zqt中气:%v\n", zqt)
-				//fmt.Printf("月地支:%s i=:%d 月将地支:%s 神将:%s\n", zhi[i], i, yjZhi, shenJiangName)
-				break
-			} else {
-				index := i - 1
-				if index < 0 {
-					index = 13
-				}
-				yjZhi = tyj[index]
-				shenJiangName = sj[index]
-				zqt = zqArrT[index]
-				zhongQiName = zqName[index]
-				//fmt.Printf("zqt中气:%v\n", zqt)
-				//fmt.Printf("月地支:%s index:%d 月将地支:%s 神将:%s\n", zhi[index], index, yjZhi, shenJiangName)
-				break
-			}
-		}
-	}
-
-	return yjZhi, shenJiangName, zqt, zhongQiName
-}
-
-// YueJiang 月将  传入节气名称
-// 以中气计算 这里不包含ZhongQiT(中气对应的阳历时间)
-func YueJiang(jieQi string) *YJ {
-	var yjz, name, zqn string
-	//中气
-	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"}
-	jieQiName := []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "小暑", "立秋", "白露", "寒露", "立冬", "大雪", "小寒"}
-	//天月将的地支
-	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}
-	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"}
-	for i := 0; i < len(zqName); i++ {
-		if strings.EqualFold(zqName[i], jieQi) || strings.EqualFold(jieQiName[i], jieQi) {
-			yjz = tyj[i]
-			name = sj[i]
-			zqn = zqName[i]
-			break
-		}
-	}
-	return &YJ{
-		Zhi:         yjz,
-		Name:        name,
-		ZhongQiName: zqn,
-		ZhongQiT:    "",
-	}
-}
+//type YJ struct {
+//	Zhi         string `json:"zhi"`
+//	Name        string `json:"name"`
+//	ZhongQiT    string `json:"zhong_qi_t"`
+//	ZhongQiName string `json:"zhong_qi_name"`
+//}
+//
+//// NewYueJiang 月将
+//func NewYueJiang(y, m, d int, mgz string) *YJ {
+//	mz := pub.GetZhiS(mgz)
+//	yj, name, t, zqName := yueJiang(y, m, d, mz)
+//	ts := t.Format("2006-01-02")
+//	return &YJ{
+//		yj,
+//		name,
+//		ts,
+//		zqName,
+//	}
+//}
+//
+//// 传入阳历时间(年　月　日)　月干支
+//// 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
+//func yueJiang(year, month, day int, zhis string) (string, string, time.Time, string) {
+//	cust := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local) //精确到日
+//	_, _, zqArrT := getJie12T(year)
+//
+//	zhi := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子"}             //月支从上年冬月开始
+//	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}             //天月将的地支 从子月到子月
+//	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"} //从子月到子月
+//
+//	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"} //中气
+//	var zqt time.Time                                                                                //中气时间戳　精确到日
+//	var yjZhi string                                                                                 //月将的地支
+//	var shenJiangName, zhongQiName string                                                            //神将名称,中气名称
+//	for i := 0; i < len(zhi); i++ {
+//		if strings.EqualFold(zhis, zhi[i]) {
+//			zqt = zqArrT[i]
+//			zqt = time.Date(zqt.Year(), zqt.Month(), zqt.Day(), 0, 0, 0, 0, time.Local)
+//			zhongQiName = zqName[i]
+//			if cust.Equal(zqt) || cust.After(zqt) {
+//				yjZhi = tyj[i]
+//				shenJiangName = sj[i]
+//				//fmt.Printf("zqt中气:%v\n", zqt)
+//				//fmt.Printf("月地支:%s i=:%d 月将地支:%s 神将:%s\n", zhi[i], i, yjZhi, shenJiangName)
+//				break
+//			} else {
+//				index := i - 1
+//				if index < 0 {
+//					index = 13
+//				}
+//				yjZhi = tyj[index]
+//				shenJiangName = sj[index]
+//				zqt = zqArrT[index]
+//				zhongQiName = zqName[index]
+//				//fmt.Printf("zqt中气:%v\n", zqt)
+//				//fmt.Printf("月地支:%s index:%d 月将地支:%s 神将:%s\n", zhi[index], index, yjZhi, shenJiangName)
+//				break
+//			}
+//		}
+//	}
+//
+//	return yjZhi, shenJiangName, zqt, zhongQiName
+//}
+//
+//// YueJiang 月将  传入节气名称
+//// 以中气计算 这里不包含ZhongQiT(中气对应的阳历时间)
+//func YueJiang(jieQi string) *YJ {
+//	var yjz, name, zqn string
+//	//中气
+//	zqName := []string{"冬至", "大寒", "雨水", "春分", "谷雨", "小满", "夏至", "大暑", "处暑", "秋分", "霜降", "小雪", "冬至"}
+//	jieQiName := []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "小暑", "立秋", "白露", "寒露", "立冬", "大雪", "小寒"}
+//	//天月将的地支
+//	tyj := []string{"丑", "子", "亥", "戌", "酉", "申", "未", "午", "巳", "辰", "卯", "寅", "丑"}
+//	sj := []string{"大吉", "神后", "登明", "河魁", "从魁", "传送", "小吉", "胜光", "太乙", "天罡", "太冲", "功曹", "大吉"}
+//	for i := 0; i < len(zqName); i++ {
+//		if strings.EqualFold(zqName[i], jieQi) || strings.EqualFold(jieQiName[i], jieQi) {
+//			yjz = tyj[i]
+//			name = sj[i]
+//			zqn = zqName[i]
+//			break
+//		}
+//	}
+//	return &YJ{
+//		Zhi:         yjz,
+//		Name:        name,
+//		ZhongQiName: zqn,
+//		ZhongQiT:    "",
+//	}
+//}
 
 // TaiChongTianMa 太冲天马
-func (yj *YJ) TaiChongTianMa(hgz string) string {
-	yjz := yj.Zhi
-	hz := pub.GetZhiS(hgz)
-	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
-	yjarr := pub.SortArr(yjz, zhis)
-	hzarr := pub.SortArr(hz, zhis)
-
-	var s string
-	for i := 0; i < len(yjarr); i++ {
-		if strings.EqualFold(yjarr[i], "卯") {
-			s = hzarr[i]
-			break
-		}
-	}
-	return s
-}
+//func (yj *YJ) TaiChongTianMa(hgz string) string {
+//	yjz := yj.Zhi
+//	hz := pub.GetZhiS(hgz)
+//	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+//	yjarr := pub.SortArr(yjz, zhis)
+//	hzarr := pub.SortArr(hz, zhis)
+//
+//	var s string
+//	for i := 0; i < len(yjarr); i++ {
+//		if strings.EqualFold(yjarr[i], "卯") {
+//			s = hzarr[i]
+//			break
+//		}
+//	}
+//	return s
+//}
 
 // TianSanMenStruct 天三门
-func (yj *YJ) TianSanMenStruct(hgz string) *TianSanMenStruct {
-	mao, you, wei := TianSanMen(yj.Zhi, hgz)
-	return &TianSanMenStruct{
-		TaiCongZhi: mao,
-		CongKuiZhi: you,
-		XiaoJiZhi:  wei,
-	}
-}
+//func (yj *YJ) TianSanMenStruct(hgz string) *TianSanMenStruct {
+//	mao, you, wei := TianSanMen(yj.Zhi, hgz)
+//	return &TianSanMenStruct{
+//		TaiCongZhi: mao,
+//		CongKuiZhi: you,
+//		XiaoJiZhi:  wei,
+//	}
+//}
 
 // TianSanMenStruct 天三门
 type TianSanMenStruct struct {
@@ -193,207 +192,207 @@ func TianSanMen(yueJiangZhi, hgz string) (string, string, string) {
 }
 
 // TianSanMen 天三门(天盘卯酉未临下方地支是也)
-func (yj *YJ) TianSanMen(hgz string) (string, string, string) {
-	yjz := yj.Zhi
-	hz := pub.GetZhiS(hgz)
-	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
-	yjarr := pub.SortArr(yjz, zhis)
-	hzarr := pub.SortArr(hz, zhis)
-	yjnames := pub.SortArr(yjmap[yjz], yueJiangArr)
-
-	var a, b, c string
-	for i := 0; i < len(yjarr); i++ {
-		if strings.EqualFold(yjarr[i], "卯") {
-			a = yjnames[i] + ":" + hzarr[i]
-		}
-		if strings.EqualFold(yjarr[i], "酉") {
-			b = yjnames[i] + ":" + hzarr[i]
-		}
-		if strings.EqualFold(yjarr[i], "未") {
-			c = yjnames[i] + ":" + hzarr[i]
-		}
-	}
-	return a, b, c
-}
-
-// GuiDengTianMen 贵登天门 返回旦/暮登天门时辰
-func (yj *YJ) GuiDengTianMen(dgz string) (string, string) {
-	//k:月将 v十干数组(0:甲 1:乙)
-	tmap := map[string][]struct{ dan, xi string }{
-		"亥": { //月将
-			{"卯", "酉"}, //甲日
-			{"", "戌"},
-			{"", "亥"}, //丙日
-			{"", "丑"}, //丁日
-			{"酉", "卯"},
-			{"", "寅"}, //己日
-			{"酉", "卯"},
-			{"申", ""}, //辛日
-			{"未", ""},
-			{"巳", ""}, //癸日
-		},
-		"戌": {
-			{"", ""}, //甲日
-			{"", "酉"},
-			{"", "戌"}, //丙日
-			{"", "子"},
-			{"申", "寅"}, //戊日
-			{"酉", "丑"},
-			{"申", "寅"}, //庚日
-			{"未", "卯"},
-			{"午", ""}, //壬日
-			{"辰", ""},
-		},
-		"酉": {
-			{"", ""}, //甲日
-			{"", ""},
-			{"", ""}, //丙日
-			{"酉", "亥"},
-			{"未", "丑"}, //戊日
-			{"申", "子"},
-			{"未", "丑"}, //庚日
-			{"午", "寅"},
-			{"巳", ""}, //壬日
-			{"卯", ""},
-		},
-		"申": {
-			{"", ""}, //甲日
-			{"", ""},
-			{"戌", ""}, //丙日
-			{"申", "戌"},
-			{"午", "子"}, //戊日
-			{"未", "亥"},
-			{"午", "子"}, //庚日
-			{"巳", "丑"},
-			{"辰", "寅"}, //壬日
-			{"寅", ""},
-		},
-		"未": {
-			{"", ""}, //甲日
-			{"戌", ""},
-			{"酉", ""}, //丙日
-			{"未", ""},
-			{"巳", "亥"}, //戊日
-			{"午", "戌"},
-			{"巳", "亥"}, //庚日
-			{"辰", "子"},
-			{"卯", "丑"}, //壬日
-			{"", ""},
-		},
-		"午": {
-			{"", ""}, //甲日
-			{"酉", ""},
-			{"申", ""}, //丙日
-			{"午", ""},
-			{"辰", "戌"}, //戊日
-			{"巳", ""},
-			{"辰", "戌"}, //庚日
-			{"卯", "亥"},
-			{"寅", "子"}, //壬日
-			{"", "寅"},
-		},
-		"巳": {
-			{"酉", ""}, //甲日
-			{"申", ""},
-			{"未", ""}, //丙日
-			{"巳", ""},
-			{"卯", "酉"}, //戊日
-			{"辰", ""},
-			{"卯", "酉"}, //庚日
-			{"", "戌"},
-			{"", "亥"}, //壬日
-			{"", "丑"},
-		},
-		"辰": {
-			{"申", "寅"}, //甲日
-			{"未", "卯"},
-			{"午", ""}, //丙日
-			{"辰", ""},
-			{"", ""}, //戊日
-			{"卯", ""},
-			{"", ""}, //庚日
-			{"", "酉"},
-			{"", "戌"}, //壬日
-			{"", "子"},
-		},
-		"卯": {
-			{"未", "丑"}, //甲日
-			{"午", "寅"},
-			{"巳", "卯"}, //丙日
-			{"卯", ""},
-			{"", ""}, //戊日
-			{"", ""},
-			{"", ""}, //庚日
-			{"", ""},
-			{"", "酉"}, //壬日
-			{"酉", "亥"},
-		},
-		"寅": {
-			{"午", "子"}, //甲日
-			{"巳", "丑"},
-			{"辰", "寅"}, //丙日
-			{"", ""},
-			{"", ""}, //戊日
-			{"", ""},
-			{"", ""}, //庚日
-			{"", ""},
-			{"", "申"}, //壬日
-			{"申", "戌"},
-		},
-		"丑": {
-			{"巳", "亥"}, //甲日
-			{"辰", "子"},
-			{"", "丑"}, //丙日
-			{"", "卯"},
-			{"", ""}, //戊日
-			{"", "辰"},
-			{"", ""}, //庚日
-			{"", ""},
-			{"", ""}, //壬日
-			{"未", "酉"},
-		},
-		"子": {
-			{"辰", "戌"}, //甲日
-			{"卯", "亥"},
-			{"", "子"}, //丙日
-			{"", "寅"},
-			{"", ""}, //戊日
-			{"", "卯"},
-			{"", ""}, //庚日
-			{"", ""},
-			{"申", ""}, //壬日
-			{"午", "申"},
-		},
-	}
-	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
-	var index int
-	for i := 0; i < len(gan); i++ {
-		if strings.ContainsAny(dgz, gan[i]) {
-			index = i
-			break
-		}
-	}
-
-	var dan, mu string //贵登天门时
-	for k, v := range tmap {
-		if strings.EqualFold(yj.Zhi, k) {
-			for i := 0; i < len(v); i++ {
-				if index == i {
-					dan = v[i].dan
-					mu = v[i].xi
-					break
-				}
-			}
-			break
-		}
-	}
-	return dan, mu
-}
-
-// DiSiMen 地私门
-func (yj *YJ) DiSiMen(dgz, hgz string) *DiSiMenStruct {
-	return DiSiMen(yj.Zhi, dgz, hgz)
-}
+//func (yj *YJ) TianSanMen(hgz string) (string, string, string) {
+//	yjz := yj.Zhi
+//	hz := pub.GetZhiS(hgz)
+//	zhis := []string{"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"}
+//	yjarr := pub.SortArr(yjz, zhis)
+//	hzarr := pub.SortArr(hz, zhis)
+//	yjnames := pub.SortArr(yjmap[yjz], yueJiangArr)
+//
+//	var a, b, c string
+//	for i := 0; i < len(yjarr); i++ {
+//		if strings.EqualFold(yjarr[i], "卯") {
+//			a = yjnames[i] + ":" + hzarr[i]
+//		}
+//		if strings.EqualFold(yjarr[i], "酉") {
+//			b = yjnames[i] + ":" + hzarr[i]
+//		}
+//		if strings.EqualFold(yjarr[i], "未") {
+//			c = yjnames[i] + ":" + hzarr[i]
+//		}
+//	}
+//	return a, b, c
+//}
+//
+//// GuiDengTianMen 贵登天门 返回旦/暮登天门时辰
+//func (yj *YJ) GuiDengTianMen(dgz string) (string, string) {
+//	//k:月将 v十干数组(0:甲 1:乙)
+//	tmap := map[string][]struct{ dan, xi string }{
+//		"亥": { //月将
+//			{"卯", "酉"}, //甲日
+//			{"", "戌"},
+//			{"", "亥"}, //丙日
+//			{"", "丑"}, //丁日
+//			{"酉", "卯"},
+//			{"", "寅"}, //己日
+//			{"酉", "卯"},
+//			{"申", ""}, //辛日
+//			{"未", ""},
+//			{"巳", ""}, //癸日
+//		},
+//		"戌": {
+//			{"", ""}, //甲日
+//			{"", "酉"},
+//			{"", "戌"}, //丙日
+//			{"", "子"},
+//			{"申", "寅"}, //戊日
+//			{"酉", "丑"},
+//			{"申", "寅"}, //庚日
+//			{"未", "卯"},
+//			{"午", ""}, //壬日
+//			{"辰", ""},
+//		},
+//		"酉": {
+//			{"", ""}, //甲日
+//			{"", ""},
+//			{"", ""}, //丙日
+//			{"酉", "亥"},
+//			{"未", "丑"}, //戊日
+//			{"申", "子"},
+//			{"未", "丑"}, //庚日
+//			{"午", "寅"},
+//			{"巳", ""}, //壬日
+//			{"卯", ""},
+//		},
+//		"申": {
+//			{"", ""}, //甲日
+//			{"", ""},
+//			{"戌", ""}, //丙日
+//			{"申", "戌"},
+//			{"午", "子"}, //戊日
+//			{"未", "亥"},
+//			{"午", "子"}, //庚日
+//			{"巳", "丑"},
+//			{"辰", "寅"}, //壬日
+//			{"寅", ""},
+//		},
+//		"未": {
+//			{"", ""}, //甲日
+//			{"戌", ""},
+//			{"酉", ""}, //丙日
+//			{"未", ""},
+//			{"巳", "亥"}, //戊日
+//			{"午", "戌"},
+//			{"巳", "亥"}, //庚日
+//			{"辰", "子"},
+//			{"卯", "丑"}, //壬日
+//			{"", ""},
+//		},
+//		"午": {
+//			{"", ""}, //甲日
+//			{"酉", ""},
+//			{"申", ""}, //丙日
+//			{"午", ""},
+//			{"辰", "戌"}, //戊日
+//			{"巳", ""},
+//			{"辰", "戌"}, //庚日
+//			{"卯", "亥"},
+//			{"寅", "子"}, //壬日
+//			{"", "寅"},
+//		},
+//		"巳": {
+//			{"酉", ""}, //甲日
+//			{"申", ""},
+//			{"未", ""}, //丙日
+//			{"巳", ""},
+//			{"卯", "酉"}, //戊日
+//			{"辰", ""},
+//			{"卯", "酉"}, //庚日
+//			{"", "戌"},
+//			{"", "亥"}, //壬日
+//			{"", "丑"},
+//		},
+//		"辰": {
+//			{"申", "寅"}, //甲日
+//			{"未", "卯"},
+//			{"午", ""}, //丙日
+//			{"辰", ""},
+//			{"", ""}, //戊日
+//			{"卯", ""},
+//			{"", ""}, //庚日
+//			{"", "酉"},
+//			{"", "戌"}, //壬日
+//			{"", "子"},
+//		},
+//		"卯": {
+//			{"未", "丑"}, //甲日
+//			{"午", "寅"},
+//			{"巳", "卯"}, //丙日
+//			{"卯", ""},
+//			{"", ""}, //戊日
+//			{"", ""},
+//			{"", ""}, //庚日
+//			{"", ""},
+//			{"", "酉"}, //壬日
+//			{"酉", "亥"},
+//		},
+//		"寅": {
+//			{"午", "子"}, //甲日
+//			{"巳", "丑"},
+//			{"辰", "寅"}, //丙日
+//			{"", ""},
+//			{"", ""}, //戊日
+//			{"", ""},
+//			{"", ""}, //庚日
+//			{"", ""},
+//			{"", "申"}, //壬日
+//			{"申", "戌"},
+//		},
+//		"丑": {
+//			{"巳", "亥"}, //甲日
+//			{"辰", "子"},
+//			{"", "丑"}, //丙日
+//			{"", "卯"},
+//			{"", ""}, //戊日
+//			{"", "辰"},
+//			{"", ""}, //庚日
+//			{"", ""},
+//			{"", ""}, //壬日
+//			{"未", "酉"},
+//		},
+//		"子": {
+//			{"辰", "戌"}, //甲日
+//			{"卯", "亥"},
+//			{"", "子"}, //丙日
+//			{"", "寅"},
+//			{"", ""}, //戊日
+//			{"", "卯"},
+//			{"", ""}, //庚日
+//			{"", ""},
+//			{"申", ""}, //壬日
+//			{"午", "申"},
+//		},
+//	}
+//	gan := []string{"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"}
+//	var index int
+//	for i := 0; i < len(gan); i++ {
+//		if strings.ContainsAny(dgz, gan[i]) {
+//			index = i
+//			break
+//		}
+//	}
+//
+//	var dan, mu string //贵登天门时
+//	for k, v := range tmap {
+//		if strings.EqualFold(yj.Zhi, k) {
+//			for i := 0; i < len(v); i++ {
+//				if index == i {
+//					dan = v[i].dan
+//					mu = v[i].xi
+//					break
+//				}
+//			}
+//			break
+//		}
+//	}
+//	return dan, mu
+//}
+//
+//// DiSiMen 地私门
+//func (yj *YJ) DiSiMen(dgz, hgz string) *DiSiMenStruct {
+//	return DiSiMen(yj.Zhi, dgz, hgz)
+//}
 
 // DiSiMenStruct 地私门
 type DiSiMenStruct struct {
