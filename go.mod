@@ -1,6 +1,6 @@
 module github.com/Aquarian-Age/xa
 
-go 1.19
+go 1.20
 
 require github.com/starainrt/astro v0.0.0-20220105092628-c0bcbbb42a60
 

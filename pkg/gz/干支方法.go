@@ -228,16 +228,16 @@ func (obj *GanZhi) RiQin(weekN int) string {
 }
 
 // YueJiangStruct 月将
-func (obj GanZhi) YueJiangStruct() *YJ {
-	return NewYueJiang(obj.year, obj.month, obj.day, obj.Mgz)
-}
+//func (obj GanZhi) YueJiangStruct() *YJ {
+//	return NewYueJiang(obj.year, obj.month, obj.day, obj.Mgz)
+//}
 
 // YueJiang 月将
 // 返回月将对应的地支 月将对应的神将名称 月将所对应的中气时间戳/中气名称
-func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
-	zhis := pub.GetZhiS(obj.Mgz)
-	return yueJiang(obj.year, obj.month, obj.day, zhis)
-}
+//func (obj *GanZhi) YueJiang() (string, string, time.Time, string) {
+//	zhis := pub.GetZhiS(obj.Mgz)
+//	return yueJiang(obj.year, obj.month, obj.day, zhis)
+//}
 
 // GuiRen 贵人诀 默认传入年干支
 func (obj *GanZhi) GuiRen(xgz string) (string, string) {
@@ -310,8 +310,8 @@ type Info struct {
 	Gzs       string    `json:"gzs"`      //干支 String
 	XunKong   [4]string `json:"xun_kong"` //旬空 Array
 	NaYin     string    `json:"na_yin"`
-	ZhongQi   string    `json:"zhong_qi"`
-	YueJiang  string    `json:"yue_jiang"`
+	//ZhongQi   string    `json:"zhong_qi"`
+	//YueJiang  string    `json:"yue_jiang"`
 	JianChu   string    `json:"jian_chu"`
 	RiQin     string    `json:"ri_qin"`
 	HuangHei  string    `json:"huang_hei"`
@@ -332,9 +332,9 @@ func (info *Info) String() string {
 	xk1, xk2, xk3, xk4 := XunKong(info.Ygz), XunKong(info.Mgz), XunKong(info.Dgz), XunKong(info.Hgz)
 	xks := fmt.Sprintf("旬空: %s %s %s %s\n", xk1, xk2, xk3, xk4)
 
-	yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
-	zhongQi := fmt.Sprintf("中气: %s(%s)\n", yjo.ZhongQiName, yjo.ZhongQiT)
-	yjs := fmt.Sprintf("月将: %s(%s)\n", yjo.Zhi, yjo.Name)
+	//yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
+	//zhongQi := fmt.Sprintf("中气: %s(%s)\n", yjo.ZhongQiName, yjo.ZhongQiT)
+	//yjs := fmt.Sprintf("月将: %s(%s)\n", yjo.Zhi, yjo.Name)
 
 	riqins := "日禽: " + GetRiQin(int(t.Weekday()), info.Dgz) + "\n"
 	jianchu := "建除: " + JianChu(info.Mgz, info.Dgz) + "\n"
@@ -345,7 +345,7 @@ func (info *Info) String() string {
 	juelis := pub.JueLiRi(t) + " "
 	jitanb := pub.JiTanBing(info.Dgz) + "\n"
 
-	infos := t.Format("2006-01-02 15:04:05") + "\n" + lus + gzs + xks + nayins + zhongQi + yjs + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "\n"
+	infos := t.Format("2006-01-02 15:04:05") + "\n" + lus + gzs + xks + nayins + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "\n"
 	return infos
 }
 
@@ -360,9 +360,9 @@ func (obj *GanZhi) Info() *Info {
 	xk1, xk2, xk3, xk4 := XunKong(obj.Ygz), XunKong(obj.Mgz), XunKong(obj.Dgz), XunKong(obj.Hgz)
 	xkarr := [4]string{xk1, xk2, xk3, xk4}
 
-	yjo := obj.YueJiangStruct()
-	zhongQi := fmt.Sprintf("中气: %s(%s)", yjo.ZhongQiName, yjo.ZhongQiT)
-	yjs := fmt.Sprintf("月将: %s(%s)", yjo.Zhi, yjo.Name)
+	//yjo := obj.YueJiangStruct()
+	//zhongQi := fmt.Sprintf("中气: %s(%s)", yjo.ZhongQiName, yjo.ZhongQiT)
+	//yjs := fmt.Sprintf("月将: %s(%s)", yjo.Zhi, yjo.Name)
 
 	juelis := pub.JueLiRi(t)
 	jitanb := pub.JiTanBing(obj.Dgz)
@@ -379,8 +379,8 @@ func (obj *GanZhi) Info() *Info {
 		Gzs:       gzs,
 		XunKong:   xkarr,
 		NaYin:     obj.GetNaYinString(),
-		ZhongQi:   zhongQi,
-		YueJiang:  yjs,
+		//ZhongQi:   zhongQi,
+		//YueJiang:  yjs,
 		JianChu:   obj.JianChuDay(),
 		RiQin:     obj.RiQin(int(t.Weekday())),
 		HuangHei:  obj.RiHuangHei1(),
@@ -400,9 +400,9 @@ func (info *Info) Html() string {
 	xk1, xk2, xk3, xk4 := XunKong(info.Ygz), XunKong(info.Mgz), XunKong(info.Dgz), XunKong(info.Hgz)
 	xks := fmt.Sprintf("旬空: %s %s %s %s<br>", xk1, xk2, xk3, xk4)
 
-	yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
-	zhongQi := fmt.Sprintf("中气: %s(%s)<br>", yjo.ZhongQiName, yjo.ZhongQiT)
-	yjs := fmt.Sprintf("月将: %s(%s)<br>", yjo.Zhi, yjo.Name)
+	//yjo := NewYueJiang(t.Year(), int(t.Month()), t.Day(), info.Mgz)
+	//zhongQi := fmt.Sprintf("中气: %s(%s)<br>", yjo.ZhongQiName, yjo.ZhongQiT)
+	//yjs := fmt.Sprintf("月将: %s(%s)<br>", yjo.Zhi, yjo.Name)
 
 	riqins := "日禽: " + GetRiQin(int(t.Weekday()), info.Dgz) + "<br>"
 	jianchu := "建除: " + JianChu(info.Mgz, info.Dgz) + "<br>"
@@ -413,6 +413,6 @@ func (info *Info) Html() string {
 	juelis := pub.JueLiRi(t) + " "
 	jitanb := pub.JiTanBing(info.Dgz) + "<br>"
 
-	infos := t.Format("2006-01-02 15:04:05") + "<br>" + lus + gzs + xks + nayins + zhongQi + yjs + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "<br>"
+	infos := t.Format("2006-01-02 15:04:05") + "<br>" + lus + gzs + xks + nayins + riqins + jianchu + hhd + hhh + juelis + jitanb + moon + "<br>"
 	return infos
 }
